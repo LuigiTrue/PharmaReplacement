@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+           <FluentPersona Name="Anonymous"
+               Status="PresenceStatus.Offline"
+               StatusSize="PresenceBadgeSize.Small"
+               StatusTitle="Anonymous user is offline"
+               Image="@(new Icons.Regular.Size48.Person().ToDataUri(size: "25px", color: "white"))"
+               ImageSize="40px">
+           </FluentPersona>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

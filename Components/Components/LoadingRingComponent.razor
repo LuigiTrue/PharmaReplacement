@@ -1,0 +1,32 @@
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
+
+
+<div style="display: flex; justify-content: center; flex-flow: row wrap; width: 80vw; height: 30vh;">
+    @for (int i = 0; i < Quantidade; i++)
+    {
+        <FluentStack Style="display: flex; justify-content: center; align-items: center; width: 15vw; align-items: left;">
+
+
+                <FluentProgressRing Value="@(Indeterminate ? null : Percentage)"
+                            Width="200px"
+                            Stroke="@Stroke"
+                            Color="@(Color.ToAttributeValue())"
+                            
+                            />
+        </FluentStack>
+
+    }
+</div>
+
+
+@code {
+
+    //CODIGO TESTE PARA PROGRESSRING
+
+   [Parameter] public int Quantidade { get; set; }
+    ProgressStroke Stroke = ProgressStroke.Normal;
+    [Parameter]public int Percentage {get;set;} = 90;
+    [Parameter]public bool  Indeterminate {get;set;} = false;
+    [Parameter]public OfficeColor Color {get;set;} = OfficeColor.Default;
+    
+}
