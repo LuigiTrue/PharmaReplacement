@@ -1,5 +1,7 @@
 using RepyPharma.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
+using ApexCharts;
+using RepyPharma.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddFluentUIComponents();
+builder.Services.AddApexCharts();
+
+builder.Services.AddScoped<IOrderService, OrderService>();
+
 
 var app = builder.Build();
 

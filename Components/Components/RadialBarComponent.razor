@@ -1,0 +1,76 @@
+@using RepyPharma.Components.Components
+@rendermode InteractiveServer
+@using ApexCharts
+@using System.Runtime.CompilerServices
+@inject IOrderService OrderService
+
+
+@if (Orders is null)
+{
+    <p>Carregando dados...</p>
+}
+else
+{
+    <ApexChart TItem="Order" Height="300" Width="300" Title="@Title" Options="options">
+
+        <ApexPointSeries TItem="Order" Items="Orders" SeriesType="SeriesType.RadialBar" Name="Desconto Médio"
+                         XValue="@(e => e.Country)" YAggregate="@(e => decimal.Round(e.Average(o => o.DiscountPercentage), 2))"
+                         OrderByDescending="e => e.Y" />
+    </ApexChart>
+}
+
+@code {
+
+    [Parameter]
+    public List<Order>? Orders { get; set; }
+    [Parameter] public string? Title { get; set; }
+
+    private ApexChartOptions<Order> options = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Orders = await OrderService.GetOrdersAsync();
+
+        options = new ApexChartOptions<Order>
+        {
+            PlotOptions = new PlotOptions
+            {
+                RadialBar = new PlotOptionsRadialBar
+                {
+                    OffsetY = 0,
+                    StartAngle = 0,
+                    EndAngle = 360,
+                    BarLabels = new RadialBarBarLabels
+                    {
+                        Enabled = false,
+                        OffsetX = -6,
+                        UseSeriesColors = true,
+                        Formatter = @"function(seriesName, opts) {
+                        return seriesName + ': ' + opts.w.globals.series[opts.seriesIndex];
+                    }"
+                    },
+                    DataLabels = new RadialBarDataLabels
+                    {
+                        Show = true,
+                        Name = new RadialBarDataLabelsName
+                        {
+                            FontSize = "1rem"
+                        },
+                        Value = new RadialBarDataLabelsValue
+                        {
+                            FontSize = "0.8rem"
+                        },
+                        Total = new RadialBarDataLabelsTotal
+                        {
+                            Show = true,
+                            Label = "Dipirona",
+                            Formatter = @"function (w) {
+                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                    }"
+                        }
+                    },
+                }
+            }
+        };
+    }
+}
