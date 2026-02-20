@@ -8,24 +8,23 @@ public class OrderService : IOrderService
     {
         var random = new Random();
 
-        var countries = new[]
+        var remedy = new[]
         {
-            "Brasil",
-            "Argentina",
-            "Chile",
-            "Colômbia",
-            "Peru"
+            "Dipirona",
+            "Ondasetrona",
+            "Hiocina + Dipirona",
+            "Tramadol"
         };
 
         var orders = new List<Order>();
 
-        for (int i = 1; i <= 50; i++)
+        for (int i = 0; i < remedy.Length; i++)
         {
             orders.Add(new Order
             {
-                Id = i,
-                Country = countries[random.Next(countries.Length)],
-                DiscountPercentage = random.Next(5, 40),
+                Id = i + 1,
+                RemedyName = remedy[i],
+                PercentageStock = random.Next(5, 40),
                 GrossValue = random.Next(1000, 10000)
             });
         }

@@ -7,17 +7,22 @@
 
 @if (Orders is null)
 {
-    <p>Carregando dados...</p>
+    <ApexChart TItem="Order" Height="300" Width="300">
+        <LoadingRingComponent Indeterminate="true" Quantidade="1"></LoadingRingComponent>
+    </ApexChart>
 }
 else
 {
-    <ApexChart TItem="Order" Height="300" Width="300" Title="@Title" Options="options">
-
-        <ApexPointSeries TItem="Order" Items="Orders" SeriesType="SeriesType.RadialBar" Name="Desconto Médio"
-                         XValue="@(e => e.Country)" YAggregate="@(e => decimal.Round(e.Average(o => o.DiscountPercentage), 2))"
-                         OrderByDescending="e => e.Y" />
-    </ApexChart>
+    @foreach (var order in Orders)
+    {
+        <ApexChart TItem="Order" Height="300" Width="300" Options="BuildOptions(order)">
+            <ApexPointSeries TItem="Order" Items="new List<Order> { order }" SeriesType="SeriesType.RadialBar"
+                             XValue="@(e => e.RemedyName)" YValue="@(e => e.PercentageStock)" />
+        </ApexChart>
+    }
 }
+
+
 
 @code {
 
@@ -25,52 +30,49 @@ else
     public List<Order>? Orders { get; set; }
     [Parameter] public string? Title { get; set; }
 
-    private ApexChartOptions<Order> options = new();
 
-    protected override async Task OnInitializedAsync()
+
+
+    private ApexChartOptions<Order> BuildOptions(Order order)
     {
-        Orders = await OrderService.GetOrdersAsync();
-
-        options = new ApexChartOptions<Order>
+        return new ApexChartOptions<Order>
         {
+            Chart = new Chart
+            {
+                Type = ChartType.RadialBar
+            },
+            Labels = new List<string>
+            {
+                order.RemedyName
+            },
             PlotOptions = new PlotOptions
             {
                 RadialBar = new PlotOptionsRadialBar
                 {
-                    OffsetY = 0,
-                    StartAngle = 0,
-                    EndAngle = 360,
-                    BarLabels = new RadialBarBarLabels
-                    {
-                        Enabled = false,
-                        OffsetX = -6,
-                        UseSeriesColors = true,
-                        Formatter = @"function(seriesName, opts) {
-                        return seriesName + ': ' + opts.w.globals.series[opts.seriesIndex];
-                    }"
-                    },
                     DataLabels = new RadialBarDataLabels
                     {
                         Show = true,
                         Name = new RadialBarDataLabelsName
                         {
+                            Show = true,
                             FontSize = "1rem"
                         },
                         Value = new RadialBarDataLabelsValue
                         {
-                            FontSize = "0.8rem"
-                        },
-                        Total = new RadialBarDataLabelsTotal
-                        {
                             Show = true,
-                            Label = "Dipirona",
-                            Formatter = @"function (w) {
-                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                    }"
+                            FontSize = "0.8rem"
                         }
-                    },
+                    }
                 }
             }
         };
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Simulação de carregamento de dados
+        await Task.Delay(2000);
+        Orders = await OrderService.GetOrdersAsync();
     }
 }

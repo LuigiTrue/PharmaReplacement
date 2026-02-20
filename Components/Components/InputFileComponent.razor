@@ -1,12 +1,6 @@
-<FluentInputFile Id="my-file-uploader"
-                 Mode="InputFileMode.SaveToTemporaryFolder"
-                 Multiple="true"
-                 MaximumFileCount="4"
-                 MaximumFileSize="@(10*1024*1024)"
-                 Accept="image/*"
-                 @bind-ProgressPercent="@ProgressPercent"
-                 OnCompleted="@OnCompletedAsync"
-                 Style="height: 300px;">
+<FluentInputFile Id="my-file-uploader" Mode="InputFileMode.SaveToTemporaryFolder" Multiple="true" MaximumFileCount="4"
+                 MaximumFileSize="@(10*1024*1024)" Accept="image/*" @bind-ProgressPercent="@ProgressPercent"
+                 OnCompleted="@OnCompletedAsync" Style="height: 300px;">
     <ChildContent>
         <label for="my-file-uploader">
             <FluentIcon Value="@(new @Icons.Regular.Size24.ArrowUpload())" />
@@ -46,7 +40,7 @@
 
 @code {
     
-        int ProgressPercent = 0;
+    int ProgressPercent = 0;
     FluentInputFileEventArgs[] Files = Array.Empty<FluentInputFileEventArgs>();
 
     private async Task OnCompletedAsync(IEnumerable<FluentInputFileEventArgs> files)
