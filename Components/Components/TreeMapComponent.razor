@@ -1,0 +1,60 @@
+@inject IOrderService OrderService
+@inject NavigationManager Navigation
+   
+<ApexChart TItem="Order" Height="500" Width="700" Options="ChartOptions" OnDataPointSelection="HandleSelection">
+
+    <ApexPointSeries TItem="Order" Items="Orders" Name="Gross Value" ShowDataLabels="true"
+                     SeriesType="SeriesType.Treemap" XValue="@(e => e.RemedyName)" YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                     PointColor="e => GetPointColor(e)" OrderByDescending="e=>e.Y" />
+
+</ApexChart>
+
+@code {
+    [Parameter] public string? PageName { get; set; }
+    private List<Order>? Orders { get; set; }
+
+    public string GetPointColor(Order order)
+    {
+        return order.Id switch
+        {
+            1 => "#008FFB",
+            2 => "#00E396",
+            3 => "#FEB019",
+            4 => "#775DD0",
+            _ => "#546E7A",
+        };
+    }
+
+    private ApexChartOptions<Order> ChartOptions = new()
+    {
+        Chart = new Chart
+        {
+            Toolbar = new Toolbar
+            {
+                Show = false
+            }
+        }
+    };
+
+    private void HandleSelection(SelectedData<Order> data)
+    {
+        if (Orders is null)
+            return;
+
+        var index = data.DataPointIndex;
+        var pageName = PageName;
+
+        if (index >= 0 && index < Orders.Count)
+        {
+            var selectedOrder = Orders[index];
+
+            Navigation.NavigateTo($"/{pageName}/Dashboard");
+        }
+       
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Orders = await OrderService.GetOrdersAsync();
+    }
+}

@@ -71,8 +71,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //Simulação de carregamento de dados
-        await Task.Delay(2000);
         Orders = await OrderService.GetOrdersAsync();
     }
 }
