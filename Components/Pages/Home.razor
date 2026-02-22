@@ -1,6 +1,9 @@
 ﻿@page "/"
 @using RepyPharma.Components.Components
 @inject IStockService StockService
+@inject IGridColumnService ColumnService
+
+
 
 <PageTitle>Home</PageTitle>
 
@@ -16,22 +19,10 @@
         Data = await StockService.GetStocksAsync();
         _data = Data.AsQueryable();
 
-        Columns = new() {
-            new GridColumnDefinition<Stock>
-            {
-                Property = x => x.StockName,
-                Title = "Nome do Estoque"
-            },
-            new GridColumnDefinition<Stock>
-            {
-                Property = x => x.StockCode,
-                Title = "Código"
-            },
-            new GridColumnDefinition<Stock>
-            {
-                Property = x => x.DangerLevel,
-                Title = "Nível de Risco"
-            }
-        };
+        Columns = ColumnService.Generate<Stock>(
+        x => x.StockName,
+        x => x.StockCode,
+        x => x.DangerLevel
+        );
     }
 }
