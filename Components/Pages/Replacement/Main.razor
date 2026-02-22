@@ -1,0 +1,13 @@
+﻿@page "/Replacement"
+@using Microsoft.FluentUI.AspNetCore.Components.Utilities
+@using RepyPharma.Components.Components
+@rendermode InteractiveServer
+@using ApexCharts
+@inject IOrderService OrderService
+
+@*<InputFileComponent></InputFileComponent>
+
+<LoadingRingComponent Percentage="90" Quantidade="5"></LoadingRingComponent>*@
+<div style="display: flex; flex-direction: row; justify-content: space-around; flex-wrap: wrap; height: 65vh">
+    <TreeMapComponent PageName="Replacement"></TreeMapComponent>
+</div>

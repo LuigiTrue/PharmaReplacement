@@ -1,0 +1,21 @@
+@typeparam TItem
+
+<div class="grid" style="width: 100%; overflow-x:auto;">
+    
+    <FluentDataGrid Items="Items" AutoFit="true">
+
+        @foreach (var column in Columns)
+        {
+            <PropertyColumn Property="column.Property" Title="@column.Title" Sortable="column.Sortable" />
+        }
+
+    </FluentDataGrid>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public IQueryable<TItem> Items { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public List<GridColumnDefinition<TItem>> Columns { get; set; } = new();
+}

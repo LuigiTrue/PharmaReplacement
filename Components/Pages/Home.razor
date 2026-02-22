@@ -1,7 +1,37 @@
 ﻿@page "/"
+@using RepyPharma.Components.Components
+@inject IStockService StockService
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<GridComponent TItem="Stock" Items="_data" Columns="Columns" />
 
-Welcome to your new app.
+@code {
+    private List<Stock>? Data = new();
+    private IQueryable<Stock>? _data;
+    private List<GridColumnDefinition<Stock>> Columns = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Data = await StockService.GetStocksAsync();
+        _data = Data.AsQueryable();
+
+        Columns = new() {
+            new GridColumnDefinition<Stock>
+            {
+                Property = x => x.StockName,
+                Title = "Nome do Estoque"
+            },
+            new GridColumnDefinition<Stock>
+            {
+                Property = x => x.StockCode,
+                Title = "Código"
+            },
+            new GridColumnDefinition<Stock>
+            {
+                Property = x => x.DangerLevel,
+                Title = "Nível de Risco"
+            }
+        };
+    }
+}
