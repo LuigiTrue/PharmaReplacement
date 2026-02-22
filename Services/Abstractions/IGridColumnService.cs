@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using RepyPharma.Components.Components.Models;
+using RepyPharma.ViewModels;
 
 public interface IGridColumnService
 {

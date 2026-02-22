@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-namespace RepyPharma.Components.Components.Models;
+namespace RepyPharma.ViewModels;
 
 public class GridColumnDefinition<T>
 {

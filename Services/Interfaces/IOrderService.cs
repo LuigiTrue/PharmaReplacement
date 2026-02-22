@@ -1,6 +1,6 @@
 using RepyPharma.Models;
 
-namespace RepyPharma.Services;
+namespace RepyPharma.Services.Interfaces;
 
 public interface IOrderService
 {

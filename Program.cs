@@ -1,7 +1,8 @@
 using RepyPharma.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using ApexCharts;
-using RepyPharma.Services;
+using RepyPharma.Services.Implementatios;
+using RepyPharma.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
