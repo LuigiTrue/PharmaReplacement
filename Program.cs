@@ -15,6 +15,8 @@ builder.Services.AddApexCharts();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();
+builder.Services.AddScoped<PdfStorageService>();
+builder.Services.AddScoped<PdfValidationService>();
 
 
 var app = builder.Build();
