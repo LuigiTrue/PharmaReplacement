@@ -1,0 +1,4612 @@
+[
+  {
+    "Code": "600",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "200",
+    "Name": "MGCOMPRIMIDO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MGCOMPRIMIDO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BD-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BD-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "250",
+    "Name": "MG/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BC-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MLBOLSA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SAGAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "MLFRASCO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "UI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "UI/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "120",
+    "Name": "MG/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "120",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "CA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AD-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "200",
+    "Name": "MGFR/ AMP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "EP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "GI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "LBYL",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "820",
+    "Name": "CM X",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "PR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MGFR/AMP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "UI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "UIFRASCOAMPOLA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "UI - INATIVARFRASCOAMPOLA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "UI - INATIVARFRASCOAMPOLA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BUA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "150",
+    "Name": "G/M",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "300",
+    "Name": "MROLO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AT-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AT-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SD",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SD",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "125",
+    "Name": "MGCOMPRIMIDO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "CAT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "CAT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "CAT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCTPAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BZLID",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BZLID",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BZLID",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BZLID",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MGAMP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLBOLSA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "VC",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MG -INATIVARFRASCOAMPOLA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "600",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AA-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AA-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "GCAIXA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "120",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AFJA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AFJA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RTQ",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RUI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RVF",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "TXK",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLSISTEMAFECHADO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "250",
+    "Name": "MLSISTEMAFECHADO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00074",
+    "Name": "UH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MLSISTEMAFECHADO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00074",
+    "Name": "UG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "WVG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "250",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "146",
+    "Name": "UNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MLUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SBSUAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "2000",
+    "Name": "ML C/CORDA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "120",
+    "Name": "CMUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "OP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "UN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "200",
+    "Name": "MLPCT C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "2025",
+    "Name": "PY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "750",
+    "Name": "ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MCG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MCG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "MLBOLSA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MGCOMPRIMIDO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "DS",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "KLADA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SDOUAA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "TE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "TE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "400",
+    "Name": "MLUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "400",
+    "Name": "MLUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "400",
+    "Name": "MLUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00025",
+    "Name": "DIX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00025",
+    "Name": "DIX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00025",
+    "Name": "DIX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00025",
+    "Name": "DIX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SECDAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "10000",
+    "Name": "UN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "229",
+    "Name": "X",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "D-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "D-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "D-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BN-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BN-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BN-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BN-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "ROLO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "UNIDADES",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "UNDROLO C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "UNIDADES",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "UNDROLO C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "UNIDADES",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "UNDROLO C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "UNIDADES",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "UNIDADES",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG- GEN TEUTOCOMPRIMIDO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AY-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AY-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AS-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AS-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "260",
+    "Name": "MMUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "609",
+    "Name": "NUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "2244",
+    "Name": "CMENVELOPE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AW",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AW",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "875",
+    "Name": "CMUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "275",
+    "Name": "CMENVELOPE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "290",
+    "Name": "CMUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AU-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLBOLSA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BF-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "160",
+    "Name": "MG/MLAPROX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "133",
+    "Name": "MLFRASCO C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "300",
+    "Name": "MGCOMPRIMIDO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "GFRASCO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00074",
+    "Name": "UI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "250",
+    "Name": "MLFECHADO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00074",
+    "Name": "UI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00074",
+    "Name": "UI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MLSISTEMAFECHADO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "GOX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "GOW",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "5000",
+    "Name": "CAIXA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "5000",
+    "Name": "UNDCAIXA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "ORC",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "ORC",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "5000",
+    "Name": "UI/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "UI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MGFR C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MGFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "PT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "PT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "PT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BF",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "UI/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BF",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BF",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "MA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "MA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "2000",
+    "Name": "MLUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "KM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "KM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "KM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "DT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "2000",
+    "Name": "MLUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "DT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "2000",
+    "Name": "MLUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "DT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "KM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "KM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "120",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HC",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCLKAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SCLKAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "240",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "240",
+    "Name": "ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "ITLL",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "ITLL",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLBOLSA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BB-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BB-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SOL INJ",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "300",
+    "Name": "MLBOLSA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "LP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SACHAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SACHAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "LP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "LP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "LP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "LP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "LP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "LP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SLTRAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SRI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SRI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SRI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SRI",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "PR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "UN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "TLDIM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "IN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "TECA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLBOLSA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MGFR C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AP-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "200",
+    "Name": "MCG -PROSTOKOS/HEBRON/INFANCOMPRIMIDO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AZ-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AZ-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AB-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLFRASCO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "EG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "EG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MLFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00078",
+    "Name": "UH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "240",
+    "Name": "MROLO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "FOLHAS AMARELOPACOTE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "180",
+    "Name": "G/M",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "180",
+    "Name": "G/M",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "200",
+    "Name": "MG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "ENV",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "PT",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00078",
+    "Name": "UD",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "UI - INATIVARFRASCOAMPOLA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AS",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00024",
+    "Name": "PF",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00024",
+    "Name": "PF",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00024",
+    "Name": "PF",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MGENVELOPEC/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "800",
+    "Name": "ML ERVADOCEUNIDADE",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "110",
+    "Name": "MM X",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "110",
+    "Name": "MM X",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MLSISTEMAFECHADO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "00074",
+    "Name": "UG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "200",
+    "Name": "MGCAPSULA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "L PCT C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "UN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "UNIDADESPCT C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "UN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "UN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "200",
+    "Name": "DOSESFRASCO",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "250",
+    "Name": "ML -VOFLURFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SSFAAA",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "FY",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "MSN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "MSN",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MG/ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "NAW",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MGFR C/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "100",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MGFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "DIP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "DIP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "DIP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "DIP",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "400",
+    "Name": "MGFRASCOC/",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "400",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SLING-IUFS",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SLING-IUFT-I",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "SLING-IUFT-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "OB",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AV-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "COVG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "BM-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "XXXXX",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HZH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HZH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HZH",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "AW-",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "RM",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MGFR",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "500",
+    "Name": "MG",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "1000",
+    "Name": "ML",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  },
+  {
+    "Code": "000",
+    "Name": "HEL - HOSPITAL ESTADUAL DE LUZIANIA -",
+    "Unit": "",
+    "CurrentStock": 0,
+    "Batch": "",
+    "Validity": null,
+    "Quantity": 0,
+    "Manufacturer": ""
+  }
+]

@@ -1,10 +1,11 @@
 @using Microsoft.FluentUI.AspNetCore.Components
 @using Icons = Microsoft.FluentUI.AspNetCore.Components.Icons
+@inject PdfParserService Parser
 @inject PdfValidationService Validator
 @inject PdfStorageService Storage
 
-<FluentInputFile Id="my-file-uploader" Mode="InputFileMode.SaveToTemporaryFolder" Multiple="true" MaximumFileCount="4"
-                 MaximumFileSize="@(10*1024*1024)" Accept="image/*" @bind-ProgressPercent="@ProgressPercent"
+<FluentInputFile Id="my-file-uploader" Mode="InputFileMode.SaveToTemporaryFolder" Multiple="false" MaximumFileCount="1"
+                 MaximumFileSize="@(10*1024*1024)" Accept=".pdf" @bind-ProgressPercent="@ProgressPercent"
                  OnCompleted="@OnCompletedAsync" Style="height: 300px;">
     <ChildContent>
         <label for="my-file-uploader">
@@ -50,16 +51,18 @@
 
     private async Task OnCompletedAsync(IEnumerable<FluentInputFileEventArgs> files)
     {
-        Files = files.ToArray();
+        var file = files.First();
 
-        // For the demo, delete these files.
-        foreach (var file in Files)
+        var text = Parser.ExtractText(file.LocalFile.FullName);
+
+        if (!Validator.IsValidHospitalStockPdf(text))
         {
-            file.LocalFile?.Delete();
+            throw new Exception("Este arquivo não é um relatório de estoque válido.");
         }
 
-        // Wait 3 seconds before to reset the progress bar.
-        await Task.Delay(3000);
-        ProgressPercent = 0;
+        // aqui virá o parser real
+        var produtos = Parser.Parse(text);
+
+        await Storage.SaveAsync(produtos);
     }
 }

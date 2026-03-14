@@ -2,7 +2,17 @@ using System.Text.Json;
 
 public class PdfStorageService
 {
-    private readonly string path = "storage/estoque.json";
+    private readonly string _path;
+
+    public PdfStorageService(IWebHostEnvironment env)
+    {
+        var folder = Path.Combine(env.ContentRootPath, "storage");
+
+        if (!Directory.Exists(folder))
+            Directory.CreateDirectory(folder);
+
+        _path = Path.Combine(folder, "estoque.json");
+    }
 
     public async Task SaveAsync(List<ProductStock> produtos)
     {
@@ -11,6 +21,6 @@ public class PdfStorageService
             WriteIndented = true
         });
 
-        await File.WriteAllTextAsync(path, json);
+        await File.WriteAllTextAsync(_path, json);
     }
 }
