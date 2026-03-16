@@ -60,9 +60,13 @@
             throw new Exception("Este arquivo não é um relatório de estoque válido.");
         }
 
-        // aqui virá o parser real
-        var produtos = Parser.Parse(text);
+        var rawLines = Parser.ExtractLines(file.LocalFile.FullName);
+
+        var productLines = Parser.BuildProductLines(rawLines);
+
+        var produtos = Parser.ParseProducts(productLines);
 
         await Storage.SaveAsync(produtos);
     }
+
 }
