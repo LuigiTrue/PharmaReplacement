@@ -1,334 +1,267 @@
 using UglyToad.PdfPig;
+using UglyToad.PdfPig.Content;
 using System.Text.RegularExpressions;
 
 public class PdfParserService
 {
+    private const double CodeMinX = 15.5;
+    private const double CodeMaxX = 52.0;
+    private const double NameMinX = 52.0;
+    private const double NameMaxX = 155.0;
+    private const double UnitMinX = 155.0;
+    private const double UnitMaxX = 215.0;
+    private const double StockMinX = 215.0;
+    private const double StockMaxX = 272.0;
+    private const double BatchMinX = 272.0;
+    private const double BatchMaxX = 312.0;
+    private const double ValidityMinX = 312.0;
+    private const double ValidityMaxX = 360.0;
+    private const double LocationMinX = 360.0;
+    private const double LocationMaxX = 400.0;
+    private const double QuantityMinX = 460.0;
+    private const double QuantityMaxX = 520.0;
+
+    private const double MaxLineContinuationGap = 15.0;
+
     public string ExtractText(string filePath)
     {
         using var document = PdfDocument.Open(filePath);
-
         var text = "";
-
         foreach (var page in document.GetPages())
-        {
             text += page.Text;
-        }
-
         return text;
     }
 
-    public List<string> ExtractLines(string path)
+    public List<ProductStock> ParseProducts(string path)
     {
-        var lines = new List<string>();
+        var products = new List<ProductStock>();
+        string lastCode = "";
+        int lastIndex = -1;
 
         using var document = PdfDocument.Open(path);
+        var pages = document.GetPages().ToList();
 
-        foreach (var page in document.GetPages())
+        for (int p = 0; p < pages.Count; p++)
         {
-            var words = page.GetWords()
-                .OrderByDescending(w => w.BoundingBox.Bottom)
-                .ThenBy(w => w.BoundingBox.Left)
-                .ToList();
+            var page = pages[p];
+            var allWords = page.GetWords().ToList();
+            var productLines = GetProductLines(allWords);
 
-            double currentY = -1;
-            string currentLine = "";
-
-            foreach (var word in words)
+            foreach (var line in productLines)
             {
-                if (currentY == -1)
-                    currentY = word.BoundingBox.Bottom;
+                double yAtual = line.Key;
+                string codigo = line.Value;
 
-                if (Math.Abs(word.BoundingBox.Bottom - currentY) > 2)
+                var nome = ExtractFieldWithContinuation(allWords, yAtual, NameMinX, NameMaxX);
+                var unidade = ExtractFieldWithContinuation(allWords, yAtual, UnitMinX, UnitMaxX);
+                var estoque = ExtractTotalStock(allWords, yAtual);
+                var lotes = ExtractBatches(allWords, yAtual);
+
+                if (codigo == lastCode && lastIndex >= 0)
                 {
-                    lines.Add(currentLine);
-                    currentLine = "";
-                    currentY = word.BoundingBox.Bottom;
+                    MergeWithPrevious(products[lastIndex], nome, unidade, lotes);
+                    continue;
                 }
 
-                currentLine += word.Text + " ";
-            }
+                if (string.IsNullOrWhiteSpace(nome))
+                    continue;
 
-            if (!string.IsNullOrWhiteSpace(currentLine))
-                lines.Add(currentLine);
+                var produto = new ProductStock
+                {
+                    Code = codigo,
+                    Name = nome,
+                    Unit = unidade,
+                    TotalStock = estoque,
+                    Batches = lotes
+                };
+
+                products.Add(produto);
+                lastCode = codigo;
+                lastIndex = products.Count - 1;
+            }
         }
 
-        return lines;
+        return products;
     }
 
-    public List<string> BuildProductLines(List<string> rawLines)
+    private List<KeyValuePair<double, string>> GetProductLines(List<Word> allWords)
     {
-        var result = new List<string>();
+        return allWords
+            .Where(w => w.BoundingBox.Left >= CodeMinX
+                     && w.BoundingBox.Left < CodeMaxX
+                     && Regex.IsMatch(w.Text, @"^\d{3,6}$"))
+            .GroupBy(w => Math.Round(w.BoundingBox.Bottom, 0))
+            .OrderByDescending(g => g.Key)
+            .Select(g => new KeyValuePair<double, string>(
+                g.Key,
+                g.OrderBy(w => w.BoundingBox.Left).First().Text.Trim()))
+            .ToList();
+    }
 
-        // Código real: número seguido de letra (início do nome do produto)
-        // Exclui linhas onde o número é seguido diretamente de uma data (= lote)
-        var productStart = new Regex(@"^\d{3,5}\s+[A-ZÀ-Ú]");
+    private string ExtractFieldWithContinuation(
+        List<Word> allWords, double yAtual, double minX, double maxX)
+    {
+        var wordsInColumn = allWords
+            .Where(w => w.BoundingBox.Left >= minX && w.BoundingBox.Left < maxX)
+            .ToList();
 
-        string current = null;
+        var wordsCode = allWords
+            .Where(w => w.BoundingBox.Left >= CodeMinX && w.BoundingBox.Left < CodeMaxX)
+            .ToList();
 
-        foreach (var line in rawLines)
+        var texto = ExtractLineText(wordsInColumn, yAtual);
+
+        var linhasAbaixo = wordsInColumn
+            .GroupBy(w => Math.Round(w.BoundingBox.Bottom, 0))
+            .Where(g => g.Key < yAtual)
+            .OrderByDescending(g => g.Key)
+            .ToList();
+
+        double yRef = yAtual;
+        foreach (var linha in linhasAbaixo)
         {
-            var clean = line.Trim();
+            double yProximo = linha.Key;
 
-            if (string.IsNullOrWhiteSpace(clean))
+            if (Math.Abs(yRef - yProximo) > MaxLineContinuationGap)
+                break;
+
+            bool temCodigo = wordsCode
+                .Any(w => Math.Round(w.BoundingBox.Bottom, 0) == yProximo
+                       && Regex.IsMatch(w.Text, @"^\d{3,6}$"));
+
+            if (temCodigo)
+                break;
+
+            var continuacao = ExtractLineText(wordsInColumn, yProximo);
+            if (!string.IsNullOrWhiteSpace(continuacao))
+                texto += " " + continuacao;
+
+            yRef = yProximo;
+        }
+
+        return texto.Trim();
+    }
+
+    private decimal ExtractTotalStock(List<Word> allWords, double yAtual)
+    {
+        var texto = ExtractLineText(allWords
+            .Where(w => w.BoundingBox.Left >= StockMinX && w.BoundingBox.Left < StockMaxX)
+            .ToList(), yAtual);
+
+        return ParseDecimal(texto);
+    }
+
+    private List<BatchStock> ExtractBatches(List<Word> allWords, double yAtual)
+    {
+        var batches = new List<BatchStock>();
+
+        var wordsBatch = allWords.Where(w => w.BoundingBox.Left >= BatchMinX && w.BoundingBox.Left < BatchMaxX).ToList();
+        var wordsValidity = allWords.Where(w => w.BoundingBox.Left >= ValidityMinX && w.BoundingBox.Left < ValidityMaxX).ToList();
+        var wordsLocation = allWords.Where(w => w.BoundingBox.Left >= LocationMinX && w.BoundingBox.Left < LocationMaxX).ToList();
+        var wordsQuantity = allWords.Where(w => w.BoundingBox.Left >= QuantityMinX && w.BoundingBox.Left < QuantityMaxX).ToList();
+        var wordsCode = allWords.Where(w => w.BoundingBox.Left >= CodeMinX && w.BoundingBox.Left < CodeMaxX).ToList();
+
+        var linhasLote = wordsBatch
+            .GroupBy(w => Math.Round(w.BoundingBox.Bottom, 0))
+            .Where(g => g.Key <= yAtual)
+            .OrderByDescending(g => g.Key)
+            .ToList();
+
+        foreach (var linhaLote in linhasLote)
+        {
+            double yLote = linhaLote.Key;
+
+            if (yLote < yAtual)
+            {
+                bool temCodigo = wordsCode
+                    .Any(w => Math.Round(w.BoundingBox.Bottom, 0) == yLote
+                           && Regex.IsMatch(w.Text, @"^\d{3,6}$"));
+
+                if (temCodigo)
+                    break;
+            }
+
+            var textoLote = ExtractLineText(wordsBatch, yLote);
+            if (string.IsNullOrWhiteSpace(textoLote))
                 continue;
 
-            if (productStart.IsMatch(clean))
-            {
-                if (current != null)
-                    result.Add(current);
+            var validade = ParseDate(ExtractLineText(wordsValidity, yLote));
+            var locationId = ExtractLineText(wordsLocation, yLote);
+            var quantidade = ParseDecimal(ExtractLineText(wordsQuantity, yLote));
 
-                current = clean;
+            var batchExistente = batches.FirstOrDefault(b => b.Batch == textoLote);
+
+            if (batchExistente != null)
+            {
+                batchExistente.Locations.Add(new StockLocation
+                {
+                    LocationId = locationId,
+                    Quantity = quantidade
+                });
             }
             else
             {
-                if (current != null)
-                    current += " " + clean;
-            }
-        }
-
-        if (current != null)
-            result.Add(current);
-
-        return result;
-    }
-
-    public List<ProductStock> ParseProducts(List<string> lines)
-    {
-        var produtos = new List<ProductStock>();
-
-        foreach (var line in lines)
-        {
-            var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-            if (parts.Length < 3)
-                continue;
-
-            if (!int.TryParse(parts[0], out _))
-                continue;
-
-            var produto = new ProductStock
-            {
-                Code = parts[0],
-                Name = ExtractProductName(line),
-                Unit = ExtractUnit(line),
-                CurrentStock = ExtractCurrentStock(line),
-                Batch = ExtractBatch(line),
-                Validity = ExtractValidity(line),
-                Quantity = ExtractQuantity(line),
-                Manufacturer = ExtractManufacturer(line)
-            };
-
-            produtos.Add(produto);
-        }
-
-        return produtos;
-    }
-
-    private string ExtractProductName(string line)
-    {
-        line = RemovePageHeader(line);
-
-        var tokens = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-        if (tokens.Length < 3)
-            return "";
-
-        var stockPattern = new Regex(@"^\d{1,3}(\.\d{3})*,\d{3}$");
-
-        // Padrão que marca fim de um lote: [estoque_id] 0,000 [quantidade]
-        // Estoque ID: 996, 997, 998, 999, 1059
-        var stockIdPattern = new Regex(@"^(996|997|998|999|1059)$");
-
-        // 1. Encontra o índice do estoque atual (primeiro número decimal da linha)
-        int currentStockIndex = -1;
-        for (int i = 1; i < tokens.Length; i++)
-        {
-            if (stockPattern.IsMatch(tokens[i]))
-            {
-                currentStockIndex = i;
-                break;
-            }
-        }
-
-        if (currentStockIndex == -1)
-            return "";
-
-        // Tokens entre código e estoque atual = "ACETILCISTEINA ENVELOPE"
-        var part1Tokens = tokens.Skip(1).Take(currentStockIndex - 1).ToList();
-
-        // 2. Encontra nome_parte2: busca padrão [stockId] [0,000] [quantidade] após o estoque atual
-        // e captura tudo que vier depois da quantidade
-        string part2 = "";
-
-        for (int i = currentStockIndex + 1; i < tokens.Length - 2; i++)
-        {
-            if (stockIdPattern.IsMatch(tokens[i])
-                && tokens[i + 1] == "0,000"
-                && stockPattern.IsMatch(tokens[i + 2]))
-            {
-                // Tudo após tokens[i+2] até o próximo lote (ou fim) é nome_parte2
-                int nameStart = i + 3;
-                var part2Tokens = new List<string>();
-
-                for (int j = nameStart; j < tokens.Length; j++)
+                batches.Add(new BatchStock
                 {
-                    // Para se encontrar outro lote iniciando
-                    // (lote é seguido de data dd/MM/yyyy)
-                    if (j + 1 < tokens.Length
-                        && Regex.IsMatch(tokens[j + 1], @"^\d{2}/\d{2}/\d{4}$"))
-                        break;
-
-                    // Para se encontrar outro stockId iniciando sequência de lote
-                    if (stockIdPattern.IsMatch(tokens[j])
-                        && j + 1 < tokens.Length
-                        && tokens[j + 1] == "0,000")
-                        break;
-
-                    part2Tokens.Add(tokens[j]);
-                }
-
-                part2 = string.Join(" ", part2Tokens).Trim();
-                break;
+                    Batch = textoLote,
+                    Validity = validade,
+                    Locations = new List<StockLocation>
+                    {
+                        new StockLocation
+                        {
+                            LocationId = locationId,
+                            Quantity   = quantidade
+                        }
+                    }
+                });
             }
         }
 
-        // 3. Remove a unidade do final de part1 para obter o nome limpo
-        var units = new HashSet<string>
+        return batches;
+    }
+
+    private void MergeWithPrevious(
+        ProductStock produto, string nome, string unidade, List<BatchStock> lotes)
     {
-        "UNIDADE", "AMP", "ENVELOPE", "FR", "COMP", "COMPRIMI", "BOLSA", "FRASCO"
-    };
+        if (!string.IsNullOrWhiteSpace(nome))
+            produto.Name = (produto.Name + " " + nome).Trim();
 
-        // Remove tokens do final de part1 que sejam unidade ou detalhe de apresentação
-        var dosePattern = new Regex(@"^\d+(\.\d+)?(MG|ML|G|UI|MCG|MG/ML).*$",
-                                    RegexOptions.IgnoreCase);
+        if (!string.IsNullOrWhiteSpace(unidade))
+            produto.Unit = (produto.Unit + " " + unidade).Trim();
 
-        while (part1Tokens.Count > 0
-               && (units.Contains(part1Tokens.Last())
-                   || dosePattern.IsMatch(part1Tokens.Last())))
+        foreach (var lote in lotes)
         {
-            part1Tokens.RemoveAt(part1Tokens.Count - 1);
+            var existente = produto.Batches.FirstOrDefault(b => b.Batch == lote.Batch);
+            if (existente != null)
+                existente.Locations.AddRange(lote.Locations);
+            else
+                produto.Batches.Add(lote);
         }
-
-        var part1 = string.Join(" ", part1Tokens).Trim();
-
-        // 4. Concatena as duas partes
-        return string.IsNullOrEmpty(part2)
-            ? part1
-            : $"{part1} {part2}".Trim();
     }
 
-    private string ExtractUnit(string line)
+    private string ExtractLineText(List<Word> words, double y)
     {
-        var units = new[]
-        {
-        "UNIDADE","AMP","ENVELOPE","FR","COMP","COMPRIMI","BOLSA"
-    };
-
-        foreach (var unit in units)
-        {
-            if (line.Contains($" {unit} "))
-                return unit;
-        }
-
-        return "";
+        return string.Join(" ", words
+            .Where(w => Math.Round(w.BoundingBox.Bottom, 0) == y)
+            .OrderBy(w => w.BoundingBox.Left)
+            .Select(w => w.Text));
     }
 
-    private decimal ExtractCurrentStock(string line)
+    private decimal ParseDecimal(string? value)
     {
-        var match = Regex.Match(line, @"\b\d{1,3}(\.\d{3})*,\d{3}\b");
-
-        if (!match.Success)
-            return 0;
-
-        return ParseDecimal(match.Value);
-    }
-
-    private string ExtractBatch(string line)
-    {
-        var tokens = line.Split(' ');
-
-        for (int i = 0; i < tokens.Length - 1; i++)
-        {
-            if (Regex.IsMatch(tokens[i + 1], @"\d{2}/\d{2}/\d{4}"))
-                return tokens[i];
-        }
-
-        return "";
-    }
-
-    private DateTime? ExtractValidity(string line)
-    {
-        var match = Regex.Match(line, @"\d{2}/\d{2}/\d{4}");
-
-        if (!match.Success)
-            return null;
-
-        if (DateTime.TryParse(match.Value, out var date))
-            return date;
-
-        return null;
-    }
-
-    private decimal ExtractQuantity(string line)
-    {
-        var match = Regex.Match(line, @"0,000\s+(\d{1,3}(\.\d{3})*,\d{3})");
-
-        if (!match.Success)
-            return 0;
-
-        return ParseDecimal(match.Groups[1].Value);
-    }
-
-    private string ExtractManufacturer(string line)
-    {
-        var tokens = line.Split(' ');
-
-        foreach (var token in tokens)
-        {
-            if (token.Contains("/"))
-                return token;
-        }
-
-        return "";
-    }
-
-    private decimal ParseDecimal(string value)
-    {
+        if (string.IsNullOrWhiteSpace(value)) return 0;
         value = value.Replace(".", "").Replace(",", ".");
-
-        if (decimal.TryParse(value,
+        return decimal.TryParse(value,
             System.Globalization.NumberStyles.Any,
             System.Globalization.CultureInfo.InvariantCulture,
-            out var result))
-            return result;
-
-        return 0;
+            out var result) ? result : 0;
     }
 
-    private string RemovePageHeader(string text)
+    private DateTime? ParseDate(string? value)
     {
-        // Remove tudo a partir de qualquer marcador conhecido do cabeçalho
-        var headerMarkers = new[]
-        {
-        @"HEL\s*-\s*HOSPITAL ESTADUAL",
-        @"SOULMV\s*-\s*Sistema de Gerenciamento",
-        @"Relat[oó]rio de Confer[eê]ncia",
-        @"P[aá]gina:\s*\d+\s*/\s*\d+",
-        @"Emitido por:\s*\w+"
-    };
-
-        foreach (var marker in headerMarkers)
-        {
-            var match = Regex.Match(text, marker, RegexOptions.IgnoreCase);
-            if (match.Success)
-            {
-                // Descarta tudo a partir do marcador
-                text = text[..match.Index].Trim();
-                break;
-            }
-        }
-
-        return text;
+        if (string.IsNullOrWhiteSpace(value)) return null;
+        var match = Regex.Match(value, @"\d{2}/\d{2}/\d{4}");
+        if (!match.Success) return null;
+        return DateTime.TryParse(match.Value, out var date) ? date : null;
     }
-
 }

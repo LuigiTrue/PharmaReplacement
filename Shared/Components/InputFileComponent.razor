@@ -52,21 +52,13 @@
     private async Task OnCompletedAsync(IEnumerable<FluentInputFileEventArgs> files)
     {
         var file = files.First();
-
         var text = Parser.ExtractText(file.LocalFile.FullName);
 
         if (!Validator.IsValidHospitalStockPdf(text))
-        {
             throw new Exception("Este arquivo não é um relatório de estoque válido.");
-        }
 
-        var rawLines = Parser.ExtractLines(file.LocalFile.FullName);
-
-        var productLines = Parser.BuildProductLines(rawLines);
-
-        var produtos = Parser.ParseProducts(productLines);
+        var produtos = Parser.ParseProducts(file.LocalFile.FullName);
 
         await Storage.SaveAsync(produtos);
     }
-
 }
