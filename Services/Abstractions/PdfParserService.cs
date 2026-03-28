@@ -9,15 +9,15 @@ public class PdfParserService
     private const double NameMinX = 52.0;
     private const double NameMaxX = 155.0;
     private const double UnitMinX = 155.0;
-    private const double UnitMaxX = 215.0;
-    private const double StockMinX = 215.0;
-    private const double StockMaxX = 272.0;
-    private const double BatchMinX = 272.0;
-    private const double BatchMaxX = 312.0;
-    private const double ValidityMinX = 312.0;
-    private const double ValidityMaxX = 360.0;
-    private const double LocationMinX = 360.0;
-    private const double LocationMaxX = 400.0;
+    private const double UnitMaxX = 212.0;
+    private const double StockMinX = 213.0;
+    private const double StockMaxX = 256.0;
+    private const double BatchMinX = 256.0;
+    private const double BatchMaxX = 311.0;
+    private const double ValidityMinX = 311.2;
+    private const double ValidityMaxX = 358.0;
+    private const double LocationMinX = 356.1;
+    private const double LocationMaxX = 387.0;
     private const double QuantityMinX = 460.0;
     private const double QuantityMaxX = 520.0;
 
@@ -182,12 +182,13 @@ public class PdfParserService
             }
 
             var textoLote = ExtractLineText(wordsBatch, yLote);
-            if (string.IsNullOrWhiteSpace(textoLote))
-                continue;
-
             var validade = ParseDate(ExtractLineText(wordsValidity, yLote));
             var locationId = ExtractLineText(wordsLocation, yLote);
             var quantidade = ParseDecimal(ExtractLineText(wordsQuantity, yLote));
+
+
+            if (!IsValidBatch(textoLote))
+                continue;
 
             var batchExistente = batches.FirstOrDefault(b => b.Batch == textoLote);
 
@@ -218,6 +219,14 @@ public class PdfParserService
         }
 
         return batches;
+    }
+
+    private bool IsValidBatch(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return false;
+
+        return Regex.IsMatch(value, @"^[A-Z0-9\-/\.]+$", RegexOptions.IgnoreCase)
+            && value.Any(char.IsDigit) && value != "DE LUZIANIA";
     }
 
     private void MergeWithPrevious(
@@ -260,8 +269,15 @@ public class PdfParserService
     private DateTime? ParseDate(string? value)
     {
         if (string.IsNullOrWhiteSpace(value)) return null;
+
         var match = Regex.Match(value, @"\d{2}/\d{2}/\d{4}");
         if (!match.Success) return null;
-        return DateTime.TryParse(match.Value, out var date) ? date : null;
+
+        return DateTime.TryParseExact(
+            match.Value,
+            "dd/MM/yyyy",
+            System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.None,
+            out var date) ? date : null;
     }
 }
