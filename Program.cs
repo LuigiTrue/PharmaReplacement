@@ -12,8 +12,15 @@ builder.Services.AddRazorComponents()
 builder.Services.AddFluentUIComponents();
 builder.Services.AddApexCharts();
 
+
+//Services
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductStockService, ProductStockService>();
+builder.Services.AddScoped<IStockJsonService, StockJsonService>();
+builder.Services.AddScoped<IMinimumStockService, MinimumStockService>();
+builder.Services.AddScoped<IReplenishmentService, ReplenishmentService>();
+
+//Abstractions 
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();
 builder.Services.AddScoped<PdfStorageService>();
 builder.Services.AddScoped<PdfValidationService>();
