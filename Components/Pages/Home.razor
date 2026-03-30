@@ -1,27 +1,27 @@
 ﻿@page "/"
-@inject IStockService StockService
+@inject IProductStockService ProductStockService
 @inject IGridColumnService ColumnService
 
 
 
 <PageTitle>Home</PageTitle>
 
-<GridComponent TItem="Stock" Items="_data" Columns="Columns" />
+<GridComponent TItem="ProductStock" Items="_data" Columns="Columns" />
 
 @code {
-    private List<Stock>? Data = new();
-    private IQueryable<Stock>? _data;
-    private List<GridColumnDefinition<Stock>> Columns = new();
+    private List<ProductStock>? Data = new();
+    private IQueryable<ProductStock>? _data;
+    private List<GridColumnDefinition<ProductStock>> Columns = new();
 
     protected override async Task OnInitializedAsync()
     {
-        Data = await StockService.GetStocksAsync();
+        Data = await ProductStockService.GetProductStocksAsync();
         _data = Data.AsQueryable();
 
-        Columns = ColumnService.Generate<Stock>(
-        x => x.StockName,
-        x => x.StockCode,
-        x => x.DangerLevel
+        Columns = ColumnService.Generate<ProductStock>(
+        x => x.Name,
+        x => x.Unit,
+        x => x.TotalStock
         );
     }
 }
