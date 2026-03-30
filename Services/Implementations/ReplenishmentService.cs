@@ -7,6 +7,7 @@ public class ReplenishmentService : IReplenishmentService
 {
     private readonly IStockJsonService _stockService;
     private readonly IMinimumStockService _minimumStockService;
+    private static readonly string[] ReplenishmentSources = { "1059", "999", "996" };
 
     // Threshold para Warning: estoque está até X% acima do mínimo
     private const decimal WarningThresholdPercent = 0.20m;
@@ -30,13 +31,14 @@ public class ReplenishmentService : IReplenishmentService
 
         foreach (var product in products)
         {
-            // Ignora produtos sem mínimo cadastrado
             if (!minimumMap.TryGetValue(product.Code, out var minimum))
                 continue;
 
-            var priority = CalculatePriority(product.TotalStock, minimum.MinimumQuantity);
+            // ✅ Usa apenas o estoque da farmácia central (997)
+            var stockAt997 = GetStockAtLocation(product, "997");
 
-            // Apenas Critical e Warning entram no relatório
+            var priority = CalculatePriority(stockAt997, minimum.MinimumQuantity);
+
             if (priority == ReplenishmentPriority.Ok)
                 continue;
 
@@ -47,19 +49,20 @@ public class ReplenishmentService : IReplenishmentService
                 Code = product.Code,
                 Name = product.Name,
                 Unit = product.Unit,
-                CurrentStock = product.TotalStock,
+                CurrentStock = stockAt997, // ✅ Exibe o estoque da farmácia, não o total
                 MinimumQuantity = minimum.MinimumQuantity,
-                MissingQuantity = Math.Max(0, minimum.MinimumQuantity - product.TotalStock),
+                MissingQuantity = Math.Max(0, minimum.MinimumQuantity - stockAt997),
                 Priority = priority,
+                ItemPriority = minimum.itemPriority,
                 RecommendedBatch = recommendedBatch
             });
         }
 
-        // Críticos primeiro, depois Warning. Dentro de cada grupo, ordena por nome
         return result
-            .OrderBy(r => r.Priority)
-            .ThenBy(r => r.Name)
-            .ToList();
+                .OrderBy(r => r.ItemPriority)   // UltraHigh(0) → High(1) → Moderate(2) → Low(3)
+                .ThenBy(r => r.Priority)        // Dentro de cada grupo, Critical antes de Warning
+                .ThenBy(r => r.Name)            // Depois alfabético
+                .ToList();
     }
 
     private ReplenishmentPriority CalculatePriority(decimal currentStock, decimal minimumQuantity)
@@ -77,11 +80,24 @@ public class ReplenishmentService : IReplenishmentService
 
     private BatchStock? SelectBatch(List<BatchStock> batches)
     {
-        // FEFO: seleciona o lote com menor validade (mais próximo do vencimento)
-        // Lotes sem validade ficam por último
         return batches
-            .Where(b => b.Locations.Sum(l => l.Quantity) > 0)
+            .Where(b => IsAvailableForReplenishment(b))
             .OrderBy(b => b.Validity ?? DateTime.MaxValue)
             .FirstOrDefault();
+    }
+
+    private bool IsAvailableForReplenishment(BatchStock batch)
+    {
+        // O lote precisa ter quantidade disponível em pelo menos um dos locais de origem
+        return batch.Locations
+            .Any(l => ReplenishmentSources.Contains(l.LocationId) && l.Quantity > 0);
+    }
+
+    private decimal GetStockAtLocation(ProductStock product, string locationId)
+    {
+        return product.Batches
+            .SelectMany(b => b.Locations)
+            .Where(l => l.LocationId == locationId)
+            .Sum(l => l.Quantity);
     }
 }

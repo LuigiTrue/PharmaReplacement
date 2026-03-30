@@ -1,0 +1,72 @@
+@page "/reposicao"
+@inject IReplenishmentService ReplenishmentService
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<PageTitle>Reposição</PageTitle>
+
+<h3>Relatório de Reposição</h3>
+
+@if (_loading)
+{
+    <p>Carregando...</p>
+}
+else if (!_items.Any())
+{
+    <p>Nenhum item necessita de reposição no momento.</p>
+}
+else
+{
+    <FluentDataGrid Items="_items" AutoFit="true">
+
+        <PropertyColumn Property="@(x => x.Code)" Title="Código" Sortable="true" />
+        <PropertyColumn Property="@(x => x.Name)" Title="Nome" Sortable="true" />
+        <PropertyColumn Property="@(x => x.CurrentStock)" Title="Estoque Atual" Sortable="true" />
+        <PropertyColumn Property="@(x => x.MissingQuantity)" Title="Qtd. Faltante" Sortable="true" />
+
+        <TemplateColumn Title="Lote Recomendado">
+            <ChildContent>
+                @if (context.RecommendedBatch is not null)
+                {
+                    <span>@context.RecommendedBatch.Batch</span>
+                    @if (context.RecommendedBatch.Validity.HasValue)
+                    {
+                        <small style="margin-left: 8px; color: gray;">
+                            Val: @context.RecommendedBatch.Validity.Value.ToString("MM/yyyy")
+                        </small>
+                    }
+                }
+                else
+                {
+                    <span style="color: red;">Sem estoque</span>
+                }
+            </ChildContent>
+        </TemplateColumn>
+
+        <TemplateColumn Title="Prioridade" Sortable="true">
+            <ChildContent>
+                @{
+                    var (label, color) = context.Priority switch
+                    {
+                        ReplenishmentPriority.Critical => ("Crítico", "#c0392b"),
+                        ReplenishmentPriority.Warning => ("Atenção", "#e67e22"),
+                        _ => ("Ok", "#27ae60")
+                    };
+                }
+                <span style="color: @color; font-weight: bold;">@label</span>
+            </ChildContent>
+        </TemplateColumn>
+
+    </FluentDataGrid>
+}
+
+@code {
+    private IQueryable<ReplenishmentItem> _items = Enumerable.Empty<ReplenishmentItem>().AsQueryable();
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await ReplenishmentService.GenerateAsync();
+        _items = result.AsQueryable();
+        _loading = false;
+    }
+}

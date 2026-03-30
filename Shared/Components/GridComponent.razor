@@ -3,12 +3,16 @@
 @typeparam TItem
 
 <div class="grid" style="width: 100%; overflow-x:auto;">
-    
+
     <FluentDataGrid Items="Items" AutoFit="true">
 
         @foreach (var column in Columns)
         {
-            <PropertyColumn Property="column.Property" Title="@column.Title" Sortable="column.Sortable" />
+            <TemplateColumn Title="@column.Title" Sortable="column.Sortable">
+                <ChildContent>
+                    @column.Property.Compile()(context)
+                </ChildContent>
+            </TemplateColumn>
         }
 
     </FluentDataGrid>

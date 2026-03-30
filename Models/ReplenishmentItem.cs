@@ -7,5 +7,6 @@ public class ReplenishmentItem
     public decimal MinimumQuantity { get; set; }
     public decimal MissingQuantity { get; set; }
     public ReplenishmentPriority Priority { get; set; }
+    public ItemPriority ItemPriority { get; set; }
     public BatchStock? RecommendedBatch { get; set; } // Lote sugerido pelo FEFO
 }

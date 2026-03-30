@@ -1,27 +1,29 @@
 ﻿@page "/"
-@inject IProductStockService ProductStockService
-@inject IGridColumnService ColumnService
-
-
+@inject IStockJsonService ProductStockService
+@using Microsoft.FluentUI.AspNetCore.Components
 
 <PageTitle>Home</PageTitle>
 
-<GridComponent TItem="ProductStock" Items="_data" Columns="Columns" />
+@if (_data is null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <FluentDataGrid Items="_data" AutoFit="true">
+        <PropertyColumn Property="@(x => x.Code)" Title="Código" />
+        <PropertyColumn Property="@(x => x.Name)" Title="Nome" />
+        <PropertyColumn Property="@(x => x.Unit)" Title="Unidade" />
+        <PropertyColumn Property="@(x => x.TotalStock)" Title="Quantidade" />
+    </FluentDataGrid>
+}
 
 @code {
-    private List<ProductStock>? Data = new();
     private IQueryable<ProductStock>? _data;
-    private List<GridColumnDefinition<ProductStock>> Columns = new();
 
     protected override async Task OnInitializedAsync()
     {
-        Data = await ProductStockService.GetProductStocksAsync();
-        _data = Data.AsQueryable();
-
-        Columns = ColumnService.Generate<ProductStock>(
-        x => x.Name,
-        x => x.Unit,
-        x => x.TotalStock
-        );
+        var data = await ProductStockService.GetAllAsync();
+        _data = data.AsQueryable();
     }
 }
