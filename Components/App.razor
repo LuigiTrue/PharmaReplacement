@@ -10,15 +10,19 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="RepyPharma.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-   <HeadOutlet />
+    <link rel="stylesheet" href="_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" />
+    <HeadOutlet  @rendermode="InteractiveServer"/>
 
 
 </head>
 
 <body>
-    <Routes />
+    <Routes  @rendermode="InteractiveServer"/>
+    <FluentDialogProvider  @rendermode="InteractiveServer"/>
     <script src="_framework/blazor.web.js"></script>
-    <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
+    <script
+    src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js"
+    type="module" async></script>
     <script src="_content/Blazor-ApexCharts/js/apexcharts.blazor.js"></script>
 </body>
 

@@ -1,0 +1,34 @@
+@using Microsoft.FluentUI.AspNetCore.Components
+@implements IDialogContentComponent<string>
+<FluentDialogBody>
+    <p>@Content</p>
+</FluentDialogBody>
+
+<FluentDialogFooter>
+    <FluentButton Appearance="Appearance.Neutral" OnClick="@CancelarAsync">
+        Cancelar
+    </FluentButton>
+    <FluentButton Appearance="Appearance.Accent" OnClick="@ConfirmarAsync">
+        Confirmar
+    </FluentButton>
+</FluentDialogFooter>
+
+@code {
+    // Parâmetro obrigatório da interface
+    [Parameter]
+    public string Content { get; set; } = string.Empty;
+
+    // CascadingParameter obrigatório para controlar o dialog
+    [CascadingParameter]
+    public FluentDialog Dialog { get; set; } = default!;
+
+    private async Task ConfirmarAsync()
+    {
+        await Dialog.CloseAsync("confirmado");
+    }
+
+    private async Task CancelarAsync()
+    {
+        await Dialog.CancelAsync();
+    }
+}
