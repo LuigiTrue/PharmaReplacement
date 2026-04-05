@@ -1,12 +1,44 @@
-@page "/Replacement/Dashboard"
-@using Microsoft.FluentUI.AspNetCore.Components.Utilities
-@rendermode InteractiveServer
-@using ApexCharts
-@inject IOrderService OrderService
+@page "/Dashboard"
+@inject IReplenishmentService ReplenishmentService
+@using RepyPharma.Models
 
-@*<InputFileComponent></InputFileComponent>
+<PageTitle>Dashboard</PageTitle>
 
-<LoadingRingComponent Percentage="90" Quantidade="5"></LoadingRingComponent>*@
-<div style="display: flex; flex-direction: row; justify-content: space-around; flex-wrap: wrap; height: 65vh">
-    <RadialBarComponent></RadialBarComponent>
-</div>
+@if (_loading)
+{
+    <p>Carregando...</p>
+}
+else if (_summary is not null)
+{
+    <div class="metric-div">
+        <div class="metric-card">
+            <p class="metric-label">Precisam ser comprados</p>
+            <p class="metric-value danger">@_summary.NeedToBuy.Count</p>
+        </div>
+        <div class="metric-card">
+            <p class="metric-label">Acabando em breve</p>
+            <p class="metric-value warning">@_summary.RunningLow.Count</p>
+        </div>
+        <div class="metric-card">
+            <p class="metric-label">Acima do normal</p>
+            <p class="metric-value info">@_summary.AboveNormal.Count</p>
+        </div>
+    </div>
+
+    <DashboardSection Title="Precisam ser comprados" BadgeClass="danger" BadgeLabel="Crítico" Items="_summary.NeedToBuy" />
+
+    <DashboardSection Title="Acabando em breve" BadgeClass="warning" BadgeLabel="Atenção" Items="_summary.RunningLow" />
+
+    <DashboardSection Title="Acima do normal" BadgeClass="info" BadgeLabel="Informativo" Items="_summary.AboveNormal" />
+}
+
+@code {
+    private DashboardSummary? _summary;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _summary = await ReplenishmentService.GetDashboardSummaryAsync();
+        _loading = false;
+    }
+}

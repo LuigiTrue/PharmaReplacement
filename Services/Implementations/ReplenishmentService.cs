@@ -65,6 +65,65 @@ public class ReplenishmentService : IReplenishmentService
                 .ToList();
     }
 
+    public async Task<DashboardSummary> GetDashboardSummaryAsync()
+    {
+        var products = await _stockService.GetAllAsync();
+        var minimums = await _minimumStockService.GetAllAsync();
+        var minimumMap = minimums.ToDictionary(m => m.Code);
+
+        var needToBuy = new List<ReplenishmentItem>();
+        var runningLow = new List<ReplenishmentItem>();
+        var aboveNormal = new List<ReplenishmentItem>();
+
+        foreach (var product in products)
+        {
+            if (!minimumMap.TryGetValue(product.Code, out var minimum))
+                continue;
+
+            var stockAt997 = GetStockAtLocation(product, "997");
+            var priority = CalculatePriority(stockAt997, minimum.MinimumQuantity);
+            var recommended = SelectBatch(product.Batches);
+
+            var item = new ReplenishmentItem
+            {
+                Code = product.Code,
+                Name = product.Name,
+                Unit = product.Unit,
+                CurrentStock = stockAt997,
+                MinimumQuantity = minimum.MinimumQuantity,
+                MissingQuantity = Math.Max(0, minimum.MinimumQuantity - stockAt997),
+                Priority = priority,
+                ItemPriority = minimum.itemPriority,
+                RecommendedBatch = recommended
+            };
+
+            if (priority == ReplenishmentPriority.Critical)
+                needToBuy.Add(item);
+            else if (priority == ReplenishmentPriority.Warning)
+                runningLow.Add(item);
+            else if (IsAboveNormal(stockAt997, minimum.MinimumQuantity))
+                aboveNormal.Add(item);
+        }
+
+        var order = (List<ReplenishmentItem> list) => list
+            .OrderBy(i => i.ItemPriority)
+            .ThenBy(i => i.Name)
+            .ToList();
+
+        return new DashboardSummary
+        {
+            NeedToBuy = order(needToBuy),
+            RunningLow = order(runningLow),
+            AboveNormal = order(aboveNormal)
+        };
+    }
+
+    // Considera acima do normal quando estoque é 2x maior que o mínimo
+    private bool IsAboveNormal(decimal currentStock, decimal minimumQuantity)
+    {
+        return minimumQuantity > 0 && currentStock >= minimumQuantity * 2;
+    }
+
     private ReplenishmentPriority CalculatePriority(decimal currentStock, decimal minimumQuantity)
     {
         if (currentStock <= minimumQuantity)

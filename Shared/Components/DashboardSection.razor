@@ -1,0 +1,74 @@
+@using RepyPharma.Models
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<div class="dashboard-section">
+    <div class="section-header">
+        <span class="section-title">@Title</span>
+        <span class="badge @BadgeClass">@BadgeLabel</span>
+    </div>
+
+    @if (!Items.Any())
+    {
+        <p class="empty-msg">Nenhum item nesta categoria.</p>
+    }
+    else
+    {
+        <FluentDataGrid Items="@Items.Take(_showAll ? Items.Count : 4).AsQueryable()" AutoFit="true">
+
+            <TemplateColumn Title="Prioridade">
+                <ChildContent>
+                    <span class="priority-chip @context.ItemPriority.ToString().ToLower()">
+                        @context.ItemPriority
+                    </span>
+                </ChildContent>
+            </TemplateColumn>
+
+            <PropertyColumn Property="@(x => x.Code)" Title="Código" Sortable="true" />
+            <PropertyColumn Property="@(x => x.Name)" Title="Nome" Sortable="true" />
+            <PropertyColumn Property="@(x => x.Unit)" Title="Unidade" />
+            <PropertyColumn Property="@(x => x.CurrentStock)" Title="Estoque Atual" Sortable="true" />
+            <PropertyColumn Property="@(x => x.MinimumQuantity)" Title="Mínimo" />
+            <PropertyColumn Property="@(x => x.MissingQuantity)" Title="Faltante" Sortable="true" />
+
+            <TemplateColumn Title="Lote Recomendado">
+                <ChildContent>
+                    @if (context.RecommendedBatch is not null)
+                    {
+                        <span>@context.RecommendedBatch.Batch</span>
+                        @if (context.RecommendedBatch.Validity.HasValue)
+                        {
+                            <small style="margin-left:8px; color:gray;">
+                                Val: @context.RecommendedBatch.Validity.Value.ToString("MM/yyyy")
+                            </small>
+                        }
+                    }
+                    else
+                    {
+                        <span style="color: var(--color-text-danger); font-weight:500;">
+                            Sem lote disponível
+                        </span>
+                    }
+                </ChildContent>
+            </TemplateColumn>
+
+        </FluentDataGrid>
+
+        @if (Items.Count > 4)
+        {
+            <button class="ver-btn" @onclick="@ToggleShowAll">
+                @(_showAll ? "Ver menos" : $"Ver todos ({Items.Count})")
+            </button>
+        }
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter, EditorRequired] public string BadgeClass { get; set; } = "";
+    [Parameter, EditorRequired] public string BadgeLabel { get; set; } = "";
+    [Parameter, EditorRequired] public List<ReplenishmentItem> Items { get; set; } = new();
+
+    private bool _showAll = false;
+
+    private void ToggleShowAll() => _showAll = !_showAll;
+}

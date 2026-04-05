@@ -1,0 +1,36 @@
+.metric-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.metric-card {
+    background: var(--neutral-fill-rest);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.metric-label {
+    font-size: 12px;
+    color: var(--neutral-foreground-hint);
+    margin: 0 0 4px;
+}
+
+.metric-value {
+    font-size: 28px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.metric-value.danger {
+    color: #c0392b;
+}
+
+.metric-value.warning {
+    color: #e67e22;
+}
+
+.metric-value.info {
+    color: #2980b9;
+}

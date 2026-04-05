@@ -1,0 +1,111 @@
+.metric-card {
+    background: var(--neutral-fill-rest);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.metric-label {
+    font-size: 12px;
+    color: var(--neutral-foreground-hint);
+    margin: 0 0 4px;
+}
+
+.metric-value {
+    font-size: 28px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.metric-value.danger {
+    color: #c0392b;
+}
+
+.metric-value.warning {
+    color: #e67e22;
+}
+
+.metric-value.info {
+    color: #2980b9;
+}
+
+.dashboard-section {
+    border: 0.5px solid var(--neutral-stroke-rest);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.badge.danger {
+    background: #fdecea;
+    color: #c0392b;
+}
+
+.badge.warning {
+    background: #fef3e2;
+    color: #e67e22;
+}
+
+.badge.info {
+    background: #e8f4fd;
+    color: #2980b9;
+}
+
+.priority-chip {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    font-weight: 500;
+}
+
+.priority-chip.ultrahigh {
+    background: #fdecea;
+    color: #c0392b;
+}
+
+.priority-chip.high {
+    background: #fef3e2;
+    color: #e67e22;
+}
+
+.priority-chip.moderate {
+    background: #e8f4fd;
+    color: #2980b9;
+}
+
+.priority-chip.low {
+    background: #eafaf1;
+    color: #1e8449;
+}
+
+.empty-msg {
+    font-size: 13px;
+    color: var(--neutral-foreground-hint);
+}
+
+.ver-btn {
+    font-size: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #2980b9;
+    padding: 8px 0 0;
+}
