@@ -13,44 +13,20 @@
     }
     else
     {
-        <FluentDataGrid Items="@Items.Take(_showAll ? Items.Count : 4).AsQueryable()" AutoFit="true">
-
-            <TemplateColumn Title="Prioridade">
+        <FluentDataGrid Items="@_visibleItems" AutoFit="true">
+            <TemplateColumn Title="Prioridade" Sortable="true">
                 <ChildContent>
                     <span class="priority-chip @context.ItemPriority.ToString().ToLower()">
                         @context.ItemPriority
                     </span>
                 </ChildContent>
             </TemplateColumn>
-
             <PropertyColumn Property="@(x => x.Code)" Title="Código" Sortable="true" />
             <PropertyColumn Property="@(x => x.Name)" Title="Nome" Sortable="true" />
-            <PropertyColumn Property="@(x => x.Unit)" Title="Unidade" />
+            <PropertyColumn Property="@(x => x.Unit)" Title="Unidade" Sortable="true" />
             <PropertyColumn Property="@(x => x.CurrentStock)" Title="Estoque Atual" Sortable="true" />
-            <PropertyColumn Property="@(x => x.MinimumQuantity)" Title="Mínimo" />
+            <PropertyColumn Property="@(x => x.MinimumQuantity)" Title="Mínimo" Sortable="true" />
             <PropertyColumn Property="@(x => x.MissingQuantity)" Title="Faltante" Sortable="true" />
-
-            <TemplateColumn Title="Lote Recomendado">
-                <ChildContent>
-                    @if (context.RecommendedBatch is not null)
-                    {
-                        <span>@context.RecommendedBatch.Batch</span>
-                        @if (context.RecommendedBatch.Validity.HasValue)
-                        {
-                            <small style="margin-left:8px; color:gray;">
-                                Val: @context.RecommendedBatch.Validity.Value.ToString("MM/yyyy")
-                            </small>
-                        }
-                    }
-                    else
-                    {
-                        <span style="color: var(--color-text-danger); font-weight:500;">
-                            Sem lote disponível
-                        </span>
-                    }
-                </ChildContent>
-            </TemplateColumn>
-
         </FluentDataGrid>
 
         @if (Items.Count > 4)
@@ -69,6 +45,23 @@
     [Parameter, EditorRequired] public List<ReplenishmentItem> Items { get; set; } = new();
 
     private bool _showAll = false;
+    private IQueryable<ReplenishmentItem> _visibleItems = Enumerable.Empty<ReplenishmentItem>().AsQueryable();
 
-    private void ToggleShowAll() => _showAll = !_showAll;
+    protected override async Task OnParametersSetAsync()
+    {
+        await UpdateVisibleItems();
+    }
+
+    private async Task ToggleShowAll()
+    {
+        _showAll = !_showAll;
+        await UpdateVisibleItems();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task UpdateVisibleItems()
+    {
+        _visibleItems = (_showAll ? Items : Items.Take(4))
+            .AsQueryable();
+    }
 }

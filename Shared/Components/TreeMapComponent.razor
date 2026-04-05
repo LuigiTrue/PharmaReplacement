@@ -1,63 +1,72 @@
 @using ApexCharts
 @using RepyPharma.Models
 @using RepyPharma.Services.Interfaces
-@inject IOrderService OrderService
-@inject NavigationManager Navigation
-   
-<ApexChart TItem="Order" Height="500" Width="700" Options="ChartOptions" OnDataPointSelection="HandleSelection">
+@inject IStockJsonService StockService
 
-    <ApexPointSeries TItem="Order" Items="Orders" Name="Gross Value" ShowDataLabels="true"
-                     SeriesType="SeriesType.Treemap" XValue="@(e => e.RemedyName)" YAggregate="@(e => e.Sum(e => e.GrossValue))"
-                     PointColor="e => GetPointColor(e)" OrderByDescending="e=>e.Y" />
+<ApexChart TItem="LocationSummary" Width="700" Height="700" Options="ChartOptions">
+
+    <ApexPointSeries TItem="LocationSummary" Items="_locations" Name="Quantidade em estoque" ShowDataLabels="true"
+                     SeriesType="SeriesType.Treemap" XValue="@(e => e.LocationName)" YValue="@(e => e.TotalQuantity)"
+                     PointColor="@(e => GetPointColor(e))" OrderByDescending="e => e.Y" />
 
 </ApexChart>
 
 @code {
-    [Parameter] public string? PageName { get; set; }
-    private List<Order>? Orders { get; set; }
+    private List<LocationSummary> _locations = new();
 
-    public string GetPointColor(Order order)
+    private static readonly Dictionary<string, string> ColorMap = new()
     {
-        return order.Id switch
-        {
-            1 => "#008FFB",
-            2 => "#00E396",
-            3 => "#FEB019",
-            4 => "#775DD0",
-            _ => "#546E7A",
-        };
-    }
+        { "997", "#4da6ff" }, // Farmácia Central — azul
+        { "999", "#4dbb6e" }, // CAF — verde
+        { "998", "#ffaa4d" }, // Farmácia Centro Cirúrgico — laranja
+        { "1059", "#c084fc" }, // Fracionamento — roxo
+        { "996", "#94a3b8" }, // Almoxarifado — cinza
+    };
 
-    private ApexChartOptions<Order> ChartOptions = new()
+    private ApexChartOptions<LocationSummary> ChartOptions = new()
     {
         Chart = new Chart
         {
-            Toolbar = new Toolbar
+            Background = "transparent",
+            Toolbar = new Toolbar { Show = false },
+            ForeColor = "black"
+        },
+        Tooltip = new Tooltip
+        {
+            Theme = Mode.Dark
+        },
+        Legend = new Legend
+        {
+            Labels = new LegendLabels
             {
-                Show = false
+                Colors = "#e0e0e0"
+            }
+        },
+        PlotOptions = new PlotOptions
+        {
+            Treemap = new PlotOptionsTreemap
+            {
+                EnableShades = false
+            }
+        },
+        DataLabels = new DataLabels
+        {
+            Style = new DataLabelsStyle
+            {
+                Colors = new List<string> { "#ffffff" }
             }
         }
     };
 
-    private void HandleSelection(SelectedData<Order> data)
+    private string GetPointColor(LocationSummary location)
     {
-        if (Orders is null)
-            return;
-
-        var index = data.DataPointIndex;
-        var pageName = PageName;
-
-        if (index >= 0 && index < Orders.Count)
-        {
-            var selectedOrder = Orders[index];
-
-            Navigation.NavigateTo($"/{pageName}/Dashboard");
-        }
-       
+        return ColorMap.TryGetValue(location.LocationId, out var color)
+            ? color
+            : "#546E7A";
     }
 
     protected override async Task OnInitializedAsync()
     {
-        Orders = await OrderService.GetOrdersAsync();
+        _locations = await StockService.GetLocationSummaryAsync();
     }
 }

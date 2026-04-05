@@ -6,3 +6,10 @@ public class DashboardSummary
     public List<ReplenishmentItem> RunningLow { get; set; } = new();      // Warning
     public List<ReplenishmentItem> AboveNormal { get; set; } = new();     // Excesso
 }
+
+public class LocationSummary
+{
+    public string LocationId { get; set; } = "";
+    public string LocationName { get; set; } = "";
+    public decimal TotalQuantity { get; set; }
+}

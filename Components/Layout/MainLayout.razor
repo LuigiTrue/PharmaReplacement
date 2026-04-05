@@ -1,4 +1,8 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.FluentUI.AspNetCore.Components
+
+
+<FluentDesignTheme Mode="DesignThemeModes.Dark" />
 
 <div class="page">
     <div class="sidebar">
@@ -6,7 +10,7 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
+        <div class="header top-row px-4">
             <FluentPersona Name="Luigi" Status="PresenceStatus.Offline" StatusSize="PresenceBadgeSize.Small"
                            StatusTitle="Anonymous user is offline"
                            Image="@(new Icons.Regular.Size48.Person().ToDataUri(size: "25px", color: "white"))" ImageSize="40px">

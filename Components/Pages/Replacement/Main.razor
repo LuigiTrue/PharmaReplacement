@@ -1,10 +1,19 @@
 ﻿@page "/Replacement"
 @rendermode InteractiveServer
-@inject IOrderService OrderService
+@inject IStockJsonService StockJsonService
 
 @*<InputFileComponent></InputFileComponent>
 
 <LoadingRingComponent Percentage="90" Quantidade="5"></LoadingRingComponent>*@
 <div style="display: flex; flex-direction: row; justify-content: space-around; flex-wrap: wrap; height: 65vh">
-    <InputFileComponent></InputFileComponent>
+    <TreeMapComponent></TreeMapComponent>
 </div>
+
+@code {
+
+    private List<ProductStock>? productStocks;
+    protected override async Task OnInitializedAsync()
+    {
+        productStocks = await StockJsonService.GetAllAsync();
+    }
+}

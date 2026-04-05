@@ -37,4 +37,38 @@ public class StockJsonService : IStockJsonService
         var products = await GetAllAsync();
         return products.FirstOrDefault(p => p.Code == code);
     }
+
+    private static readonly Dictionary<string, string> LocationNames = new()
+{
+    { "996", "Almoxarifado" },
+    { "997", "Farmácia Central" },
+    { "998", "Farmácia Centro Cirúrgico" },
+    { "999", "CAF" },
+    { "1059", "Fracionamento" }
+};
+
+    public async Task<List<LocationSummary>> GetLocationSummaryAsync()
+    {
+        var products = await GetAllAsync();
+
+        var totals = LocationNames.ToDictionary(
+            kv => kv.Key,
+            kv => new LocationSummary
+            {
+                LocationId = kv.Key,
+                LocationName = kv.Value,
+                TotalQuantity = 0
+            });
+
+        foreach (var product in products)
+            foreach (var batch in product.Batches)
+                foreach (var location in batch.Locations)
+                    if (totals.TryGetValue(location.LocationId, out var summary))
+                        summary.TotalQuantity += location.Quantity;
+
+        return totals.Values
+            .Where(l => l.TotalQuantity > 0)
+            .OrderByDescending(l => l.TotalQuantity)
+            .ToList();
+    }
 }
