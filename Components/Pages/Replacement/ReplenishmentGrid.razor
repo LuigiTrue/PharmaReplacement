@@ -1,74 +1,52 @@
 @page "/Replacement/ReplacementGrid"
 @inject IReplenishmentService ReplenishmentService
+@inject ReportHtmlService ReportHtmlService
 @using Microsoft.FluentUI.AspNetCore.Components
+@inject IJSRuntime JS
 
 <PageTitle>Reposição</PageTitle>
 
-<h3>Relatório de Reposição</h3>
 
+<div style="display:flex; align-items:center; gap:12px; margin-bottom:1.5rem;">
+    <h3>Relatório de Reposição</h3>
+    <button @onclick="OpenPreview" style="...">
+        Exportar PDF
+    </button>
+</div>
 @if (_loading)
 {
     <p>Carregando...</p>
 }
-else if (!_items.Any())
+else if (_report is null)
 {
     <p>Nenhum item necessita de reposição no momento.</p>
 }
 else
 {
-    <div class="dashboard-section">
-        <FluentDataGrid Items="_items" AutoFit="true">
+    <ReplacementSection Title="1ª Etapa — Fracionamento" Items="_report.FromFractionation" LocationId="@Fractionation" />
 
-            <PropertyColumn Property="@(x => x.Code)" Title="Código" Sortable="true" />
-            <PropertyColumn Property="@(x => x.Name)" Title="Nome" Sortable="true" />
-            <PropertyColumn Property="@(x => x.CurrentStock)" Title="Estoque Atual" Sortable="true" />
-            <PropertyColumn Property="@(x => x.MissingQuantity)" Title="Qtd. Faltante" Sortable="true" />
+    <ReplacementSection Title="2ª Etapa — CAF" Items="_report.FromCafOnly" LocationId="@Caf" />
 
-            <TemplateColumn Title="Lote Recomendado" Sortable="true">
-                <ChildContent>
-                    @if (context.RecommendedBatch is not null)
-                    {
-                        <span>@context.RecommendedBatch.Batch</span>
-                        @if (context.RecommendedBatch.Validity.HasValue)
-                        {
-                            <small style="margin-left: 8px; color: gray;">
-                                Val: @context.RecommendedBatch.Validity.Value.ToString("MM/yyyy")
-                            </small>
-                        }
-                    }
-                    else
-                    {
-                        <span style="color: red;">Sem estoque</span>
-                    }
-                </ChildContent>
-            </TemplateColumn>
-
-            <TemplateColumn Title="Prioridade" Sortable="true">
-                <ChildContent>
-                    @{
-                        var (label, color) = context.Priority switch
-                        {
-                            ReplenishmentPriority.Critical => ("Crítico", "#c0392b"),
-                            ReplenishmentPriority.Warning => ("Atenção", "#e67e22"),
-                            _ => ("Ok", "#27ae60")
-                        };
-                    }
-                    <span style="color: @color; font-weight: bold;">@label</span>
-                </ChildContent>
-            </TemplateColumn>
-
-        </FluentDataGrid>
-    </div>
+    <ReplacementSection Title="3ª Etapa — Almoxarifado" Items="_report.FromStockOnly" LocationId="@Stock" />
 }
 
 @code {
-    private IQueryable<ReplenishmentItem> _items = Enumerable.Empty<ReplenishmentItem>().AsQueryable();
+    private ReplenishmentReport? _report;
     private bool _loading = true;
+
+    private const string Fractionation = "1059";
+    private const string Caf = "999";
+    private const string Stock = "996";
 
     protected override async Task OnInitializedAsync()
     {
-        var result = await ReplenishmentService.GenerateAsync();
-        _items = result.AsQueryable();
+        _report = await ReplenishmentService.GenerateReportAsync();
         _loading = false;
+    }
+
+    private async Task OpenPreview()
+    {
+        var html = ReportHtmlService.GenerateReplacementHtml(_report!);
+        await JS.InvokeVoidAsync("openPrintPreview", html);
     }
 }

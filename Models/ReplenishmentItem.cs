@@ -9,4 +9,6 @@ public class ReplenishmentItem
     public ReplenishmentPriority Priority { get; set; }
     public ItemPriority ItemPriority { get; set; }
     public BatchStock? RecommendedBatch { get; set; } // Lote sugerido pelo FEFO
+    public List<BatchStock> AvailableBatches { get; set; } = new();
+    public bool HasLotConflict { get; set; } = false;
 }

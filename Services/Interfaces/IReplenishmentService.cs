@@ -6,4 +6,5 @@ public interface IReplenishmentService
 {
     Task<List<ReplenishmentItem>> GenerateAsync();
     Task<DashboardSummary> GetDashboardSummaryAsync();
+    Task<ReplenishmentReport> GenerateReportAsync();
 }

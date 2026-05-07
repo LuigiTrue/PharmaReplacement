@@ -1,0 +1,79 @@
+@using RepyPharma.Models
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<div class="dashboard-section" style="margin-bottom:1.5rem;">
+    <div class="section-header">
+        <span class="section-title">@Title</span>
+        <span class="badge @(Items.Any() ? "warning" : "info")">@Items.Count itens</span>
+    </div>
+
+    @if (!Items.Any())
+    {
+        <p class="empty-msg">Nenhum item nesta etapa.</p>
+    }
+    else
+    {
+        <FluentDataGrid Items="@Items.AsQueryable()" MultiLine="true" AutoFit="true">
+
+            <PropertyColumn Property="@(x => x.Code)" Title="Código" Sortable="true" />
+            <PropertyColumn Property="@(x => x.Name)" Title="Nome" Sortable="true" />
+
+           <TemplateColumn Title="Lotes Disponíveis" Sortable="true">
+    <ChildContent>
+        @if (!context.AvailableBatches.Any())
+        {
+            <span style="color:#ff6b6b;">Sem estoque disponível</span>
+        }
+        else
+        {
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                @foreach (var batch in context.AvailableBatches)
+                {
+                    var isRecommended = batch.Batch == context.RecommendedBatch?.Batch;
+                    var batchColor = isRecommended ? "color:#4da6ff;" : "color:#e0e0e0;";
+
+                    @foreach (var location in batch.Locations
+                        .Where(l => l.LocationId == LocationId && l.Quantity > 0))
+                    {
+                        <div style="display:grid; grid-template-columns:140px 70px 80px 80px; align-items:center; gap:0 8px;">
+                            <span style="font-size:12px; white-space:nowrap; @batchColor">
+                                @batch.Batch
+                            </span>
+                            <span style="font-size:11px; color:#999; white-space:nowrap;">
+                                @(batch.Validity.HasValue ? batch.Validity.Value.ToString("MM/yyyy") : "—")
+                            </span>
+                            <span style="font-size:11px; white-space:nowrap; @batchColor">
+                                @location.Quantity un.
+                            </span>
+                            <span>
+                                @if (isRecommended)
+                                {
+                                    <span style="font-size:10px; background:#0d2a4a; color:#4da6ff; padding:1px 5px; border-radius:99px; white-space:nowrap;">
+                                        indicado
+                                    </span>
+                                }
+                            </span>
+                        </div>
+                    }
+                }
+
+                @if (context.HasLotConflict)
+                {
+                    <span style="font-size:11px; color:#ffaa4d; margin-top:4px;">
+                        ⚠️ Lote diferente do que está na farmácia
+                    </span>
+                }
+            </div>
+        }
+    </ChildContent>
+</TemplateColumn>
+
+        </FluentDataGrid>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = "";
+    [Parameter, EditorRequired] public List<ReplenishmentItem> Items { get; set; } = new();
+    [Parameter, EditorRequired] public string LocationId { get; set; } = "";
+}

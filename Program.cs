@@ -25,6 +25,8 @@ builder.Services.AddScoped<IGridColumnService, GridColumnService>();
 builder.Services.AddScoped<PdfStorageService>();
 builder.Services.AddScoped<PdfValidationService>();
 builder.Services.AddScoped<PdfParserService>();
+builder.Services.AddScoped<LayoutState>();
+builder.Services.AddScoped<ReportHtmlService>();
 
 
 var app = builder.Build();

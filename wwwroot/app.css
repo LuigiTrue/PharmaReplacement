@@ -227,3 +227,131 @@ h1:focus {
     color: #4da6ff;
     padding: 8px 0 0;
 }
+
+/* Permite que as linhas do grid cresçam conforme o conteúdo */
+fluent-data-grid-row {
+    height: auto !important;
+    align-items: start !important;
+}
+
+fluent-data-grid-cell {
+    height: auto !important;
+    align-items: start !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+
+@media print {
+    @page {
+        size: portrait;
+        margin: 1cm;
+    }
+
+    /* Esconde elementos desnecessários */
+    .sidebar,
+    .header,
+    .top-row,
+    button,
+    nav,
+    .ver-btn,
+    .badge,
+    fluent-data-grid-cell[cell-type="columnheader"] fluent-button,
+    .col-sort-asc,
+    .col-sort-desc {
+        display: none !important;
+    }
+
+    /* Remove scroll e overflow */
+    html,
+    body {
+        overflow: visible !important;
+        height: auto !important;
+        background: white !important;
+        color: black !important;
+    }
+
+    main,
+    article.content {
+        overflow: visible !important;
+        height: auto !important;
+        padding: 0 !important;
+    }
+
+    /* Título da seção */
+    .section-title {
+        color: black !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+    }
+
+    .dashboard-section {
+        border: none !important;
+        background: transparent !important;
+        margin-bottom: 1rem !important;
+        page-break-inside: avoid;
+    }
+
+    /* Remove fundo e bordas do FluentDataGrid */
+    fluent-data-grid,
+    fluent-data-grid-row,
+    fluent-data-grid-cell {
+        background: white !important;
+        color: black !important;
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Linha separadora simples entre linhas */
+    fluent-data-grid-row {
+        border-bottom: 0.5px solid #ccc !important;
+    }
+
+    /* Cabeçalho da coluna */
+    fluent-data-grid-cell[cell-type="columnheader"] {
+        border-bottom: 1.5px solid #333 !important;
+        font-weight: 600 !important;
+        font-size: 11px !important;
+        color: #333 !important;
+        background: white !important;
+    }
+
+    /* Células de dados */
+    fluent-data-grid-cell {
+        font-size: 11px !important;
+        color: black !important;
+        padding: 4px 8px !important;
+    }
+
+    /* Lotes — remove cores do tema escuro */
+    .content span {
+        color: black !important;
+    }
+
+    /* Chip "indicado" */
+    span[style*="border-radius:99px"] {
+        background: #e8f0fe !important;
+        color: #1a56db !important;
+    }
+
+    /* Aviso de lote diferente */
+    span[style*="ffaa4d"] {
+        color: #b45309 !important;
+    }
+
+    /* Não quebra linha dentro de uma linha do grid */
+    fluent-data-grid-row {
+        page-break-inside: avoid !important;
+    }
+
+    /* Título da página */
+    h3 {
+        font-size: 16px !important;
+        color: black !important;
+        margin-bottom: 1rem !important;
+    }
+
+    h4 {
+        font-size: 13px !important;
+        color: #333 !important;
+    }
+}

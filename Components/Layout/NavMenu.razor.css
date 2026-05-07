@@ -82,12 +82,10 @@
 }
 
 .nav-scrollable {
-    display: none;
+    width: 250px;
+    transition: width 0.3s;
 }
 
-.navbar-toggler:checked~.nav-scrollable {
-    display: block;
-}
 
 @media (min-width: 641px) {
     .navbar-toggler {
@@ -102,4 +100,21 @@
         height: 100vh;
         overflow-y: auto;
     }
+}
+
+
+
+
+.nav-scrollable {
+    width: 250px;
+    transition: width 0.3s;
+}
+
+.nav-scrollable.collapsed {
+    width: 70px;
+}
+
+/* Esconde texto quando colapsado */
+.nav-scrollable.collapsed .nav-link span:nth-child(2) {
+    display: none;
 }

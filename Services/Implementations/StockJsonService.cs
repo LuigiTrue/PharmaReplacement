@@ -7,6 +7,7 @@ namespace RepyPharma.Services.Implementatios;
 public class StockJsonService : IStockJsonService
 {
     private readonly string _filePath;
+    private readonly string _ignoredFilePath;
 
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -16,6 +17,8 @@ public class StockJsonService : IStockJsonService
     public StockJsonService(IWebHostEnvironment env)
     {
         _filePath = Path.Combine(env.ContentRootPath, "storage", "estoque.json");
+        _ignoredFilePath = Path.Combine(env.ContentRootPath, "storage", "ignorados.json");
+
     }
 
     public async Task<List<ProductStock>> GetAllAsync()
@@ -70,5 +73,19 @@ public class StockJsonService : IStockJsonService
             .Where(l => l.TotalQuantity > 0)
             .OrderByDescending(l => l.TotalQuantity)
             .ToList();
+    }
+
+    public async Task<HashSet<string>> GetIgnoredCodesAsync()
+    {
+        if (!File.Exists(_ignoredFilePath))
+            return new HashSet<string>();
+
+        var json = await File.ReadAllTextAsync(_ignoredFilePath);
+
+        if (string.IsNullOrWhiteSpace(json))
+            return new HashSet<string>();
+
+        var codes = JsonSerializer.Deserialize<List<string>>(json, _jsonOptions);
+        return codes?.ToHashSet() ?? new HashSet<string>();
     }
 }

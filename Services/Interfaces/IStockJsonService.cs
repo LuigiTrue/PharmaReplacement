@@ -7,4 +7,5 @@ public interface IStockJsonService
     Task<List<ProductStock>> GetAllAsync();
     Task<ProductStock?> GetByCodeAsync(string code);
     Task<List<LocationSummary>> GetLocationSummaryAsync();
+    Task<HashSet<string>> GetIgnoredCodesAsync();
 }
