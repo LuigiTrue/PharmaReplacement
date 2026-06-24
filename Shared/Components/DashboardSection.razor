@@ -23,10 +23,7 @@
             </TemplateColumn>
             <PropertyColumn Property="@(x => x.Code)" Title="Código" Sortable="true" />
             <PropertyColumn Property="@(x => x.Name)" Title="Nome" Sortable="true" />
-            <PropertyColumn Property="@(x => x.Unit)" Title="Unidade" Sortable="true" />
             <PropertyColumn Property="@(x => x.CurrentStock)" Title="Estoque Atual" Sortable="true" />
-            <PropertyColumn Property="@(x => x.MinimumQuantity)" Title="Mínimo" Sortable="true" />
-            <PropertyColumn Property="@(x => x.MissingQuantity)" Title="Faltante" Sortable="true" />
         </FluentDataGrid>
 
         @if (Items.Count > 4)

@@ -1,48 +1,24 @@
-﻿@inject LayoutState LayoutState
+﻿<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable @(LayoutState.IsMenuCollapsed ? "collapsed" : "")">
+<div class="nav-scrollable nav-menu-conteiner" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Dashboard">
-                <span class="bi bi-house-door-fill-nav-menu"></span>
-                @if (!LayoutState.IsMenuCollapsed)
-                {
-                    <span> Início</span>
-                }
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Início
             </NavLink>
         </div>
 
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="/Replacement/ReplacementGrid">
-                <span class="bi bi-plus-square-fill-nav-menu"></span>
-                @if (!LayoutState.IsMenuCollapsed)
-                {
-                    <span> Reposição </span>
-                }
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Reposição
             </NavLink>
         </div>
-        @*
+
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Dialog">
-                <span class="bi bi-list-nested-nav-menu"></span>
-                @if (!LayoutState.IsMenuCollapsed)
-                {
-                    <span> Configurações</span>
-                }
+            <NavLink class="nav-link" href="/Dashboard">
+                <span class="bi bi-cart-fill-nav-menu" aria-hidden="true"></span> Compras
             </NavLink>
         </div>
-*@
     </nav>
 </div>
 
-@code {
-    protected override void OnInitialized()
-    {
-        LayoutState.OnChange += StateHasChanged;
-    }
-
-    public void Dispose()
-    {
-        LayoutState.OnChange -= StateHasChanged;
-    }
-}

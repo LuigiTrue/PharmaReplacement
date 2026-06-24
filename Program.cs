@@ -26,6 +26,7 @@ builder.Services.AddScoped<PdfStorageService>();
 builder.Services.AddScoped<PdfValidationService>();
 builder.Services.AddScoped<PdfParserService>();
 builder.Services.AddScoped<LayoutState>();
+builder.Services.AddScoped<ThemeState>();
 builder.Services.AddScoped<ReportHtmlService>();
 
 

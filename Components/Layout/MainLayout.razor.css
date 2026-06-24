@@ -1,3 +1,44 @@
+.layout-container {
+    --app-bg: #1a1a1a;
+    --app-surface: #222;
+    --app-surface-muted: #2a2a2a;
+    --app-border: #333;
+    --app-text: #e0e0e0;
+    --app-text-muted: #999;
+    --app-link: #4da6ff;
+    --app-footer-bg: rgba(0,0,0,.15);
+    --app-nav-bg: #333;
+    --app-nav-fg: azure;
+    --app-nav-hover-bg: #0b046d;
+    --app-nav-shadow: rgba(0,0,0,0.5);
+    min-height: 100vh;
+    background: var(--app-bg);
+    color: var(--app-text);
+}
+
+.layout-container.theme-light {
+    --app-bg: #f5f7fb;
+    --app-surface: #ffffff;
+    --app-surface-muted: #eef2f7;
+    --app-border: #d9e2ec;
+    --app-text: #172033;
+    --app-text-muted: #5d6b82;
+    --app-link: #075ea8;
+    --app-footer-bg: rgba(255,255,255,.85);
+    --app-nav-bg: #ffffff;
+    --app-nav-fg: #172033;
+    --app-nav-hover-bg: #dcecff;
+    --app-nav-shadow: rgba(15,23,42,0.16);
+}
+
+.layout-container.theme-dark {
+    color-scheme: dark;
+}
+
+.layout-container.theme-light {
+    color-scheme: light;
+}
+
 .page {
     position: relative;
     display: flex;
@@ -8,13 +49,9 @@ main {
     flex: 1;
 }
 
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
-}
-
 .top-row {
     background-color: #f7f7f7;
-    border-bottom: 1px solid linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    border-bottom: 1px solid #d6d5d5;
     justify-content: flex-end;
     height: 3.5rem;
     display: flex;
@@ -65,7 +102,6 @@ main {
         position: sticky;
         top: 0;
         z-index: 1;
-        background-color: rgb(88, 88, 90);
     }
 
     .top-row.auth ::deep a:first-child {
@@ -98,4 +134,24 @@ main {
     position: absolute;
     right: 0.75rem;
     top: 0.5rem;
+}
+
+
+.app-footer {
+    text-align: center;
+    font-size: .75rem;
+    color: var(--app-text-muted);
+
+    padding: 0.5px;
+
+    border-top: 1px solid var(--app-border);
+
+    background-color: var(--app-footer-bg);
+}
+
+.body-content {
+    margin-left: 75px;
+    padding: 2em;
+    overflow-y: auto;
+    overflow-x: none;
 }

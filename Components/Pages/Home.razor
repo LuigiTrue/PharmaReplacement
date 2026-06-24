@@ -1,8 +1,131 @@
-﻿@page "/"
+﻿@page "/Home"
+
+@using Microsoft.FluentUI.AspNetCore.Components
 
 <PageTitle>Home</PageTitle>
 
+<div class="home-container">
 
-@code {
+    <FluentCard Class="hero-card">
+        <h1>Bem-vindo ao RepyPharma</h1>
+        <p>
+            Sistema de Controle e Reposição da Farmácia Hospitalar.
+        </p>
 
-}
+        <p>
+            O RepyPharma foi desenvolvido para auxiliar no gerenciamento das reposições
+            de medicamentos, materiais e insumos hospitalares, proporcionando maior
+            organização, rastreabilidade e segurança aos processos executados pela equipe da farmácia.
+        </p>
+
+        <p>
+            A plataforma tem como principal objetivo reduzir falhas operacionais,
+            melhorar a comunicação entre os setores e garantir que os itens necessários
+            estejam disponíveis no local correto, no momento adequado.
+        </p>
+    </FluentCard>
+
+    <div class="cards-grid">
+
+        <FluentCard Class="info-card">
+            <h3>Como utilizar o sistema</h3>
+
+            <ol>
+                <li>Consulte as reposições pendentes.</li>
+                <li>Realize as movimentações necessárias.</li>
+                <li>Confirme as reposições efetuadas.</li>
+                <li>Acompanhe indicadores e relatórios.</li>
+            </ol>
+
+            <p>
+                Mantenha sempre as informações atualizadas para garantir a confiabilidade dos dados.
+            </p>
+        </FluentCard>
+
+        <FluentCard Class="info-card">
+            <h3>Boas práticas</h3>
+
+            <ul>
+                <li>Registrar todas as movimentações.</li>
+                <li>Seguir o fluxo operacional definido.</li>
+                <li>Evitar transferências não registradas.</li>
+                <li>Manter os estoques atualizados.</li>
+                <li>Comunicar divergências identificadas.</li>
+                <li>Garantir a rastreabilidade dos itens.</li>
+            </ul>
+        </FluentCard>
+
+    </div>
+
+    <FluentCard Class="warning-card">
+
+        <h2>Por que a reposição correta é importante?</h2>
+
+        <p>
+            A reposição adequada dos materiais não é apenas uma questão de organização.
+            Ela impacta diretamente a qualidade do atendimento prestado aos pacientes
+            e a segurança dos processos internos.
+        </p>
+
+        <p>
+            Em situações de urgência, é comum que um colaborador precise localizar
+            rapidamente um medicamento ou material disponível em outro setor.
+        </p>
+
+        <p>
+            Nesses momentos, a prioridade é atender a solicitação com a maior agilidade possível.
+            Entretanto, quando etapas importantes do processo são ignoradas, podem surgir
+            divergências entre o estoque físico e o estoque registrado.
+        </p>
+
+        <h4>Exemplo de situação comum</h4>
+
+        <p>
+            Imagine que um medicamento esteja disponível no Almoxarifado,
+            mas seja solicitado com urgência para utilização imediata.
+        </p>
+
+        <p>
+            Para agilizar o atendimento, o item pode ser entregue diretamente ao setor solicitante,
+            sem que a movimentação prevista seja registrada corretamente.
+        </p>
+
+        <p>
+            Embora a necessidade tenha sido atendida, posteriormente podem ocorrer problemas como:
+        </p>
+
+        <ul>
+            <li>Divergências de estoque;</li>
+            <li>Dificuldade para localizar materiais;</li>
+            <li>Reposições desnecessárias;</li>
+            <li>Perda de rastreabilidade;</li>
+            <li>Aumento do tempo gasto em conferências e inventários.</li>
+        </ul>
+
+        <p>
+            Pequenas exceções realizadas diariamente podem gerar grandes diferenças ao longo do tempo.
+        </p>
+
+    </FluentCard>
+
+    <FluentCard Class="objective-card">
+
+        <h2>Nosso objetivo</h2>
+
+        <p>
+            O RepyPharma não foi desenvolvido apenas para controlar estoques.
+        </p>
+
+        <p>
+            Seu propósito é auxiliar a equipe da farmácia a trabalhar com mais segurança,
+            organização e eficiência, reduzindo retrabalho, minimizando erros operacionais
+            e garantindo que medicamentos e insumos estejam disponíveis quando realmente forem necessários.
+        </p>
+
+        <blockquote>
+            Uma reposição bem executada hoje evita problemas, retrabalho e atrasos amanhã.
+        </blockquote>
+
+    </FluentCard>
+
+</div>

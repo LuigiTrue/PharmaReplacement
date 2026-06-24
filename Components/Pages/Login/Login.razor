@@ -1,0 +1,88 @@
+@page "/"
+@page "/Login"
+@layout LoginLayout
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Login</PageTitle>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>Bem-vindo</h1>
+            <p>Entre com suas credenciais para continuar</p>
+        </div>
+
+        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" class="login-form">
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <InputText id="email" class="form-control" @bind-Value="loginModel.Email" placeholder="seu@email.com" />
+                <ValidationMessage For="@(() => loginModel.Email)" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" placeholder="••••••••" />
+                <ValidationMessage For="@(() => loginModel.Password)" />
+            </div>
+
+            <div class="form-options">
+                <label class="checkbox-label">
+                    <InputCheckbox @bind-Value="loginModel.RememberMe" />
+                    <span>Lembrar-me</span>
+                </label>
+                <a href="#" class="forgot-link">Esqueci minha senha</a>
+            </div>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert-error">@errorMessage</div>
+            }
+
+            <button type="submit" class="btn-login" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span class="spinner"></span>
+                    <span>Entrando...</span>
+                }
+                else
+                {
+                    <span>Entrar</span>
+                }
+            </button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+    private bool isLoading = false;
+    private string? errorMessage;
+
+    private async Task HandleLogin()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        // TODO: substituir pela chamada real ao serviço de autenticação
+        // ex: var resultado = await AuthService.LoginAsync(loginModel.Email, loginModel.Password);
+        await Task.Delay(800);
+
+        isLoading = false;
+        errorMessage = "Serviço de autenticação ainda não implementado.";
+    }
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "Informe o e-mail")]
+        [EmailAddress(ErrorMessage = "E-mail inválido")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Informe a senha")]
+        [MinLength(6, ErrorMessage = "A senha deve ter ao menos 6 caracteres")]
+        public string Password { get; set; } = string.Empty;
+
+        public bool RememberMe { get; set; }
+    }
+}

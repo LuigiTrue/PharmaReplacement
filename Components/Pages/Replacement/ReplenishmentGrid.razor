@@ -2,6 +2,7 @@
 @inject IReplenishmentService ReplenishmentService
 @inject ReportHtmlService ReportHtmlService
 @using Microsoft.FluentUI.AspNetCore.Components
+@using Microsoft.FluentUI.AspNetCore.Components.DesignTokens
 @inject IJSRuntime JS
 
 <PageTitle>Reposição</PageTitle>
@@ -9,9 +10,6 @@
 
 <div style="display:flex; align-items:center; gap:12px; margin-bottom:1.5rem;">
     <h3>Relatório de Reposição</h3>
-    <button @onclick="OpenPreview" style="...">
-        Exportar PDF
-    </button>
 </div>
 @if (_loading)
 {
@@ -29,6 +27,10 @@ else
 
     <ReplacementSection Title="3ª Etapa — Almoxarifado" Items="_report.FromStockOnly" LocationId="@Stock" />
 }
+
+<button class="pdf-fab" title="Exportar para PDF" @onclick="OpenPreview">
+    <i class="bi bi-file-earmark-pdf-fill"></i>
+</button>
 
 @code {
     private ReplenishmentReport? _report;
@@ -50,3 +52,4 @@ else
         await JS.InvokeVoidAsync("openPrintPreview", html);
     }
 }
+

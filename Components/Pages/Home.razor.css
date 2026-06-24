@@ -1,0 +1,56 @@
+.home-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 25px;
+}
+
+.hero-card {
+    margin-bottom: 20px;
+    padding: 25px;
+}
+
+.hero-card h1 {
+    margin-bottom: 15px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.info-card {
+    padding: 20px;
+}
+
+.info-card h3 {
+    margin-bottom: 15px;
+}
+
+.warning-card {
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.warning-card h2 {
+    margin-bottom: 15px;
+}
+
+.warning-card h4 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.objective-card {
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.objective-card blockquote {
+    margin-top: 20px;
+    padding: 15px;
+    border-left: 4px solid #4da3ff;
+    font-style: italic;
+    font-size: 1.05rem;
+}

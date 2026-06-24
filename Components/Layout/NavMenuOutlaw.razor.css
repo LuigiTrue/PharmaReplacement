@@ -1,0 +1,113 @@
+.sidebar-nav-outlaw{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 75px;
+    z-index: 9999;
+    background: var(--app-nav-bg, #333);
+    overflow-x: hidden;
+    padding-top: 10px;
+    transition: 0.6s ease;
+    box-shadow: 0 0 10px var(--app-nav-shadow, rgba(0,0,0,0.5));
+}
+
+.sidebar-nav-outlaw:hover{
+    width: 250px;
+    transition: 0.6s ease;
+}
+
+.sidebar-nav-outlaw ul{
+     position: relative;
+     height: 95vh;
+
+}
+
+.sidebar-nav-outlaw ul li{
+    list-style: none;
+    margin: 5px 0;
+}
+
+.sidebar-nav-outlaw ul li:hover {
+    background: var(--app-nav-hover-bg, #0b046d);
+    transition: 0.3s ease;
+}
+
+.sidebar-nav-outlaw ul li a,
+.sidebar-nav-outlaw ul li button {
+    position: relative;
+    display: flex;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--app-nav-fg, azure);
+    width: 100%;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+}
+
+.sidebar-nav-outlaw ul li .logo {
+    margin-bottom: 80px;
+}
+
+.sidebar-nav-outlaw ul li .logo .text {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.sidebar-nav-outlaw ul li.logout-item{
+    position: absolute;
+    bottom: 78px;
+    width: 100%;
+}
+
+.sidebar-nav-outlaw ul li.theme-toggle-item{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.sidebar-nav-outlaw ul li a .icon,
+.sidebar-nav-outlaw ul li button .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-width: 75px;
+    height: 72px;
+
+    font-size: 25px;
+}
+
+.sidebar-nav-outlaw ul li a .text,
+.sidebar-nav-outlaw ul li button .text {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 72px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: 0.3s ease;
+}
+
+.sidebar-nav-outlaw:hover ul li a .text,
+.sidebar-nav-outlaw:hover ul li button .text {
+    opacity: 1;
+    visibility: visible;
+}
+
+ul {
+    padding-left: 0;
+}
+
+
+

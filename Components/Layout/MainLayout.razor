@@ -1,30 +1,37 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
+@implements IDisposable
 @using Microsoft.FluentUI.AspNetCore.Components
-@inject LayoutState LayoutState
+@inject ThemeState ThemeState
 
 
-<FluentDesignTheme Mode="DesignThemeModes.Dark" />
+<FluentDesignTheme Mode="@ThemeMode" />
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<div class="layout-container @ThemeClass">
+
+    <div class="page">
+
+       @* <div class="sidebar">
+            <NavMenu />
+        </div>*@
+        <NavMenuOutlaw></NavMenuOutlaw>
+            
+        
+
+        <main>
+            @*<div class="top-row px-4" style="background-color: var(--fluent-theme-color);">
+                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            </div> *@
+
+            <div class="body-content">
+                @Body
+            </div>
+
+        <footer class="app-footer">
+            © @DateTime.Now.Year RepyPharma • Desenvolvido por Luigi Paoli
+        </footer>
+        </main>
     </div>
-    <main>
-        @*<main @onclick="CollapseMenu" @onclick:stopPropagation="false">
-
-<div class="header top-row px-4">
-            <FluentPersona Name="Luigi" Status="PresenceStatus.Offline" StatusSize="PresenceBadgeSize.Small"
-                           StatusTitle="Anonymous user is offline"
-                           Image="@(new Icons.Regular.Size48.Person().ToDataUri(size: "25px", color: "white"))" ImageSize="40px">
-            </FluentPersona>
-        </div>
-*@
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
 </div>
-
 
 
 <div id="blazor-error-ui">
@@ -34,8 +41,24 @@
 </div>
 
 @code {
-    void CollapseMenu()
+    private DesignThemeModes ThemeMode => ThemeState.IsDarkMode
+        ? DesignThemeModes.Dark
+        : DesignThemeModes.Light;
+
+    private string ThemeClass => ThemeState.IsDarkMode ? "theme-dark" : "theme-light";
+
+    protected override void OnInitialized()
     {
-        LayoutState.Collapse();
+        ThemeState.OnChange += OnThemeChanged;
+    }
+
+    private void OnThemeChanged()
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ThemeState.OnChange -= OnThemeChanged;
     }
 }

@@ -1,8 +1,8 @@
 html,
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #1a1a1a;
-    color: #e0e0e0;
+    background-color: var(--app-bg, #1a1a1a);
+    color: var(--app-text, #e0e0e0);
     height: 100%;
     overflow: hidden;
 }
@@ -25,13 +25,13 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: #1a1a1a;
+    background: var(--app-bg, #1a1a1a);
     /* mesma cor do seu tema escuro */
     display: flex;
     align-items: center;
     justify-content: flex-end;
     padding: 0.5rem 1rem;
-    border-bottom: 0.5px solid #333;
+    border-bottom: 0.5px solid var(--app-border, #333);
 }
 
 /* Apenas o article rola */
@@ -52,7 +52,7 @@ article.content {
 
 a,
 .btn-link {
-    color: #4da6ff;
+    color: var(--app-link, #4da6ff);
 }
 
 .btn-primary {
@@ -115,14 +115,14 @@ h1:focus {
 
 /* Dashboard */
 .metric-card {
-    background: #2a2a2a;
+    background: var(--app-surface-muted, #2a2a2a);
     border-radius: 8px;
     padding: 1rem;
 }
 
 .metric-label {
     font-size: 12px;
-    color: #999;
+    color: var(--app-text-muted, #999);
     margin: 0 0 4px;
 }
 
@@ -141,15 +141,15 @@ h1:focus {
 }
 
 .metric-value.info {
-    color: #4da6ff;
+    color: var(--app-link, #4da6ff);
 }
 
 .dashboard-section {
-    border: 0.5px solid #333;
+    border: 0.5px solid var(--app-border, #333);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     margin-bottom: 1rem;
-    background: #222;
+    background: var(--app-surface, #222);
 }
 
 .section-header {
@@ -162,7 +162,7 @@ h1:focus {
 .section-title {
     font-size: 14px;
     font-weight: 500;
-    color: #e0e0e0;
+    color: var(--app-text, #e0e0e0);
 }
 
 .badge {
@@ -216,7 +216,7 @@ h1:focus {
 
 .empty-msg {
     font-size: 13px;
-    color: #666;
+    color: var(--app-text-muted, #666);
 }
 
 .ver-btn {

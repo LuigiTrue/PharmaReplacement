@@ -1,0 +1,52 @@
+@inject ThemeState ThemeState
+
+<div class="sidebar-nav-outlaw">
+    <ul>
+        <li>
+            <a href="/Home" class="logo">
+                <span class="icon"><i class="bi bi-hospital-fill"></i></span>
+                <span class="text">RepyPharm</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Home">
+                <span class="icon"><i class="bi bi-house-fill"></i></span>
+                <span class="text">Início</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Replacement/ReplacementGrid">
+                <span class="icon"><i class="bi bi-capsule"></i></span>
+                <span class="text">Reposição</span>
+            </a>
+        </li>
+        <li>
+            <a href="/Dashboard">
+                <span class="icon"><i class="bi bi-cart-fill"></i></span>
+                <span class="text">Compras</span>
+            </a>
+        </li>
+
+        <li class="logout-item">
+            <a href="/Home">
+                <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
+                <span class="text">Logout</span>
+            </a>
+        </li>
+
+        <li class="theme-toggle-item">
+            <button type="button" class="theme-toggle-button" title="@ThemeButtonTitle" @onclick="ThemeState.Toggle">
+                <span class="icon"><i class="bi @ThemeIcon"></i></span>
+                <span class="text">@ThemeButtonText</span>
+            </button>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private string ThemeIcon => ThemeState.IsDarkMode ? "bi-sun-fill" : "bi-moon-stars-fill";
+
+    private string ThemeButtonText => ThemeState.IsDarkMode ? "Tema claro" : "Tema escuro";
+
+    private string ThemeButtonTitle => ThemeState.IsDarkMode ? "Ativar tema claro" : "Ativar tema escuro";
+}
