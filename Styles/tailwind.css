@@ -1,0 +1,6 @@
+@import "tailwindcss";
+@source "../Components/**/*.razor";
+@source "../Shared/**/*.razor";
+@source "../wwwroot/**/*.html";
+
+@custom-variant dark (&:where(.dark, .dark *));

@@ -18,9 +18,16 @@
         
 
         <main>
-            @*<div class="top-row px-4" style="background-color: var(--fluent-theme-color);">
-                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-            </div> *@
+           @* <header class="app-main-header sticky top-0 border-b border-slate-200 bg-white px-6 py-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <nav class="flex flex-wrap items-center gap-2" aria-label="Ações do cabeçalho">
+                        <a href="/Home" class="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-blue-950 dark:hover:text-blue-200">
+                            <i class="bi bi-info-circle" aria-hidden="true"></i>
+                            <span>Sobre</span>
+                        </a>
+                    </nav>
+                </div>
+            </header>*@
 
             <div class="body-content">
                 @Body
@@ -45,7 +52,7 @@
         ? DesignThemeModes.Dark
         : DesignThemeModes.Light;
 
-    private string ThemeClass => ThemeState.IsDarkMode ? "theme-dark" : "theme-light";
+    private string ThemeClass => ThemeState.IsDarkMode ? "theme-dark dark" : "theme-light";
 
     protected override void OnInitialized()
     {

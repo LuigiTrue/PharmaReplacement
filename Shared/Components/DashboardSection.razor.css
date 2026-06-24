@@ -17,15 +17,15 @@
 }
 
 .metric-value.danger {
-    color: #c0392b;
+    color: #8B3FE0;
 }
 
 .metric-value.warning {
-    color: #e67e22;
+    color: #8B3FE0;
 }
 
 .metric-value.info {
-    color: #2980b9;
+    color: #8B3FE0;
 }
 
 .dashboard-section {
@@ -55,18 +55,18 @@
 }
 
 .badge.danger {
-    background: #fdecea;
-    color: #c0392b;
+    background: #6420C4;
+    color: #FBF3EC;
 }
 
 .badge.warning {
-    background: #fef3e2;
-    color: #e67e22;
+    background: #E8924F;
+    color: #14102B;
 }
 
 .badge.info {
-    background: #e8f4fd;
-    color: #2980b9;
+    background: #3320C9;
+    color: #FBF3EC;
 }
 
 .priority-chip {
@@ -77,23 +77,23 @@
 }
 
 .priority-chip.ultrahigh {
-    background: #d3d2e5;
-    color: #b21503;
+    background: #6420C4;
+    color: #FBF3EC;
 }
 
 .priority-chip.high {
-    background: #fef3e2;
-    color: #e67e22;
+    background: #E8924F;
+    color: #14102B;
 }
 
 .priority-chip.moderate {
-    background: #e8f4fd;
-    color: #2980b9;
+    background: #3320C9;
+    color: #FBF3EC;
 }
 
 .priority-chip.low {
-    background: #eafaf1;
-    color: #1e8449;
+    background: #8B3FE0;
+    color: #FBF3EC;
 }
 
 .empty-msg {
@@ -106,6 +106,6 @@
     background: none;
     border: none;
     cursor: pointer;
-    color: #2980b9;
+    color: #3320C9;
     padding: 8px 0 0;
 }

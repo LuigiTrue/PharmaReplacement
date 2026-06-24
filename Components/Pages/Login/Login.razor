@@ -2,56 +2,69 @@
 @page "/Login"
 @layout LoginLayout
 @using System.ComponentModel.DataAnnotations
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
 
 <PageTitle>Login</PageTitle>
 
 <div class="login-container">
-    <div class="login-card">
-        <div class="login-header">
-            <h1>Bem-vindo</h1>
-            <p>Entre com suas credenciais para continuar</p>
+    <div class="login-shell">
+        <div class="login-visual" aria-hidden="true">
+            <img src="/img/pharma_login_theme.jpg" alt="" />
+            <div class="login-visual-overlay">
+                <span class="login-visual-badge">RepyPharma</span>
+                <h2>Reposição rápida e objetiva</h2>
+                <p>Para facilitar e viabilizar a disponibilidade de itens na farmácia central.</p>
+            </div>
         </div>
 
-        <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" class="login-form">
-            <DataAnnotationsValidator />
-
-            <div class="form-group">
-                <label for="email">E-mail</label>
-                <InputText id="email" class="form-control" @bind-Value="loginModel.Email" placeholder="seu@email.com" />
-                <ValidationMessage For="@(() => loginModel.Email)" />
+        <div class="login-card">
+            <div class="login-header">
+                <h1>Bem-vindo</h1>
+                <p>Entre com suas credenciais para continuar</p>
             </div>
 
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" placeholder="••••••••" />
-                <ValidationMessage For="@(() => loginModel.Password)" />
-            </div>
+            <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" class="login-form">
+                <DataAnnotationsValidator />
 
-            <div class="form-options">
-                <label class="checkbox-label">
-                    <InputCheckbox @bind-Value="loginModel.RememberMe" />
-                    <span>Lembrar-me</span>
-                </label>
-                <a href="#" class="forgot-link">Esqueci minha senha</a>
-            </div>
+                <div class="form-group">
+                    <label for="username">Usuário</label>
+                    <InputText id="username" class="form-control" @bind-Value="loginModel.Username" placeholder="Digite seu usuário" />
+                    <ValidationMessage For="@(() => loginModel.Username)" />
+                </div>
 
-            @if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert-error">@errorMessage</div>
-            }
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" placeholder="••••••••" />
+                    <ValidationMessage For="@(() => loginModel.Password)" />
+                </div>
 
-            <button type="submit" class="btn-login" disabled="@isLoading">
-                @if (isLoading)
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <InputCheckbox @bind-Value="loginModel.RememberMe" />
+                        <span>Lembrar-me</span>
+                    </label>
+                    <a href="#" class="forgot-link">Esqueci minha senha</a>
+                </div>
+
+                @if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    <span class="spinner"></span>
-                    <span>Entrando...</span>
+                    <div class="alert-error">@errorMessage</div>
                 }
-                else
-                {
-                    <span>Entrar</span>
-                }
-            </button>
-        </EditForm>
+
+                <button type="submit" class="btn-login" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner"></span>
+                        <span>Entrando...</span>
+                    }
+                    else
+                    {
+                        <span>Entrar</span>
+                    }
+                </button>
+            </EditForm>
+        </div>
     </div>
 </div>
 
@@ -65,19 +78,43 @@
         isLoading = true;
         errorMessage = null;
 
-        // TODO: substituir pela chamada real ao serviço de autenticação
-        // ex: var resultado = await AuthService.LoginAsync(loginModel.Email, loginModel.Password);
-        await Task.Delay(800);
+        var result = await AuthService.LoginAsync(loginModel.Username, loginModel.Password, loginModel.RememberMe);
 
         isLoading = false;
-        errorMessage = "Serviço de autenticação ainda não implementado.";
+
+        if (!result.Succeeded)
+        {
+            errorMessage = result.ErrorMessage;
+            return;
+        }
+
+        Navigation.NavigateTo(GetReturnUrl(), replace: true);
+    }
+
+    private string GetReturnUrl()
+    {
+        var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
+        var query = uri.Query.TrimStart('?');
+
+        foreach (var part in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
+        {
+            var pair = part.Split('=', 2);
+            if (pair.Length == 2 && pair[0] == "returnUrl")
+            {
+                var returnUrl = Uri.UnescapeDataString(pair[1]);
+                return string.IsNullOrWhiteSpace(returnUrl) || returnUrl.StartsWith("Login", StringComparison.OrdinalIgnoreCase)
+                    ? "/Home"
+                    : $"/{returnUrl.TrimStart('/')}";
+            }
+        }
+
+        return "/Home";
     }
 
     public class LoginModel
     {
-        [Required(ErrorMessage = "Informe o e-mail")]
-        [EmailAddress(ErrorMessage = "E-mail inválido")]
-        public string Email { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Informe o usuário")]
+        public string Username { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Informe a senha")]
         [MinLength(6, ErrorMessage = "A senha deve ter ao menos 6 caracteres")]

@@ -19,6 +19,7 @@ builder.Services.AddScoped<IProductStockService, ProductStockService>();
 builder.Services.AddScoped<IStockJsonService, StockJsonService>();
 builder.Services.AddScoped<IMinimumStockService, MinimumStockService>();
 builder.Services.AddScoped<IReplenishmentService, ReplenishmentService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 //Abstractions 
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();

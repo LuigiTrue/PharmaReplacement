@@ -1,0 +1,16 @@
+[
+  {
+    "username": "admin",
+    "email": "admin@repypharma.local",
+    "name": "Administrador",
+    "password": "apocalipse16",
+    "active": true
+  },
+   {
+    "username": "admin",
+    "email": "",
+    "name": "Usuário",
+    "password": "admin123",
+    "active": true
+  }
+]

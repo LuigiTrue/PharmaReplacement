@@ -1,75 +1,86 @@
 @using RepyPharma.Models
-@using Microsoft.FluentUI.AspNetCore.Components
 
-<div class="dashboard-section">
-    <div class="section-header">
-        <span class="section-title">@Title</span>
-        <span class="badge @(Items.Any() ? "warning" : "info")">@Items.Count itens</span>
+<section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div class="mb-3 flex items-center justify-between gap-3">
+        <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">@Title</span>
+        <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold shadow-sm @(Items.Any() ? "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" : "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-slate-800 dark:text-blue-300")">
+            <span class="h-2 w-2 rounded-full @(Items.Any() ? "bg-slate-500 dark:bg-slate-300" : "bg-blue-500 dark:bg-blue-300")"></span>
+            <span>@Items.Count itens</span>
+        </div>
     </div>
 
     @if (!Items.Any())
     {
-        <p class="empty-msg">Nenhum item nesta etapa.</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Nenhum item nesta etapa.</p>
     }
     else
     {
-        <FluentDataGrid Items="@Items.AsQueryable()" MultiLine="true" AutoFit="true">
-
-            <PropertyColumn Property="@(x => x.Code)" Title="Código" Sortable="true" />
-            <PropertyColumn Property="@(x => x.Name)" Title="Nome" Sortable="true" />
-
-           <TemplateColumn Title="Lotes Disponíveis" Sortable="true">
-                    <ChildContent>
-                        @if (!context.AvailableBatches.Any())
-                        {
-                            <span style="color:#ff6b6b;">Sem estoque disponível</span>
-                        }
-                        else
-                        {
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                @foreach (var batch in context.AvailableBatches)
+        <div class="app-grid overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
+            <table class="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-700">
+                <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                    <tr>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">Código</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">Nome</th>
+                        <th scope="col" class="px-4 py-3 text-left font-semibold">Lotes Disponíveis</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 bg-white text-slate-700 dark:divide-slate-800 dark:bg-slate-900 dark:text-slate-100">
+                    @foreach (var item in Items)
+                    {
+                        <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/70">
+                            <td class="whitespace-nowrap px-4 py-3 align-top font-medium text-slate-900 dark:text-slate-100">@item.Code</td>
+                            <td class="min-w-72 px-4 py-3 align-top">@item.Name</td>
+                            <td class="min-w-[420px] px-4 py-3 align-top">
+                                @if (!item.AvailableBatches.Any())
                                 {
-                                    var isRecommended = batch.Batch == context.RecommendedBatch?.Batch;
-                                    var batchColor = isRecommended ? "color:#4da6ff;" : "color:#e0e0e0;";
+                                    <span class="text-sm font-medium text-red-600 dark:text-red-300">Sem estoque disponível</span>
+                                }
+                                else
+                                {
+                                    <div class="flex flex-col gap-1.5">
+                                        @foreach (var batch in item.AvailableBatches)
+                                        {
+                                            var isRecommended = batch.Batch == item.RecommendedBatch?.Batch;
+                                            var batchClass = isRecommended
+                                                ? "font-semibold text-blue-600 dark:text-blue-300"
+                                                : "text-slate-700 dark:text-slate-100";
 
-                                    @foreach (var location in batch.Locations
-                                        .Where(l => l.LocationId == LocationId && l.Quantity > 0))
-                                    {
-                                        <div style="display:grid; grid-template-columns:140px 70px 80px 80px; align-items:center; gap:0 8px;">
-                                            <span style="font-size:12px; white-space:nowrap; @batchColor">
-                                                @batch.Batch
-                                            </span>
-                                            <span style="font-size:11px; color:#999; white-space:nowrap;">
-                                                @(batch.Validity.HasValue ? batch.Validity.Value.ToString("MM/yyyy") : "—")
-                                            </span>
-                                            <span style="font-size:11px; white-space:nowrap; @batchColor">
-                                                @location.Quantity un.
-                                            </span>
-                                            <span>
-                                                @if (isRecommended)
-                                                {
-                                                    <span style="font-size:10px; background:#0d2a4a; color:#4da6ff; padding:1px 5px; border-radius:99px; white-space:nowrap;">
-                                                        indicado
+                                            @foreach (var location in batch.Locations.Where(l => l.LocationId == LocationId && l.Quantity > 0))
+                                            {
+                                                <div class="grid grid-cols-[140px_70px_80px_80px] items-center gap-x-2">
+                                                    <span class="whitespace-nowrap text-xs @batchClass">@batch.Batch</span>
+                                                    <span class="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+                                                        @(batch.Validity.HasValue ? batch.Validity.Value.ToString("MM/yyyy") : "-")
                                                     </span>
-                                                }
-                                            </span>
-                                        </div>
-                                    }
-                                }
+                                                    <span class="whitespace-nowrap text-xs @batchClass">@location.Quantity un.</span>
+                                                    <span>
+                                                        @if (isRecommended)
+                                                        {
+                                                            <span class="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                                                                indicado
+                                                            </span>
+                                                        }
+                                                    </span>
+                                                </div>
+                                            }
+                                        }
 
-                                @if (context.HasLotConflict)
-                                {
-                                    <span style="font-size:11px; color:#ffaa4d; margin-top:4px;">
-                                        ⚠️ Lote diferente do que está na farmácia
-                                    </span>
+                                        @if (item.HasLotConflict)
+                                        {
+                                            <span class="mt-1 text-xs font-medium text-amber-600 dark:text-amber-300">
+                                                Lote diferente do que está na farmácia
+                                            </span>
+                                        }
+                                    </div>
                                 }
-                            </div>
-                        }
-                    </ChildContent>
-                </TemplateColumn>
-        </FluentDataGrid>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
-</div>
+</section>
 
 @code {
     [Parameter, EditorRequired] public string Title { get; set; } = "";

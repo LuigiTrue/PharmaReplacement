@@ -1,0 +1,63 @@
+@using RepyPharma.Components.Pages.Login
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+@if (IsLoginRoute)
+{
+    <RouteView RouteData="RouteData" DefaultLayout="DefaultLayout" />
+}
+else if (_canRenderProtectedRoute)
+{
+    <RouteView RouteData="RouteData" DefaultLayout="DefaultLayout" />
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public RouteData RouteData { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public Type DefaultLayout { get; set; } = default!;
+
+    private bool _canRenderProtectedRoute;
+    private bool IsLoginRoute => RouteData.PageType == typeof(Login);
+
+    protected override void OnParametersSet()
+    {
+        _canRenderProtectedRoute = false;
+
+        if (!AuthService.IsInitialized)
+            return;
+
+        ApplyAccessRules();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender && AuthService.IsInitialized)
+            return;
+
+        await AuthService.InitializeAsync();
+        ApplyAccessRules();
+        StateHasChanged();
+    }
+
+    private void ApplyAccessRules()
+    {
+        if (IsLoginRoute)
+        {
+            if (AuthService.IsAuthenticated)
+                Navigation.NavigateTo("/Home", replace: true);
+
+            return;
+        }
+
+        if (!AuthService.IsAuthenticated)
+        {
+            var returnUrl = Uri.EscapeDataString(Navigation.ToBaseRelativePath(Navigation.Uri));
+            Navigation.NavigateTo($"/Login?returnUrl={returnUrl}", replace: true);
+            return;
+        }
+
+        _canRenderProtectedRoute = true;
+    }
+}

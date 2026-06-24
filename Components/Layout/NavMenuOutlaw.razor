@@ -1,41 +1,49 @@
 @inject ThemeState ThemeState
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
 
-<div class="sidebar-nav-outlaw">
+<div class="sidebar-nav-outlaw @SidebarClass">
     <ul>
-        <li>
-            <a href="/Home" class="logo">
+        <li class="rounded-md @NavItemHoverClass">
+            <a href="/Home" class="logo @NavLinkClass">
                 <span class="icon"><i class="bi bi-hospital-fill"></i></span>
                 <span class="text">RepyPharm</span>
             </a>
         </li>
-        <li>
-            <a href="/Home">
+        <li class="rounded-md @NavItemHoverClass">
+            <a href="/Home" class="@NavLinkClass">
                 <span class="icon"><i class="bi bi-house-fill"></i></span>
                 <span class="text">Início</span>
             </a>
         </li>
-        <li>
-            <a href="/Replacement/ReplacementGrid">
+        <li class="rounded-md @NavItemHoverClass">
+            <a href="/Replacement/ReplacementGrid" class="@NavLinkClass">
                 <span class="icon"><i class="bi bi-capsule"></i></span>
                 <span class="text">Reposição</span>
             </a>
         </li>
-        <li>
-            <a href="/Dashboard">
+        <li class="rounded-md @NavItemHoverClass">
+            <a href="/Dashboard" class="@NavLinkClass">
                 <span class="icon"><i class="bi bi-cart-fill"></i></span>
                 <span class="text">Compras</span>
             </a>
         </li>
-
-        <li class="logout-item">
-            <a href="/Home">
-                <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
-                <span class="text">Logout</span>
+          <li class="rounded-md @NavItemHoverClass">
+            <a href="/Home" class="@NavLinkClass">
+                <span class="icon"><i class="bi bi-prescription2"></i></span>
+                <span class="text">Controle de ATBs</span>
             </a>
         </li>
 
-        <li class="theme-toggle-item">
-            <button type="button" class="theme-toggle-button" title="@ThemeButtonTitle" @onclick="ThemeState.Toggle">
+        <li class="logout-item rounded-md @NavItemHoverClass">
+            <button type="button" class="theme-toggle-button @NavLinkClass" title="Sair" @onclick="LogoutAsync">
+                <span class="icon"><i class="bi bi-box-arrow-right"></i></span>
+                <span class="text">Logout</span>
+            </button>
+        </li>
+
+        <li class="theme-toggle-item rounded-md @NavItemHoverClass">
+            <button type="button" class="theme-toggle-button @NavLinkClass" title="@ThemeButtonTitle" @onclick="ThemeState.Toggle">
                 <span class="icon"><i class="bi @ThemeIcon"></i></span>
                 <span class="text">@ThemeButtonText</span>
             </button>
@@ -44,9 +52,27 @@
 </div>
 
 @code {
+    private string SidebarClass => ThemeState.IsDarkMode
+        ? "sidebar-dark"
+        : "sidebar-light";
+
+    private string NavLinkClass => ThemeState.IsDarkMode
+        ? "text-slate-100"
+        : "text-slate-800";
+
+    private string NavItemHoverClass => ThemeState.IsDarkMode
+        ? "hover:bg-blue-950"
+        : "hover:bg-blue-50";
+
     private string ThemeIcon => ThemeState.IsDarkMode ? "bi-sun-fill" : "bi-moon-stars-fill";
 
     private string ThemeButtonText => ThemeState.IsDarkMode ? "Tema claro" : "Tema escuro";
 
     private string ThemeButtonTitle => ThemeState.IsDarkMode ? "Ativar tema claro" : "Ativar tema escuro";
+
+    private async Task LogoutAsync()
+    {
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/Login", replace: true);
+    }
 }

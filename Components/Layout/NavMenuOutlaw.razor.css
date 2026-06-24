@@ -1,35 +1,46 @@
-.sidebar-nav-outlaw{
+.sidebar-nav-outlaw {
     position: fixed;
     top: 0;
     left: 0;
     height: 100%;
     width: 75px;
     z-index: 9999;
-    background: var(--app-nav-bg, #333);
     overflow-x: hidden;
     padding-top: 10px;
     transition: 0.6s ease;
-    box-shadow: 0 0 10px var(--app-nav-shadow, rgba(0,0,0,0.5));
+    background-color: #FFFFFF;
+    color: #221A3D;
+    border-right: 1px solid #E5DFF0;
+    box-shadow: 0 0 10px rgba(42, 27, 158, 0.16);
 }
 
-.sidebar-nav-outlaw:hover{
+.sidebar-nav-outlaw.sidebar-dark {
+    background-color: #20202A;
+    color: #C9C4D6;
+    border-right: 1px solid rgba(186,184,205,0.12);
+    box-shadow: 0 0 10px rgba(18,18,28,0.45);
+}
+
+.sidebar-nav-outlaw.sidebar-light {
+    background-color: #FFFFFF;
+    color: #221A3D;
+    border-right: 1px solid #E5DFF0;
+    box-shadow: 0 0 10px rgba(42, 27, 158, 0.16);
+}
+
+.sidebar-nav-outlaw:hover {
     width: 250px;
     transition: 0.6s ease;
 }
 
-.sidebar-nav-outlaw ul{
-     position: relative;
-     height: 95vh;
-
+.sidebar-nav-outlaw ul {
+    position: relative;
+    height: 95vh;
 }
 
-.sidebar-nav-outlaw ul li{
+.sidebar-nav-outlaw ul li {
     list-style: none;
     margin: 5px 0;
-}
-
-.sidebar-nav-outlaw ul li:hover {
-    background: var(--app-nav-hover-bg, #0b046d);
     transition: 0.3s ease;
 }
 
@@ -39,7 +50,6 @@
     display: flex;
     white-space: nowrap;
     text-decoration: none;
-    color: var(--app-nav-fg, azure);
     width: 100%;
     border: 0;
     background: transparent;
@@ -58,13 +68,13 @@
     font-weight: 600;
 }
 
-.sidebar-nav-outlaw ul li.logout-item{
+.sidebar-nav-outlaw ul li.logout-item {
     position: absolute;
     bottom: 78px;
     width: 100%;
 }
 
-.sidebar-nav-outlaw ul li.theme-toggle-item{
+.sidebar-nav-outlaw ul li.theme-toggle-item {
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -75,10 +85,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
     min-width: 75px;
     height: 72px;
-
     font-size: 25px;
 }
 
@@ -92,10 +100,8 @@
     text-transform: uppercase;
     letter-spacing: 0.8px;
     font-weight: 500;
-
     opacity: 0;
     visibility: hidden;
-
     transition: 0.3s ease;
 }
 
@@ -109,5 +115,30 @@ ul {
     padding-left: 0;
 }
 
+.sidebar-nav-outlaw.sidebar-light ul li:hover {
+    background-color: #F5F0FA;
+}
 
+.sidebar-nav-outlaw.sidebar-dark ul li:hover {
+    background-color: #6E5FA5;
+}
 
+.sidebar-nav-outlaw.sidebar-light ul li a,
+.sidebar-nav-outlaw.sidebar-light ul li button {
+    color: #5F5A78;
+}
+
+.sidebar-nav-outlaw.sidebar-dark ul li a,
+.sidebar-nav-outlaw.sidebar-dark ul li button {
+    color: #C9C4D6;
+}
+
+.sidebar-nav-outlaw.sidebar-light ul li:hover a,
+.sidebar-nav-outlaw.sidebar-light ul li:hover button {
+    color: #3320C9;
+}
+
+.sidebar-nav-outlaw.sidebar-dark ul li:hover a,
+.sidebar-nav-outlaw.sidebar-dark ul li:hover button {
+    color: #F4F1F6;
+}
