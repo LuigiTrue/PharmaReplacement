@@ -1,35 +1,37 @@
 @using Microsoft.FluentUI.AspNetCore.Components
 @implements IDialogContentComponent<string>
 
-    
-<FluentDialogBody>
-    <p>@Content</p>
-</FluentDialogBody>
-
-<FluentDialogFooter>
-    <FluentButton Appearance="Appearance.Neutral" OnClick="@CancelarAsync">
-        Cancelar
+<FluentDialogBody Class="!bg-zinc-900 !text-zinc-100">
+    <p class="text-sm text-zinc-300 leading-relaxed">@Content</p>
+    <FluentDialogFooter Class="!bg-zinc-900 !border-t !border-zinc-700">
+    <FluentButton Appearance="Appearance.Neutral"
+                  Class="!bg-zinc-800 !text-zinc-200 hover:!bg-zinc-700"
+                  OnClick="FecharAsync">
+        Sair
     </FluentButton>
-    <FluentButton Appearance="Appearance.Accent" OnClick="@ConfirmarAsync">
-        Confirmar
+    <FluentButton Appearance="Appearance.Accent"
+                  Class="!bg-indigo-600 hover:!bg-indigo-500"
+                  OnClick="AtualizarAsync">
+        Atualizar
     </FluentButton>
 </FluentDialogFooter>
+</FluentDialogBody>
+
+
 
 @code {
-    // Parâmetro obrigatório da interface
     [Parameter]
     public string Content { get; set; } = string.Empty;
 
-    // CascadingParameter obrigatório para controlar o dialog
     [CascadingParameter]
     public FluentDialog Dialog { get; set; } = default!;
 
-    private async Task ConfirmarAsync()
+    private async Task AtualizarAsync()
     {
-        await Dialog.CloseAsync("confirmado");
+        await Dialog.CloseAsync("atualizar");
     }
 
-    private async Task CancelarAsync()
+    private async Task FecharAsync()
     {
         await Dialog.CancelAsync();
     }

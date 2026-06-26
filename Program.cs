@@ -30,6 +30,10 @@ builder.Services.AddScoped<LayoutState>();
 builder.Services.AddScoped<ThemeState>();
 builder.Services.AddScoped<ReportHtmlService>();
 
+builder.Services.AddFluentUIComponents(options =>
+{
+    options.ValidateClassNames = false;
+});
 
 var app = builder.Build();
 
