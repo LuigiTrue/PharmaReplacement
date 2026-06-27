@@ -1,6 +1,7 @@
 @using RepyPharma.Components.Pages.Login
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
+@implements IDisposable
 
 @if (IsLoginRoute)
 {
@@ -19,7 +20,13 @@ else if (_canRenderProtectedRoute)
     public Type DefaultLayout { get; set; } = default!;
 
     private bool _canRenderProtectedRoute;
+    private bool _initialized;
     private bool IsLoginRoute => RouteData.PageType == typeof(Login);
+
+    protected override void OnInitialized()
+    {
+        AuthService.OnChange += HandleAuthChanged;
+    }
 
     protected override void OnParametersSet()
     {
@@ -33,12 +40,22 @@ else if (_canRenderProtectedRoute)
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (!firstRender && AuthService.IsInitialized)
+        if (_initialized)
             return;
 
+        _initialized = true;
         await AuthService.InitializeAsync();
         ApplyAccessRules();
         StateHasChanged();
+    }
+
+    private void HandleAuthChanged()
+    {
+        _ = InvokeAsync(() =>
+        {
+            ApplyAccessRules();
+            StateHasChanged();
+        });
     }
 
     private void ApplyAccessRules()
@@ -59,5 +76,10 @@ else if (_canRenderProtectedRoute)
         }
 
         _canRenderProtectedRoute = true;
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnChange -= HandleAuthChanged;
     }
 }

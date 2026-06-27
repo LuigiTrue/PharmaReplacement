@@ -6,9 +6,9 @@
 }
 
 .metric-card {
-    background: var(--neutral-fill-rest);
     border-radius: 8px;
     padding: 1rem;
+    background-color: transparent;
 }
 
 .metric-label {
@@ -24,13 +24,17 @@
 }
 
 .metric-value.danger {
-    color: #8B3FE0;
+    color: #e03f97;
 }
 
 .metric-value.warning {
-    color: #8B3FE0;
+    color: #a53fe0;
 }
 
 .metric-value.info {
-    color: #8B3FE0;
+    color: #3fe06f;
+}
+
+.section-conteiner{
+display: flex; justify-content: space-between;
 }

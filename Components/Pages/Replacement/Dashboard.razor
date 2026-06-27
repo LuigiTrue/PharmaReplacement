@@ -10,20 +10,22 @@
 }
 else if (_summary is not null)
 {
-    <div class="metric-div">
-        <div class="metric-card">
-            <p class="metric-label">Precisam ser comprados</p>
-            <p class="metric-value danger">@_summary.NeedToBuy.Count</p>
-        </div>
-        <div class="metric-card">
-            <p class="metric-label">Acabando em breve</p>
-            <p class="metric-value warning">@_summary.RunningLow.Count</p>
-        </div>
-        <div class="metric-card">
-            <p class="metric-label">Acima do normal</p>
-            <p class="metric-value info">@_summary.AboveNormal.Count</p>
-        </div>
-    </div>
+     <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+          <div class="section-conteiner">
+            <div class="metric-card border-slate-200 dark:border-slate-500">
+                <p class="metric-label">Precisam ser comprados</p>
+                <p class="metric-value danger">@_summary.NeedToBuy.Count</p>
+            </div>
+            <div class="metric-card">
+                <p class="metric-label">Acabando em breve</p>
+                <p class="metric-value warning">@_summary.RunningLow.Count</p>
+            </div>
+            <div class="metric-card">
+                <p class="metric-label">Acima do normal</p>
+                <p class="metric-value info">@_summary.AboveNormal.Count</p>
+            </div>
+          </div>
+     </section>
 
     <DashboardSection Title="Precisam ser comprados" BadgeClass="danger" BadgeLabel="Crítico" Items="_summary.NeedToBuy" />
 

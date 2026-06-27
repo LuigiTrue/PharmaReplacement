@@ -9,20 +9,14 @@
                  OnCompleted="@OnCompletedAsync" Style="height: 300px;">
     <ChildContent>
         <label for="my-file-uploader">
-            <FluentIcon Value="@(new @Icons.Regular.Size24.ArrowUpload())" />
+            <FluentIcon Value="@(new @Icons.Regular.Size32.ArrowUpload())" />
         </label>
 
         <div>
-            Drag files here you wish to upload,
-            or <label for="my-file-uploader">browse</label>
-            for them<span style="color: red;">*</span>.
+            Para atualizar, arraste aqui ou <label for="my-file-uploader">selecione</label>
+            o arquivo do espelho de estoque<span style="color: red;">*</span>.
             <br />
-            <em>Maximum of 4 files allowed.</em>
-        </div>
-
-        <div>
-            <br />
-            <a href="#">Read more about our supported file formats.</a>
+            <em>Gere o espelho apenas dos estoques 996,997,999 e 1059 .</em>
         </div>
     </ChildContent>
 </FluentInputFile>

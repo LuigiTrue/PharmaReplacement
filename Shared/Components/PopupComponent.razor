@@ -1,0 +1,39 @@
+@using Microsoft.FluentUI.AspNetCore.Components
+@using RepyPharma.Components.Pages.Replacement
+@using RepyPharma.Models
+@implements IDialogContentComponent
+
+@if (Dialog != null)
+{
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+ <section>
+     <InputFileComponent></InputFileComponent>
+</section>
+
+<FluentDialogFooter>
+    <FluentButton Appearance="Appearance.Neutral" OnClick="@CancelAsync">Fechar</FluentButton>
+</FluentDialogFooter>
+}
+
+@code {
+
+    [CascadingParameter]
+    public FluentDialog? Dialog { get; set; }
+
+    private void ToggleDialogPrimaryActionButton(bool enable)
+    {
+        Dialog!.TogglePrimaryActionButton(enable);
+    }
+
+    private async Task CancelAsync()
+    {
+        await Dialog.CancelAsync();
+    }
+}

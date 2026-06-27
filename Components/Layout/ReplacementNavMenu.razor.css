@@ -1,0 +1,55 @@
+.replacement-nav-outlaw {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 2.5vh;
+    z-index: 9999;
+    overflow-x: hidden;
+    padding-top: 10px;
+    transition: 0.6s ease;
+    background-color: #777777a9;
+    color: #221A3D;
+    border-left: 1px solid #fffefe00;
+    box-shadow: 0 0 10px rgba(42, 27, 158, 0.16);
+    border-radius: 10px 0px 0px 15px;
+}
+
+/* Overlay que cobre o restante da tela */
+.replacement-nav-outlaw::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0);
+    z-index: -1;
+    pointer-events: none;
+    transition: background-color 0.5s ease;
+}
+
+.replacement-nav-outlaw:hover::before {
+    background-color: rgba(29, 29, 29, 0.404);
+}
+
+.replacement-nav-outlaw:hover {
+    width: 40vw;
+    transition: 0.5s ease;
+    background-color: #000000a9;
+}
+
+/* Variantes de tema — mantidas sem alteração */
+.replacement-nav-outlaw.sidebar-dark {
+    background-color: #20202A;
+    color: #C9C4D6;
+    border-left: 1px solid rgba(186,184,205,0.12);
+    box-shadow: 0 0 10px rgba(18,18,28,0.45);
+}
+
+.replacement-nav-outlaw.sidebar-light {
+    background-color: #FFFFFF;
+    color: #221A3D;
+    border-left: 1px solid #E5DFF0;
+    box-shadow: 0 0 10px rgba(42, 27, 158, 0.16);
+}
