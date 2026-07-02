@@ -3,6 +3,7 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    box-sizing: border-box;
     padding: 1.25rem;
     background: radial-gradient(rgb(249, 249, 252) 40%, rgb(0, 0, 255) 180%)}
 
