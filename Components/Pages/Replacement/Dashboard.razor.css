@@ -35,8 +35,15 @@
     color: #3fe06f;
 }
 
+.metric-value.success {
+    color: #8B3FE0;
+}
+
 .section-conteiner{
-display: flex; justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 
@@ -58,8 +65,85 @@ display: flex; justify-content: space-between;
     font-weight: 600;
 }
 
+.dashboard-chart-card ::deep .apexcharts-text,
+.dashboard-chart-card ::deep .apexcharts-xaxis-label,
+.dashboard-chart-card ::deep .apexcharts-yaxis-label {
+    fill: var(--app-text-muted, #5F5A78) !important;
+    color: var(--app-text-muted, #5F5A78) !important;
+}
+
+.dashboard-chart-card ::deep .apexcharts-legend-text,
+.dashboard-chart-card ::deep .apexcharts-tooltip-title,
+.dashboard-chart-card ::deep .apexcharts-tooltip-text,
+.dashboard-chart-card ::deep .apexcharts-tooltip-series-group {
+    color: var(--app-text, #221A3D) !important;
+}
+
+.dashboard-chart-card ::deep .apexcharts-datalabel,
+.dashboard-chart-card ::deep .apexcharts-pie-label {
+    fill: #FFFFFF !important;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.dashboard-chart-card ::deep .apexcharts-gridline,
+.dashboard-chart-card ::deep .apexcharts-xaxis line,
+.dashboard-chart-card ::deep .apexcharts-yaxis line {
+    stroke: var(--app-border, #E5DFF0) !important;
+}
+
+.dashboard-chart-card ::deep .apexcharts-tooltip,
+.dashboard-chart-card ::deep .apexcharts-tooltip-title {
+    border-color: var(--app-border, #E5DFF0) !important;
+    background: var(--app-surface, #FFFFFF) !important;
+}
+
+.theme-dark .dashboard-chart-card ::deep .apexcharts-text,
+.theme-dark .dashboard-chart-card ::deep .apexcharts-xaxis-label,
+.theme-dark .dashboard-chart-card ::deep .apexcharts-yaxis-label,
+.dark .dashboard-chart-card ::deep .apexcharts-text,
+.dark .dashboard-chart-card ::deep .apexcharts-xaxis-label,
+.dark .dashboard-chart-card ::deep .apexcharts-yaxis-label {
+    fill: #EDE9FE !important;
+    color: #EDE9FE !important;
+}
+
+.theme-dark .dashboard-chart-card ::deep .apexcharts-legend-text,
+.theme-dark .dashboard-chart-card ::deep .apexcharts-tooltip-title,
+.theme-dark .dashboard-chart-card ::deep .apexcharts-tooltip-text,
+.theme-dark .dashboard-chart-card ::deep .apexcharts-tooltip-series-group,
+.dark .dashboard-chart-card ::deep .apexcharts-legend-text,
+.dark .dashboard-chart-card ::deep .apexcharts-tooltip-title,
+.dark .dashboard-chart-card ::deep .apexcharts-tooltip-text,
+.dark .dashboard-chart-card ::deep .apexcharts-tooltip-series-group {
+    color: #F8FAFC !important;
+}
+
+.theme-dark .dashboard-chart-card ::deep .apexcharts-tooltip,
+.theme-dark .dashboard-chart-card ::deep .apexcharts-tooltip-title,
+.dark .dashboard-chart-card ::deep .apexcharts-tooltip,
+.dark .dashboard-chart-card ::deep .apexcharts-tooltip-title {
+    border-color: rgba(237, 233, 254, 0.28) !important;
+    background: #20202A !important;
+}
+
+.theme-dark .dashboard-chart-card ::deep .apexcharts-gridline,
+.theme-dark .dashboard-chart-card ::deep .apexcharts-xaxis line,
+.theme-dark .dashboard-chart-card ::deep .apexcharts-yaxis line,
+.dark .dashboard-chart-card ::deep .apexcharts-gridline,
+.dark .dashboard-chart-card ::deep .apexcharts-xaxis line,
+.dark .dashboard-chart-card ::deep .apexcharts-yaxis line {
+    stroke: rgba(237, 233, 254, 0.18) !important;
+}
+
 @media (max-width: 900px) {
     .dashboard-charts-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .section-conteiner {
+        flex-direction: column;
     }
 }

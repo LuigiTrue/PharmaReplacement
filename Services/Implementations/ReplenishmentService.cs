@@ -61,16 +61,17 @@ public class ReplenishmentService : IReplenishmentService
                 MinimumQuantity = minimum.MinimumQuantity,
                 MissingQuantity = Math.Max(0, minimum.MinimumQuantity - stockAt997),
                 Priority = priority,
-                ItemPriority = minimum.itemPriority,
+                ItemPriority = ReplenishmentPriorityPolicy.GetEffectiveItemPriority(minimum, product.Name),
                 RecommendedBatch = recommendedBatch,
                 AvailableBatches = availableBatches
             });
         }
 
         return result
-                .OrderBy(r => r.ItemPriority)   // UltraHigh(0) → High(1) → Moderate(2) → Low(3)
-                .ThenBy(r => r.Priority)        // Dentro de cada grupo, Critical antes de Warning
-                .ThenBy(r => r.Name)            // Depois alfabético
+                .OrderBy(r => ReplenishmentPriorityPolicy.GetSupplyRank(r.Name, r.ItemPriority))
+                .ThenBy(r => r.Priority)
+                .ThenBy(r => r.ItemPriority)
+                .ThenBy(r => r.Name)
                 .ToList();
     }
 
@@ -78,6 +79,7 @@ public class ReplenishmentService : IReplenishmentService
     {
         var products = await _stockService.GetAllAsync();
         var minimums = await _minimumStockService.GetAllAsync();
+        var ignoredCodes = await _stockService.GetIgnoredCodesAsync();
         var minimumMap = minimums.ToDictionary(m => m.Code);
 
         var needToBuy = new List<ReplenishmentItem>();
@@ -87,6 +89,8 @@ public class ReplenishmentService : IReplenishmentService
         foreach (var product in products)
         {
             if (!minimumMap.TryGetValue(product.Code, out var minimum))
+                continue;
+            if (ignoredCodes.Contains(product.Code))
                 continue;
 
             var stockAt997 = GetStockAtLocation(product, "997");
@@ -102,7 +106,7 @@ public class ReplenishmentService : IReplenishmentService
                 MinimumQuantity = minimum.MinimumQuantity,
                 MissingQuantity = Math.Max(0, minimum.MinimumQuantity - stockAt997),
                 Priority = priority,
-                ItemPriority = minimum.itemPriority,
+                ItemPriority = ReplenishmentPriorityPolicy.GetEffectiveItemPriority(minimum, product.Name),
                 RecommendedBatch = recommended
 
             };
@@ -116,7 +120,8 @@ public class ReplenishmentService : IReplenishmentService
         }
 
         var order = (List<ReplenishmentItem> list) => list
-            .OrderBy(i => i.ItemPriority)
+            .OrderBy(i => ReplenishmentPriorityPolicy.GetSupplyRank(i.Name, i.ItemPriority))
+            .ThenBy(i => i.ItemPriority)
             .ThenBy(i => i.Name)
             .ToList();
 
@@ -136,7 +141,7 @@ public class ReplenishmentService : IReplenishmentService
 
     private ReplenishmentPriority CalculatePriority(decimal currentStock, decimal minimumQuantity)
     {
-        if (currentStock <= minimumQuantity)
+        if (currentStock < minimumQuantity)
             return ReplenishmentPriority.Critical;
 
         var warningThreshold = minimumQuantity * (1 + WarningThresholdPercent);

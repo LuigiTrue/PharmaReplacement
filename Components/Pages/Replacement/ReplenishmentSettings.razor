@@ -1,0 +1,145 @@
+@inject IReplacementSettingsService SettingsService
+
+<section class="app-grid-card replacement-settings-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div class="replacement-settings-header">
+        <div>
+            <h4 class="replacement-settings-title">Configurações de Reposição</h4>
+            <p class="replacement-settings-description">Altere a prioridade dos itens monitorados pelo abastecimento.</p>
+        </div>
+    </div>
+
+    <div class="replacement-settings-form">
+        <label class="replacement-settings-field">
+            <span>Pesquisar item</span>
+            <input class="replacement-settings-input"
+                   type="search"
+                   placeholder="Digite o código ou nome do item"
+                   @bind="_searchText"
+                   @bind:event="oninput"
+                   @bind:after="SearchItemsAsync" />
+        </label>
+
+        <label class="replacement-settings-field">
+            <span>Prioridade</span>
+            <select class="replacement-settings-input"
+                    @bind="_selectedPriority"
+                    disabled="@(_selectedItem is null)">
+                @foreach (var priority in _priorities)
+                {
+                    <option value="@priority">@GetPriorityLabel(priority)</option>
+                }
+            </select>
+        </label>
+
+        <button type="button"
+                class="replacement-settings-save"
+                disabled="@(_selectedItem is null || _saving)"
+                @onclick="SavePriorityAsync">
+            Salvar prioridade
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(_message))
+    {
+        <p class="replacement-settings-message">@_message</p>
+    }
+
+    @if (_loading)
+    {
+        <p class="replacement-settings-description">Carregando itens...</p>
+    }
+    else if (_searchResults.Count == 0)
+    {
+        <p class="replacement-settings-description">Nenhum item encontrado.</p>
+    }
+    else
+    {
+        <div class="replacement-settings-results">
+            @foreach (var item in _searchResults)
+            {
+                var selected = _selectedItem?.Code == item.Code;
+
+                <button type="button"
+                        class="replacement-settings-result @(selected ? "selected" : null)"
+                        @onclick="() => SelectItem(item)">
+                    <span class="replacement-settings-result-main">
+                        <strong>@item.Name</strong>
+                        <small>@item.Code • mínimo @item.MinimumQuantity.ToString("0.##")</small>
+                    </span>
+                    <span class="replacement-settings-chip">@GetPriorityLabel(item.ItemPriority)</span>
+                </button>
+            }
+        </div>
+    }
+</section>
+
+@code {
+    private readonly ItemPriority[] _priorities =
+    [
+        ItemPriority.UltraHigh,
+        ItemPriority.High,
+        ItemPriority.Moderate,
+        ItemPriority.Low
+    ];
+
+    private string _searchText = "";
+    private string? _message;
+    private bool _loading = true;
+    private bool _saving;
+    private ItemPriority _selectedPriority = ItemPriority.Low;
+    private ReplacementSettingsItem? _selectedItem;
+    private List<ReplacementSettingsItem> _searchResults = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadItemsAsync();
+    }
+
+    private async Task SearchItemsAsync()
+    {
+        _message = null;
+        await LoadItemsAsync();
+    }
+
+    private async Task LoadItemsAsync()
+    {
+        _loading = true;
+        _searchResults = await SettingsService.SearchPriorityItemsAsync(_searchText);
+        _loading = false;
+    }
+
+    private void SelectItem(ReplacementSettingsItem item)
+    {
+        _selectedItem = item;
+        _selectedPriority = item.ItemPriority;
+        _message = null;
+    }
+
+    private async Task SavePriorityAsync()
+    {
+        if (_selectedItem is null)
+            return;
+
+        _saving = true;
+        await SettingsService.UpdateItemPriorityAsync(_selectedItem.Code, _selectedPriority);
+
+        var updatedItem = await SettingsService.GetPriorityItemAsync(_selectedItem.Code);
+        _selectedItem = updatedItem;
+        await LoadItemsAsync();
+
+        _message = updatedItem is null
+            ? "Prioridade atualizada."
+            : $"Prioridade de {updatedItem.Name} alterada para {GetPriorityLabel(updatedItem.ItemPriority)}.";
+
+        _saving = false;
+    }
+
+    private static string GetPriorityLabel(ItemPriority priority) => priority switch
+    {
+        ItemPriority.UltraHigh => "Muito alta",
+        ItemPriority.High => "Alta",
+        ItemPriority.Moderate => "Moderada",
+        ItemPriority.Low => "Baixa",
+        _ => priority.ToString()
+    };
+}

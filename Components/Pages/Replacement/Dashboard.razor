@@ -1,5 +1,6 @@
 @page "/Dashboard"
 @inject IReplenishmentService ReplenishmentService
+@inject IReplenishmentDashboardService ReplenishmentDashboardService
 @using RepyPharma.Models
 @using ApexCharts
 
@@ -9,10 +10,14 @@
 {
     <p>Carregando...</p>
 }
-else if (_summary is not null)
+else if (_summary is not null && _dashboardData is not null)
 {
      <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
           <div class="section-conteiner">
+            <div class="metric-card border-slate-200 dark:border-slate-500">
+                <p class="metric-label">Reposição concluída</p>
+                <p class="metric-value success">@_dashboardData.ReplenishmentCompletionPercentage.ToString("0.#")%</p>
+            </div>
             <div class="metric-card border-slate-200 dark:border-slate-500">
                 <p class="metric-label">Precisam ser comprados</p>
                 <p class="metric-value danger">@_summary.NeedToBuy.Count</p>
@@ -30,25 +35,25 @@ else if (_summary is not null)
 
     <section class="dashboard-charts-grid">
         <div class="app-grid-card dashboard-chart-card rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h4 class="dashboard-chart-title">Distribuição por status</h4>
-            <ApexChart TItem="DashboardChartPoint" Height="320" Options="_pieChartOptions">
-                <ApexPointSeries TItem="DashboardChartPoint"
-                                 Items="_chartPoints"
+            <h4 class="dashboard-chart-title">Itens no mínimo - @_dashboardData.LocationName</h4>
+            <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="320" Options="_pieChartOptions">
+                <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
+                                 Items="_dashboardData.CompletionChart"
                                  SeriesType="SeriesType.Pie"
-                                 XValue="@(item => item.Category)"
-                                 YValue="@(item => item.Count)" />
+                                 XValue="@(item => item.Label)"
+                                 YValue="@(item => item.Value)" />
             </ApexChart>
         </div>
 
         <div class="app-grid-card dashboard-chart-card rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h4 class="dashboard-chart-title">Quantidade por status</h4>
-            <ApexChart TItem="DashboardChartPoint" Height="320" Options="_barChartOptions">
-                <ApexPointSeries TItem="DashboardChartPoint"
-                                 Name="Itens"
-                                 Items="_chartPoints"
+            <h4 class="dashboard-chart-title">Itens abaixo do mínimo por prioridade</h4>
+            <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="320" Options="_barChartOptions">
+                <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
+                                 Name="Itens abaixo do mínimo"
+                                 Items="_dashboardData.MissingByItemChart"
                                  SeriesType="SeriesType.Bar"
-                                 XValue="@(item => item.Category)"
-                                 YValue="@(item => item.Count)" />
+                                 XValue="@(item => item.Label)"
+                                 YValue="@(item => item.Value)" />
             </ApexChart>
         </div>
     </section>
@@ -63,33 +68,23 @@ else if (_summary is not null)
 
 @code {
     private DashboardSummary? _summary;
+    private ReplenishmentDashboardData? _dashboardData;
     private bool _loading = true;
-    private List<DashboardChartPoint> _chartPoints = new();
-    private ApexChartOptions<DashboardChartPoint> _pieChartOptions = new();
-    private ApexChartOptions<DashboardChartPoint> _barChartOptions = new();
+    private ApexChartOptions<ReplenishmentDashboardChartPoint> _pieChartOptions = new();
+    private ApexChartOptions<ReplenishmentDashboardChartPoint> _barChartOptions = new();
 
     protected override async Task OnInitializedAsync()
     {
         _summary = await ReplenishmentService.GetDashboardSummaryAsync();
-        _chartPoints = BuildChartPoints(_summary);
+        _dashboardData = await ReplenishmentDashboardService.GetDashboardDataAsync();
         _pieChartOptions = BuildPieChartOptions();
         _barChartOptions = BuildBarChartOptions();
         _loading = false;
     }
 
-    private static List<DashboardChartPoint> BuildChartPoints(DashboardSummary summary)
+    private static ApexChartOptions<ReplenishmentDashboardChartPoint> BuildPieChartOptions()
     {
-        return new List<DashboardChartPoint>
-        {
-            new("Precisam ser comprados", summary.NeedToBuy.Count),
-            new("Acabando em breve", summary.RunningLow.Count),
-            new("Acima do normal", summary.AboveNormal.Count)
-        };
-    }
-
-    private static ApexChartOptions<DashboardChartPoint> BuildPieChartOptions()
-    {
-        return new ApexChartOptions<DashboardChartPoint>
+        return new ApexChartOptions<ReplenishmentDashboardChartPoint>
         {
             Chart = new Chart
             {
@@ -98,9 +93,8 @@ else if (_summary is not null)
             },
             Labels = new List<string>
             {
-                "Precisam ser comprados",
-                "Acabando em breve",
-                "Acima do normal"
+                "Itens no mínimo ou acima",
+                "Itens abaixo do mínimo"
             },
             Colors = ChartColors,
             Legend = new Legend
@@ -114,9 +108,9 @@ else if (_summary is not null)
         };
     }
 
-    private static ApexChartOptions<DashboardChartPoint> BuildBarChartOptions()
+    private static ApexChartOptions<ReplenishmentDashboardChartPoint> BuildBarChartOptions()
     {
-        return new ApexChartOptions<DashboardChartPoint>
+        return new ApexChartOptions<ReplenishmentDashboardChartPoint>
         {
             Chart = new Chart
             {
@@ -145,10 +139,7 @@ else if (_summary is not null)
 
     private static readonly List<string> ChartColors = new()
     {
-        "#8B3FE0",
-        "#E8924F",
-        "#3320C9"
+        "#22C55E",
+        "#F97316"
     };
-
-    private sealed record DashboardChartPoint(string Category, int Count);
 }
