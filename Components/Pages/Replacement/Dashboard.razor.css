@@ -38,3 +38,28 @@
 .section-conteiner{
 display: flex; justify-content: space-between;
 }
+
+
+.dashboard-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-chart-card {
+    min-width: 0;
+}
+
+.dashboard-chart-title {
+    margin: 0 0 0.75rem;
+    color: var(--app-text, #221A3D);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .dashboard-charts-grid {
+        grid-template-columns: 1fr;
+    }
+}

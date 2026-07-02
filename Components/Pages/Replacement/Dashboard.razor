@@ -1,6 +1,7 @@
 @page "/Dashboard"
 @inject IReplenishmentService ReplenishmentService
 @using RepyPharma.Models
+@using ApexCharts
 
 <PageTitle>Dashboard</PageTitle>
 
@@ -27,6 +28,31 @@ else if (_summary is not null)
           </div>
      </section>
 
+    <section class="dashboard-charts-grid">
+        <div class="app-grid-card dashboard-chart-card rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            <h4 class="dashboard-chart-title">Distribuição por status</h4>
+            <ApexChart TItem="DashboardChartPoint" Height="320" Options="_pieChartOptions">
+                <ApexPointSeries TItem="DashboardChartPoint"
+                                 Items="_chartPoints"
+                                 SeriesType="SeriesType.Pie"
+                                 XValue="@(item => item.Category)"
+                                 YValue="@(item => item.Count)" />
+            </ApexChart>
+        </div>
+
+        <div class="app-grid-card dashboard-chart-card rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            <h4 class="dashboard-chart-title">Quantidade por status</h4>
+            <ApexChart TItem="DashboardChartPoint" Height="320" Options="_barChartOptions">
+                <ApexPointSeries TItem="DashboardChartPoint"
+                                 Name="Itens"
+                                 Items="_chartPoints"
+                                 SeriesType="SeriesType.Bar"
+                                 XValue="@(item => item.Category)"
+                                 YValue="@(item => item.Count)" />
+            </ApexChart>
+        </div>
+    </section>
+
     <DashboardSection Title="Precisam ser comprados" BadgeClass="danger" BadgeLabel="Crítico" Items="_summary.NeedToBuy" />
 
     <DashboardSection Title="Acabando em breve" BadgeClass="warning" BadgeLabel="Atenção" Items="_summary.RunningLow" />
@@ -38,10 +64,91 @@ else if (_summary is not null)
 @code {
     private DashboardSummary? _summary;
     private bool _loading = true;
+    private List<DashboardChartPoint> _chartPoints = new();
+    private ApexChartOptions<DashboardChartPoint> _pieChartOptions = new();
+    private ApexChartOptions<DashboardChartPoint> _barChartOptions = new();
 
     protected override async Task OnInitializedAsync()
     {
         _summary = await ReplenishmentService.GetDashboardSummaryAsync();
+        _chartPoints = BuildChartPoints(_summary);
+        _pieChartOptions = BuildPieChartOptions();
+        _barChartOptions = BuildBarChartOptions();
         _loading = false;
     }
+
+    private static List<DashboardChartPoint> BuildChartPoints(DashboardSummary summary)
+    {
+        return new List<DashboardChartPoint>
+        {
+            new("Precisam ser comprados", summary.NeedToBuy.Count),
+            new("Acabando em breve", summary.RunningLow.Count),
+            new("Acima do normal", summary.AboveNormal.Count)
+        };
+    }
+
+    private static ApexChartOptions<DashboardChartPoint> BuildPieChartOptions()
+    {
+        return new ApexChartOptions<DashboardChartPoint>
+        {
+            Chart = new Chart
+            {
+                Type = ChartType.Pie,
+                Toolbar = new Toolbar { Show = false }
+            },
+            Labels = new List<string>
+            {
+                "Precisam ser comprados",
+                "Acabando em breve",
+                "Acima do normal"
+            },
+            Colors = ChartColors,
+            Legend = new Legend
+            {
+                Position = LegendPosition.Bottom
+            },
+            DataLabels = new DataLabels
+            {
+                Enabled = true
+            }
+        };
+    }
+
+    private static ApexChartOptions<DashboardChartPoint> BuildBarChartOptions()
+    {
+        return new ApexChartOptions<DashboardChartPoint>
+        {
+            Chart = new Chart
+            {
+                Type = ChartType.Bar,
+                Toolbar = new Toolbar { Show = false }
+            },
+            Colors = ChartColors,
+            Legend = new Legend
+            {
+                Show = false
+            },
+            PlotOptions = new PlotOptions
+            {
+                Bar = new PlotOptionsBar
+                {
+                    BorderRadius = 6,
+                    ColumnWidth = "48%"
+                }
+            },
+            DataLabels = new DataLabels
+            {
+                Enabled = false
+            }
+        };
+    }
+
+    private static readonly List<string> ChartColors = new()
+    {
+        "#8B3FE0",
+        "#E8924F",
+        "#3320C9"
+    };
+
+    private sealed record DashboardChartPoint(string Category, int Count);
 }
