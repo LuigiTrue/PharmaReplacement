@@ -58,8 +58,11 @@ public class ReplacementSettingsService : IReplacementSettingsService
         return items.FirstOrDefault(i => i.Code == code);
     }
 
-    public async Task UpdateItemPriorityAsync(string code, ItemPriority priority)
+    public async Task UpdateItemSettingsAsync(string code, ItemPriority priority, decimal minimumQuantity)
     {
+        if (minimumQuantity < 0)
+            throw new InvalidOperationException("O estoque mínimo não pode ser negativo.");
+
         var minimums = await _minimumStockService.GetAllAsync();
         var item = minimums.FirstOrDefault(m => m.Code == code);
 
@@ -67,6 +70,7 @@ public class ReplacementSettingsService : IReplacementSettingsService
             throw new InvalidOperationException("Item não encontrado nas configurações de estoque mínimo.");
 
         item.itemPriority = priority;
+        item.MinimumQuantity = minimumQuantity;
 
         var json = JsonSerializer.Serialize(minimums, _jsonOptions);
         await File.WriteAllTextAsync(_minimumStockPath, json);

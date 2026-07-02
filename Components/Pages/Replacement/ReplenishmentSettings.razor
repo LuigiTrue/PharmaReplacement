@@ -4,7 +4,7 @@
     <div class="replacement-settings-header">
         <div>
             <h4 class="replacement-settings-title">Configurações de Reposição</h4>
-            <p class="replacement-settings-description">Altere a prioridade dos itens monitorados pelo abastecimento.</p>
+            <p class="replacement-settings-description">Altere a prioridade e o estoque mínimo dos itens monitorados pelo abastecimento.</p>
         </div>
     </div>
 
@@ -31,11 +31,21 @@
             </select>
         </label>
 
+        <label class="replacement-settings-field">
+            <span>Estoque mínimo</span>
+            <input class="replacement-settings-input"
+                   type="number"
+                   min="0"
+                   step="0.01"
+                   @bind="_selectedMinimumQuantity"
+                   disabled="@(_selectedItem is null)" />
+        </label>
+
         <button type="button"
                 class="replacement-settings-save"
-                disabled="@(_selectedItem is null || _saving)"
-                @onclick="SavePriorityAsync">
-            Salvar prioridade
+                disabled="@(!CanSave)"
+                @onclick="SaveSettingsAsync">
+            Salvar configurações
         </button>
     </div>
 
@@ -87,8 +97,11 @@
     private bool _loading = true;
     private bool _saving;
     private ItemPriority _selectedPriority = ItemPriority.Low;
+    private decimal _selectedMinimumQuantity;
     private ReplacementSettingsItem? _selectedItem;
     private List<ReplacementSettingsItem> _searchResults = new();
+
+    private bool CanSave => _selectedItem is not null && !_saving && _selectedMinimumQuantity >= 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,24 +125,31 @@
     {
         _selectedItem = item;
         _selectedPriority = item.ItemPriority;
+        _selectedMinimumQuantity = item.MinimumQuantity;
         _message = null;
     }
 
-    private async Task SavePriorityAsync()
+    private async Task SaveSettingsAsync()
     {
         if (_selectedItem is null)
             return;
 
         _saving = true;
-        await SettingsService.UpdateItemPriorityAsync(_selectedItem.Code, _selectedPriority);
+        await SettingsService.UpdateItemSettingsAsync(_selectedItem.Code, _selectedPriority, _selectedMinimumQuantity);
 
         var updatedItem = await SettingsService.GetPriorityItemAsync(_selectedItem.Code);
         _selectedItem = updatedItem;
+        if (updatedItem is not null)
+        {
+            _selectedPriority = updatedItem.ItemPriority;
+            _selectedMinimumQuantity = updatedItem.MinimumQuantity;
+        }
+
         await LoadItemsAsync();
 
         _message = updatedItem is null
-            ? "Prioridade atualizada."
-            : $"Prioridade de {updatedItem.Name} alterada para {GetPriorityLabel(updatedItem.ItemPriority)}.";
+            ? "Configurações atualizadas."
+            : $"Configurações de {updatedItem.Name} atualizadas: prioridade {GetPriorityLabel(updatedItem.ItemPriority)} e mínimo {updatedItem.MinimumQuantity:0.##}.";
 
         _saving = false;
     }
