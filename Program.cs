@@ -1,16 +1,27 @@
 using RepyPharma.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using ApexCharts;
+using Microsoft.AspNetCore.HttpOverrides;
 using RepyPharma.Services.Implementatios;
 using RepyPharma.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var renderPort = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(renderPort))
+    builder.WebHost.UseUrls($"http://0.0.0.0:{renderPort}");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddFluentUIComponents();
 builder.Services.AddApexCharts();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 
 //Services
@@ -39,6 +50,8 @@ builder.Services.AddFluentUIComponents(options =>
 });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
