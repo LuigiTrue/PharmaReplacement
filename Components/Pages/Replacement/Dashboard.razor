@@ -34,13 +34,13 @@ else if (_summary is not null && _dashboardData is not null)
      </section>
 
     <section class="dashboard-charts-grid">
-        <div class="app-grid-card dashboard-chart-card rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h4 class="dashboard-chart-title">Itens no mínimo - @_dashboardData.LocationName</h4>
+        <div class="app-grid-card dashboard-chart-card dashboard-radial-card rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            <h4 class="dashboard-chart-title">Reposição concluída - @_dashboardData.LocationName</h4>
             <div class="dashboard-chart-viewport">
-                <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="320" Options="_pieChartOptions">
+                <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="320" Options="_radialChartOptions">
                     <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
-                                     Items="_dashboardData.CompletionChart"
-                                     SeriesType="SeriesType.Pie"
+                                     Items="_completionRadialChart"
+                                     SeriesType="SeriesType.RadialBar"
                                      XValue="@(item => item.Label)"
                                      YValue="@(item => item.Value)" />
                 </ApexChart>
@@ -82,7 +82,8 @@ else if (_summary is not null && _dashboardData is not null)
     private DashboardSummary? _summary;
     private ReplenishmentDashboardData? _dashboardData;
     private bool _loading = true;
-    private ApexChartOptions<ReplenishmentDashboardChartPoint> _pieChartOptions = new();
+    private List<ReplenishmentDashboardChartPoint> _completionRadialChart = new();
+    private ApexChartOptions<ReplenishmentDashboardChartPoint> _radialChartOptions = new();
     private ApexChartOptions<ReplenishmentDashboardChartPoint> _barChartOptions = new();
     private ApexChartOptions<ReplenishmentDashboardChartPoint> _topItemsChartOptions = new();
 
@@ -90,34 +91,58 @@ else if (_summary is not null && _dashboardData is not null)
     {
         _summary = await ReplenishmentService.GetDashboardSummaryAsync();
         _dashboardData = await ReplenishmentDashboardService.GetDashboardDataAsync();
-        _pieChartOptions = BuildPieChartOptions();
+        _completionRadialChart = BuildCompletionRadialChart(_dashboardData.ReplenishmentCompletionPercentage);
+        _radialChartOptions = BuildRadialChartOptions();
         _barChartOptions = BuildBarChartOptions();
         _topItemsChartOptions = BuildTopItemsChartOptions();
         _loading = false;
     }
 
-    private static ApexChartOptions<ReplenishmentDashboardChartPoint> BuildPieChartOptions()
+    private static List<ReplenishmentDashboardChartPoint> BuildCompletionRadialChart(decimal completionPercentage)
+    {
+        return new List<ReplenishmentDashboardChartPoint>
+        {
+            new() { Label = "Reposição concluída", Value = completionPercentage }
+        };
+    }
+
+    private static ApexChartOptions<ReplenishmentDashboardChartPoint> BuildRadialChartOptions()
     {
         return new ApexChartOptions<ReplenishmentDashboardChartPoint>
         {
             Chart = new Chart
             {
-                Type = ChartType.Pie,
+                Type = ChartType.RadialBar,
                 Toolbar = new Toolbar { Show = false }
             },
             Labels = new List<string>
             {
-                "Itens no mínimo ou acima",
-                "Itens abaixo do mínimo"
+                "Reposição concluída"
             },
-            Colors = ChartColors,
+            Colors = RadialChartColors,
             Legend = new Legend
             {
-                Position = LegendPosition.Bottom
+                Show = false
             },
-            DataLabels = new DataLabels
+            PlotOptions = new PlotOptions
             {
-                Enabled = true
+                RadialBar = new PlotOptionsRadialBar
+                {
+                    DataLabels = new RadialBarDataLabels
+                    {
+                        Show = true,
+                        Name = new RadialBarDataLabelsName
+                        {
+                            Show = true,
+                            FontSize = "0.9rem"
+                        },
+                        Value = new RadialBarDataLabelsValue
+                        {
+                            Show = true,
+                            FontSize = "1.9rem"
+                        }
+                    }
+                }
             }
         };
     }
@@ -188,6 +213,11 @@ else if (_summary is not null && _dashboardData is not null)
         "var(--dashboard-chart-pink, #E03F97)",
         "var(--dashboard-chart-purple, #8B3FE0)",
         "var(--dashboard-chart-blue, #1BAEDB)"
+    };
+
+    private static readonly List<string> RadialChartColors = new()
+    {
+        "var(--dashboard-radial-progress, #F5F0FA)"
     };
 
     private static readonly List<string> TopItemsChartColors = new()

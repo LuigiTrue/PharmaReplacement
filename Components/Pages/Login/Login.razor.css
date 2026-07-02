@@ -5,14 +5,14 @@
     min-height: 100dvh;
     box-sizing: border-box;
     padding: 1.25rem;
-    background: radial-gradient(rgb(249, 249, 252) 40%, rgb(0, 0, 255) 180%);
+    background: #F5F0FA;
 }
 
 .login-shell {
     display: flex;
     align-items: stretch;
-    width: min(1120px, 100%);
-    min-height: clamp(640px, 76vh, 760px);
+    width: min(1008px, 100%);
+    min-height: clamp(576px, 68.4vh, 684px);
     border-radius: 24px;
     overflow: hidden;
     box-shadow: 0 28px 70px rgba(16, 16, 24, 0.42);
@@ -288,15 +288,15 @@
 
     .login-visual-badge {
         padding: 0.32rem 0.65rem;
-        font-size: 12.5px;
+        font-size: 11px;
     }
 
     .login-visual-overlay h2 {
-        font-size: 32px;
+        font-size: 24px;
     }
 
     .login-visual-overlay p {
-        font-size: 16px;
+        font-size: 13.5px;
         line-height: 1.35;
     }
 
@@ -366,15 +366,15 @@
     }
 
     .login-visual-badge {
-        font-size: 12.5px;
+        font-size: 10px;
     }
 
     .login-visual-overlay h2 {
-        font-size: 32px;
+        font-size: 20px;
     }
 
     .login-visual-overlay p {
-        font-size: 16px;
+        font-size: 12px;
     }
 
     .login-header {
@@ -440,15 +440,15 @@
     }
 
     .login-visual-badge {
-        font-size: 12.5px;
+        font-size: 9px;
     }
 
     .login-visual-overlay h2 {
-        font-size: 32px;
+        font-size: 18px;
     }
 
     .login-visual-overlay p {
-        font-size: 16px;
+        font-size: 11px;
     }
 
     .login-header h1 {

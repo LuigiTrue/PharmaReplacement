@@ -66,6 +66,7 @@
     --dashboard-chart-pink: #E03F97;
     --dashboard-chart-purple: #8B3FE0;
     --dashboard-chart-blue: #1BAEDB;
+    --dashboard-radial-progress: #F5F0FA;
     min-width: 0;
     overflow: hidden;
 }
@@ -86,10 +87,48 @@
 
 .dashboard-top-items-scroll {
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;
     padding-bottom: 0.25rem;
     scrollbar-width: thin;
     -webkit-overflow-scrolling: touch;
+}
+
+.dashboard-top-items-chart {
+    overflow: visible;
+}
+
+.dashboard-top-items-chart ::deep .apexcharts-canvas,
+.dashboard-top-items-chart ::deep svg {
+    overflow: visible !important;
+}
+
+.dashboard-radial-card ::deep .apexcharts-radialbar-area {
+    stroke: var(--dashboard-radial-progress) !important;
+}
+
+.dashboard-radial-card ::deep .apexcharts-radialbar-track path {
+    stroke: var(--app-surface-muted, #F5F0FA) !important;
+}
+
+.dashboard-radial-card ::deep .apexcharts-datalabel-value {
+    fill: var(--app-text, #221A3D) !important;
+    font-weight: 800;
+}
+
+.dashboard-radial-card ::deep .apexcharts-datalabel-label {
+    fill: var(--app-text-muted, #5F5A78) !important;
+    font-weight: 700;
+}
+
+.dashboard-radial-card .dashboard-chart-viewport {
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+}
+
+.dashboard-radial-card ::deep .apexcharts-canvas,
+.dashboard-radial-card ::deep svg {
+    overflow: visible !important;
 }
 
 .dashboard-chart-title {
@@ -157,6 +196,7 @@
     --dashboard-chart-pink: #F472B6;
     --dashboard-chart-purple: #C084FC;
     --dashboard-chart-blue: #38BDF8;
+    --dashboard-radial-progress: #6E5FA5;
 }
 
 .theme-dark .dashboard-top-items-chart,
@@ -233,6 +273,14 @@
         min-height: 280px !important;
     }
 
+    .dashboard-radial-card .dashboard-chart-viewport ::deep .apexcharts-canvas,
+    .dashboard-radial-card .dashboard-chart-viewport ::deep svg {
+        height: 320px !important;
+        min-height: 320px !important;
+        max-width: 100% !important;
+        overflow: visible !important;
+    }
+
     .dashboard-top-items-scroll ::deep > div,
     .dashboard-top-items-scroll ::deep .apexcharts-canvas,
     .dashboard-top-items-scroll ::deep svg {
@@ -242,8 +290,9 @@
 
     .dashboard-top-items-scroll ::deep .apexcharts-canvas,
     .dashboard-top-items-scroll ::deep svg {
-        height: 360px !important;
-        min-height: 360px !important;
+        height: 390px !important;
+        min-height: 390px !important;
+        overflow: visible !important;
     }
 }
 
@@ -284,6 +333,13 @@
         min-height: 245px !important;
     }
 
+    .dashboard-radial-card .dashboard-chart-viewport ::deep .apexcharts-canvas,
+    .dashboard-radial-card .dashboard-chart-viewport ::deep svg {
+        height: 300px !important;
+        min-height: 300px !important;
+        overflow: visible !important;
+    }
+
     .dashboard-top-items-scroll ::deep > div,
     .dashboard-top-items-scroll ::deep .apexcharts-canvas,
     .dashboard-top-items-scroll ::deep svg {
@@ -294,8 +350,9 @@
 
     .dashboard-top-items-scroll ::deep .apexcharts-canvas,
     .dashboard-top-items-scroll ::deep svg {
-        height: 330px !important;
-        min-height: 330px !important;
+        height: 365px !important;
+        min-height: 365px !important;
+        overflow: visible !important;
     }
 }
 
@@ -335,6 +392,13 @@
         min-height: 220px !important;
     }
 
+    .dashboard-radial-card .dashboard-chart-viewport ::deep .apexcharts-canvas,
+    .dashboard-radial-card .dashboard-chart-viewport ::deep svg {
+        height: 285px !important;
+        min-height: 285px !important;
+        overflow: visible !important;
+    }
+
     .dashboard-top-items-scroll ::deep > div,
     .dashboard-top-items-scroll ::deep .apexcharts-canvas,
     .dashboard-top-items-scroll ::deep svg {
@@ -345,8 +409,9 @@
 
     .dashboard-top-items-scroll ::deep .apexcharts-canvas,
     .dashboard-top-items-scroll ::deep svg {
-        height: 305px !important;
-        min-height: 305px !important;
+        height: 340px !important;
+        min-height: 340px !important;
+        overflow: visible !important;
     }
 }
 
@@ -385,6 +450,13 @@
         min-height: 205px !important;
     }
 
+    .dashboard-radial-card .dashboard-chart-viewport ::deep .apexcharts-canvas,
+    .dashboard-radial-card .dashboard-chart-viewport ::deep svg {
+        height: 270px !important;
+        min-height: 270px !important;
+        overflow: visible !important;
+    }
+
     .dashboard-top-items-scroll ::deep > div,
     .dashboard-top-items-scroll ::deep .apexcharts-canvas,
     .dashboard-top-items-scroll ::deep svg {
@@ -395,7 +467,8 @@
 
     .dashboard-top-items-scroll ::deep .apexcharts-canvas,
     .dashboard-top-items-scroll ::deep svg {
-        height: 285px !important;
-        min-height: 285px !important;
+        height: 320px !important;
+        min-height: 320px !important;
+        overflow: visible !important;
     }
 }
