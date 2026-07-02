@@ -1,0 +1,61 @@
+.update-input-file-shell {
+    --update-input-file-height: 18.75rem;
+}
+
+.update-input-copy {
+    font-size: 0.95rem;
+    line-height: 1.35;
+}
+
+.update-input-copy em {
+    font-size: 0.86rem;
+}
+
+@media (max-width: 900px) {
+    .update-input-file-shell {
+        --update-input-file-height: min(15rem, 38vh);
+    }
+
+    .update-input-copy {
+        font-size: 0.88rem;
+    }
+
+    .update-input-copy em {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 720px) {
+    .update-input-file-shell {
+        --update-input-file-height: min(13.5rem, 36vh);
+    }
+}
+
+@media (max-width: 430px) {
+    .update-input-file-shell {
+        --update-input-file-height: min(12rem, 34vh);
+    }
+
+    .update-input-copy {
+        font-size: 0.78rem;
+        line-height: 1.28;
+    }
+
+    .update-input-copy em {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .update-input-file-shell {
+        --update-input-file-height: min(10.75rem, 32vh);
+    }
+
+    .update-input-copy {
+        font-size: 0.72rem;
+    }
+
+    .update-input-copy em {
+        font-size: 0.66rem;
+    }
+}

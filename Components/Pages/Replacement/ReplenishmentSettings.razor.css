@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    min-width: 0;
 }
 
 .replacement-settings-header {
@@ -9,6 +10,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .replacement-settings-layout {
@@ -98,14 +100,14 @@
 
 .replacement-settings-form {
     display: grid;
-    grid-template-columns: minmax(16rem, 1fr) minmax(11rem, 14rem) minmax(9rem, 12rem) auto;
+    grid-template-columns: minmax(min(16rem, 100%), 1fr) minmax(11rem, 14rem) minmax(9rem, 12rem) auto;
     gap: 0.85rem;
     align-items: end;
 }
 
 .replacement-settings-inclusion-form {
     display: grid;
-    grid-template-columns: minmax(8rem, 11rem) minmax(16rem, 1fr) minmax(9rem, 12rem) minmax(11rem, 14rem) auto;
+    grid-template-columns: minmax(8rem, 11rem) minmax(min(16rem, 100%), 1fr) minmax(9rem, 12rem) minmax(11rem, 14rem) auto;
     gap: 0.85rem;
     align-items: end;
 }
@@ -295,5 +297,24 @@
     .replacement-settings-result {
         align-items: flex-start;
         flex-direction: column;
+    }
+
+    .replacement-settings-save {
+        width: 100%;
+    }
+}
+
+@media (max-width: 520px) {
+    .replacement-settings-tree-item {
+        padding: 0.6rem 0.7rem;
+    }
+
+    .replacement-settings-result-main strong,
+    .replacement-settings-result-main small {
+        white-space: normal;
+    }
+
+    .replacement-settings-chip {
+        align-self: flex-start;
     }
 }

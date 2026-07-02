@@ -4,22 +4,24 @@
 @inject PdfValidationService Validator
 @inject PdfStorageService Storage
 
-<FluentInputFile Id="my-file-uploader" Mode="InputFileMode.SaveToTemporaryFolder" Multiple="false" MaximumFileCount="1"
-                 MaximumFileSize="@(10*1024*1024)" Accept=".pdf" @bind-ProgressPercent="@ProgressPercent"
-                 OnCompleted="@OnCompletedAsync" Style="height: 300px;">
-    <ChildContent>
-        <label for="my-file-uploader">
-            <FluentIcon Value="@(new @Icons.Regular.Size32.ArrowUpload())" />
-        </label>
+<div class="update-input-file-shell">
+    <FluentInputFile Id="my-file-uploader" Class="update-input-file" Mode="InputFileMode.SaveToTemporaryFolder" Multiple="false" MaximumFileCount="1"
+                     MaximumFileSize="@(10*1024*1024)" Accept=".pdf" @bind-ProgressPercent="@ProgressPercent"
+                     OnCompleted="@OnCompletedAsync" Style="height: var(--update-input-file-height, 18.75rem);">
+        <ChildContent>
+            <label for="my-file-uploader">
+                <FluentIcon Value="@(new @Icons.Regular.Size32.ArrowUpload())" />
+            </label>
 
-        <div>
-            Para atualizar, arraste aqui ou <label for="my-file-uploader">selecione</label>
-            o arquivo do espelho de estoque<span style="color: red;">*</span>.
-            <br />
-            <em>Gere o espelho apenas dos estoques 996,997,999 e 1059 .</em>
-        </div>
-    </ChildContent>
-</FluentInputFile>
+            <div class="update-input-copy">
+                Para atualizar, arraste aqui ou <label for="my-file-uploader">selecione</label>
+                o arquivo do espelho de estoque<span style="color: red;">*</span>.
+                <br />
+                <em>Gere o espelho apenas dos estoques 996,997,999 e 1059 .</em>
+            </div>
+        </ChildContent>
+    </FluentInputFile>
+</div>
 
 @if (Files.Any())
 {

@@ -1,3 +1,45 @@
 .dark .input-file-content{
     background-color: transparent;
 }
+
+.update-popup-body {
+    max-width: 100%;
+    padding: 0.25rem 0;
+}
+
+@media (max-width: 900px) {
+    .update-popup-body {
+        padding: 0.15rem 0;
+    }
+
+    ::deep fluent-dialog-header,
+    ::deep fluent-dialog-footer {
+        padding-inline: 0.9rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .update-popup-body {
+        padding: 0;
+    }
+
+    ::deep fluent-dialog-header,
+    ::deep fluent-dialog-footer {
+        padding-inline: 0.65rem;
+    }
+
+    ::deep fluent-dialog-footer fluent-button {
+        font-size: 0.78rem;
+    }
+}
+
+@media (max-width: 360px) {
+    ::deep fluent-dialog-header,
+    ::deep fluent-dialog-footer {
+        padding-inline: 0.55rem;
+    }
+
+    ::deep fluent-dialog-footer fluent-button {
+        font-size: 0.72rem;
+    }
+}

@@ -35,16 +35,17 @@
 
                 <div class="form-group">
                     <label for="password">Senha</label>
-                    <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" placeholder="••••••••" />
+                    <div class="password-field">
+                        <InputText id="password" type="@PasswordInputType" class="form-control password-control" @bind-Value="loginModel.Password" placeholder="••••••••" />
+                        <button type="button"
+                                class="password-toggle"
+                                title="@PasswordToggleTitle"
+                                aria-label="@PasswordToggleTitle"
+                                @onclick="TogglePasswordVisibility">
+                            <i class="bi @PasswordToggleIcon" aria-hidden="true"></i>
+                        </button>
+                    </div>
                     <ValidationMessage For="@(() => loginModel.Password)" />
-                </div>
-
-                <div class="form-options">
-                    <label class="checkbox-label">
-                        <InputCheckbox @bind-Value="loginModel.RememberMe" />
-                        <span>Lembrar-me</span>
-                    </label>
-                    <a href="#" class="forgot-link">Esqueci minha senha</a>
                 </div>
 
                 @if (!string.IsNullOrEmpty(errorMessage))
@@ -71,7 +72,16 @@
 @code {
     private LoginModel loginModel = new();
     private bool isLoading = false;
+    private bool showPassword = false;
     private string? errorMessage;
+    private string PasswordInputType => showPassword ? "text" : "password";
+    private string PasswordToggleIcon => showPassword ? "bi-eye-slash" : "bi-eye";
+    private string PasswordToggleTitle => showPassword ? "Ocultar senha" : "Mostrar senha";
+
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+    }
 
     private async Task HandleLogin()
     {

@@ -1,4 +1,6 @@
 .layout-container {
+    --app-sidebar-width: 75px;
+    --app-mobile-nav-height: 4.25rem;
     --app-bg: #171721;
     --app-surface: #20202A;
     --app-surface-muted: rgba(186,184,205,0.12);
@@ -61,7 +63,7 @@ main {
     justify-content: space-between;
     gap: 1rem;
     min-height: 4rem;
-    margin-left: 75px;
+    margin-left: var(--app-sidebar-width);
     border-bottom: 1px solid var(--app-border);
     padding: 0.7rem 1.25rem;
     background: var(--app-surface);
@@ -76,6 +78,15 @@ main {
     align-items: center;
     gap: 0.75rem;
     min-width: 0;
+}
+
+.app-main-header-brand {
+    flex: 1 1 auto;
+}
+
+.app-main-header-actions {
+    flex: 0 0 auto;
+    justify-content: flex-end;
 }
 
 .app-main-header-icon {
@@ -186,7 +197,7 @@ main {
 
 .app-footer {
     flex: 0 0 auto;
-    margin-left: 75px;
+    margin-left: var(--app-sidebar-width);
     text-align: center;
     font-size: .75rem;
     color: var(--app-text-muted);
@@ -201,24 +212,183 @@ main {
 .body-content {
     flex: 1 1 auto;
     min-height: 0;
-    margin-left: 75px;
-    padding: 2em;
+    margin-left: var(--app-sidebar-width);
+    padding: clamp(1rem, 2.4vw, 2rem);
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-@media (max-width: 720px) {
+@media (min-width: 721px) and (max-width: 900px) {
     .app-main-header {
-        align-items: flex-start;
-        flex-direction: column;
+        gap: 0.75rem;
+        min-height: 3.65rem;
+        padding: 0.65rem 1rem;
+    }
+
+    .app-main-header-brand,
+    .app-main-header-actions {
+        gap: 0.6rem;
+    }
+
+    .app-main-header-icon {
+        width: 2.05rem;
+        height: 2.05rem;
+        font-size: 1rem;
+    }
+
+    .app-main-header-title {
+        font-size: 0.92rem;
+    }
+
+    .app-notification-button {
+        width: 2.35rem;
+        height: 2.35rem;
+    }
+}
+
+@media (max-width: 720px) {
+    main {
+        height: 100dvh;
+        min-height: 100dvh;
+    }
+
+    .app-main-header {
+        align-items: center;
+        flex-direction: row;
+        gap: 0.6rem;
+        margin-left: 0;
+        min-height: 3.35rem;
+        padding: 0.6rem 0.75rem;
+    }
+
+    .app-main-header-brand,
+    .app-main-header-actions {
+        gap: 0.5rem;
+    }
+
+    .app-main-header-icon {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.95rem;
+    }
+
+    .app-main-header-title {
+        min-width: 0;
+        font-size: 0.84rem;
     }
 
     .app-main-header-actions {
-        width: 100%;
-        justify-content: space-between;
+        width: auto;
+        justify-content: flex-end;
     }
 
     .app-main-header-actions ::deep .user-identity-badge {
-        max-width: calc(100% - 3.25rem);
+        max-width: none;
+    }
+
+    .app-notification-button {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .body-content {
+        margin-left: 0;
+        padding: 1rem;
+        padding-bottom: calc(var(--app-mobile-nav-height) + 1rem);
+    }
+
+    .app-footer {
+        margin-left: 0;
+        margin-bottom: var(--app-mobile-nav-height);
+        padding: 0.45rem 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-main-header-brand {
+        width: auto;
+    }
+
+    .app-main-header-title {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 430px) {
+    .app-main-header {
+        gap: 0.45rem;
+        min-height: 3.1rem;
+        padding: 0.5rem 0.65rem;
+    }
+
+    .app-main-header-brand,
+    .app-main-header-actions {
+        gap: 0.4rem;
+    }
+
+    .app-main-header-icon {
+        width: 1.85rem;
+        height: 1.85rem;
+        border-radius: 7px;
+        font-size: 0.88rem;
+    }
+
+    .app-main-header-title {
+        font-size: 0.76rem;
+    }
+
+    .app-notification-button {
+        width: 2.1rem;
+        height: 2.1rem;
+        border-radius: 7px;
+    }
+
+    .app-notification-dot {
+        top: 0.45rem;
+        right: 0.5rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .app-main-header {
+        gap: 0.35rem;
+        padding-right: 0.55rem;
+        padding-left: 0.55rem;
+    }
+
+    .app-main-header-brand,
+    .app-main-header-actions {
+        gap: 0.35rem;
+    }
+
+    .app-main-header-icon {
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.82rem;
+    }
+
+    .app-main-header-title {
+        font-size: 0.7rem;
+    }
+
+    .app-notification-button {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+    .app-main-header {
+        margin-left: var(--app-sidebar-width);
+    }
+
+    .body-content {
+        margin-left: var(--app-sidebar-width);
+        padding-bottom: clamp(0.75rem, 2vw, 1.25rem);
+    }
+
+    .app-footer {
+        margin-left: var(--app-sidebar-width);
+        margin-bottom: 0;
     }
 }

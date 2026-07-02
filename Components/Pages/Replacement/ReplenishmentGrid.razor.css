@@ -110,6 +110,7 @@
     justify-content: space-between;
     gap: 1rem;
     height: 100%;
+    min-width: 0;
 }
 
 .replenishment-grid-title {
@@ -122,6 +123,7 @@
     align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .replenishment-grid-action {
@@ -302,6 +304,16 @@
         flex-direction: column;
     }
 
+    .replenishment-grid-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .replenishment-grid-action {
+        flex: 1 1 12rem;
+        justify-content: center;
+    }
+
     .replenishment-dashboard-summary {
         flex-direction: column;
     }
@@ -319,7 +331,16 @@
     }
 
     .replenishment-tabs-host .app-tab {
-        min-width: 8rem;
+        min-width: 7.25rem;
         flex: 1 0 auto;
+    }
+
+    .replenishment-grid-title {
+        font-size: 1.1rem;
+    }
+
+    .replenishment-grid-action {
+        width: 100%;
+        flex-basis: 100%;
     }
 }

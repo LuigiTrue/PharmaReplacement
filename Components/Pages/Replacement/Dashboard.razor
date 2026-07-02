@@ -12,7 +12,7 @@
 }
 else if (_summary is not null && _dashboardData is not null)
 {
-     <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+     <section class="app-grid-card dashboard-summary-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
           <div class="section-conteiner">
             <div class="metric-card border-slate-200 dark:border-slate-500">
                 <p class="metric-label">Reposição concluída</p>
@@ -36,38 +36,44 @@ else if (_summary is not null && _dashboardData is not null)
     <section class="dashboard-charts-grid">
         <div class="app-grid-card dashboard-chart-card rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <h4 class="dashboard-chart-title">Itens no mínimo - @_dashboardData.LocationName</h4>
-            <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="320" Options="_pieChartOptions">
-                <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
-                                 Items="_dashboardData.CompletionChart"
-                                 SeriesType="SeriesType.Pie"
-                                 XValue="@(item => item.Label)"
-                                 YValue="@(item => item.Value)" />
-            </ApexChart>
+            <div class="dashboard-chart-viewport">
+                <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="320" Options="_pieChartOptions">
+                    <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
+                                     Items="_dashboardData.CompletionChart"
+                                     SeriesType="SeriesType.Pie"
+                                     XValue="@(item => item.Label)"
+                                     YValue="@(item => item.Value)" />
+                </ApexChart>
+            </div>
         </div>
 
         <div class="app-grid-card dashboard-chart-card rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <h4 class="dashboard-chart-title">Itens abaixo do mínimo por prioridade</h4>
-            <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="320" Options="_barChartOptions">
-                <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
-                                 Name="Itens abaixo do mínimo"
-                                 Items="_dashboardData.MissingByItemChart"
-                                 SeriesType="SeriesType.Bar"
-                                 XValue="@(item => item.Label)"
-                                 YValue="@(item => item.Value)" />
-            </ApexChart>
+            <div class="dashboard-chart-viewport">
+                <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="320" Options="_barChartOptions">
+                    <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
+                                     Name="Itens abaixo do mínimo"
+                                     Items="_dashboardData.MissingByItemChart"
+                                     SeriesType="SeriesType.Bar"
+                                     XValue="@(item => item.Label)"
+                                     YValue="@(item => item.Value)" />
+                </ApexChart>
+            </div>
         </div>
     </section>
 
     <section class="app-grid-card dashboard-chart-card dashboard-chart-card-wide dashboard-top-items-chart rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
         <h4 class="dashboard-chart-title">Top 10 itens para reposição</h4>
-        <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="420" Options="_topItemsChartOptions">
-            <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
-                             Name="Quantidade faltante"
-                             Items="_dashboardData.TopReplenishmentItemsChart"
-                             SeriesType="SeriesType.Bar"
-                             XValue="@(item => item.Label)"
-                             YValue="@(item => item.Value)" />
-        </ApexChart>
+        <div class="dashboard-chart-viewport dashboard-top-items-scroll">
+            <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="420" Options="_topItemsChartOptions">
+                <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
+                                 Name="Quantidade faltante"
+                                 Items="_dashboardData.TopReplenishmentItemsChart"
+                                 SeriesType="SeriesType.Bar"
+                                 XValue="@(item => item.Label)"
+                                 YValue="@(item => item.Value)" />
+            </ApexChart>
+        </div>
     </section>
 
 }

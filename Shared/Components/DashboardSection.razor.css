@@ -39,6 +39,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.75rem;
     margin-bottom: 12px;
 }
 
@@ -108,4 +109,24 @@
     cursor: pointer;
     color: #3320C9;
     padding: 8px 0 0;
+}
+
+@media (max-width: 640px) {
+    .dashboard-section {
+        padding: 0.85rem;
+    }
+
+    .section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .badge {
+        max-width: 100%;
+    }
+
+    .ver-btn {
+        width: 100%;
+        text-align: left;
+    }
 }

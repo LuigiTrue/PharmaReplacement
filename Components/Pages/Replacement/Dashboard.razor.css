@@ -5,21 +5,28 @@
     padding: 20px;
 }
 
+.dashboard-summary-card {
+    padding: 0.95rem !important;
+}
+
 .metric-card {
+    min-width: 0;
     border-radius: 8px;
-    padding: 1rem;
+    padding: 0.8rem 0.9rem;
     background-color: transparent;
 }
 
 .metric-label {
-    font-size: 12px;
+    font-size: 0.75rem;
+    line-height: 1.2;
     color: var(--neutral-foreground-hint);
-    margin: 0 0 4px;
+    margin: 0 0 0.25rem;
 }
 
 .metric-value {
-    font-size: 30px;
+    font-size: 1.85rem;
     font-weight: 500;
+    line-height: 1.05;
     margin: 0;
 }
 
@@ -39,11 +46,10 @@
     color: #8B3FE0;
 }
 
-.section-conteiner{
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
+.section-conteiner {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
 }
 
 
@@ -61,6 +67,13 @@
     --dashboard-chart-purple: #8B3FE0;
     --dashboard-chart-blue: #1BAEDB;
     min-width: 0;
+    overflow: hidden;
+}
+
+.dashboard-chart-viewport {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .dashboard-chart-card-wide {
@@ -69,6 +82,14 @@
 
 .dashboard-top-items-chart {
     --dashboard-chart-top-items: #EA580C;
+}
+
+.dashboard-top-items-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.25rem;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
 }
 
 .dashboard-chart-title {
@@ -172,13 +193,209 @@
 }
 
 @media (max-width: 900px) {
+    .dashboard-summary-card {
+        padding: 0.85rem !important;
+    }
+
+    .section-conteiner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.7rem;
+    }
+
+    .metric-card {
+        padding: 0.7rem 0.75rem;
+    }
+
+    .metric-label {
+        font-size: 0.72rem;
+    }
+
+    .metric-value {
+        font-size: 1.65rem;
+    }
+
     .dashboard-charts-grid {
         grid-template-columns: 1fr;
+    }
+
+    .dashboard-chart-card {
+        padding: 0.85rem !important;
+    }
+
+    .dashboard-chart-title {
+        margin-bottom: 0.55rem;
+        font-size: 0.9rem;
+    }
+
+    .dashboard-chart-viewport:not(.dashboard-top-items-scroll) ::deep .apexcharts-canvas,
+    .dashboard-chart-viewport:not(.dashboard-top-items-scroll) ::deep svg {
+        height: 280px !important;
+        min-height: 280px !important;
+    }
+
+    .dashboard-top-items-scroll ::deep > div,
+    .dashboard-top-items-scroll ::deep .apexcharts-canvas,
+    .dashboard-top-items-scroll ::deep svg {
+        width: 760px !important;
+        min-width: 760px !important;
+    }
+
+    .dashboard-top-items-scroll ::deep .apexcharts-canvas,
+    .dashboard-top-items-scroll ::deep svg {
+        height: 360px !important;
+        min-height: 360px !important;
     }
 }
 
 @media (max-width: 720px) {
+    .dashboard-summary-card {
+        padding: 0.75rem !important;
+    }
+
+    .metric-card {
+        width: 100%;
+        padding: 0.65rem 0.7rem;
+    }
+
+    .metric-label {
+        font-size: 0.68rem;
+    }
+
+    .metric-value {
+        font-size: 1.45rem;
+    }
+
+    .dashboard-chart-card {
+        padding: 0.75rem !important;
+    }
+
+    .dashboard-chart-card ::deep .apexcharts-canvas,
+    .dashboard-chart-card ::deep svg {
+        max-width: 100% !important;
+    }
+
+    .dashboard-chart-title {
+        font-size: 0.84rem;
+    }
+
+    .dashboard-chart-viewport:not(.dashboard-top-items-scroll) ::deep .apexcharts-canvas,
+    .dashboard-chart-viewport:not(.dashboard-top-items-scroll) ::deep svg {
+        height: 245px !important;
+        min-height: 245px !important;
+    }
+
+    .dashboard-top-items-scroll ::deep > div,
+    .dashboard-top-items-scroll ::deep .apexcharts-canvas,
+    .dashboard-top-items-scroll ::deep svg {
+        width: 720px !important;
+        min-width: 720px !important;
+        max-width: none !important;
+    }
+
+    .dashboard-top-items-scroll ::deep .apexcharts-canvas,
+    .dashboard-top-items-scroll ::deep svg {
+        height: 330px !important;
+        min-height: 330px !important;
+    }
+}
+
+@media (max-width: 430px) {
+    .dashboard-summary-card {
+        padding: 0.65rem !important;
+    }
+
     .section-conteiner {
-        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .metric-card {
+        padding: 0.55rem 0.6rem;
+    }
+
+    .metric-label {
+        font-size: 0.62rem;
+        margin-bottom: 0.18rem;
+    }
+
+    .metric-value {
+        font-size: 1.25rem;
+    }
+
+    .dashboard-chart-card {
+        padding: 0.65rem !important;
+    }
+
+    .dashboard-chart-title {
+        font-size: 0.78rem;
+    }
+
+    .dashboard-chart-viewport:not(.dashboard-top-items-scroll) ::deep .apexcharts-canvas,
+    .dashboard-chart-viewport:not(.dashboard-top-items-scroll) ::deep svg {
+        height: 220px !important;
+        min-height: 220px !important;
+    }
+
+    .dashboard-top-items-scroll ::deep > div,
+    .dashboard-top-items-scroll ::deep .apexcharts-canvas,
+    .dashboard-top-items-scroll ::deep svg {
+        width: 660px !important;
+        min-width: 660px !important;
+        max-width: none !important;
+    }
+
+    .dashboard-top-items-scroll ::deep .apexcharts-canvas,
+    .dashboard-top-items-scroll ::deep svg {
+        height: 305px !important;
+        min-height: 305px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .dashboard-summary-card {
+        padding: 0.55rem !important;
+    }
+
+    .section-conteiner {
+        gap: 0.4rem;
+    }
+
+    .metric-card {
+        padding: 0.5rem;
+    }
+
+    .metric-label {
+        font-size: 0.58rem;
+    }
+
+    .metric-value {
+        font-size: 1.12rem;
+    }
+
+    .dashboard-chart-card {
+        padding: 0.55rem !important;
+    }
+
+    .dashboard-chart-title {
+        font-size: 0.72rem;
+    }
+
+    .dashboard-chart-viewport:not(.dashboard-top-items-scroll) ::deep .apexcharts-canvas,
+    .dashboard-chart-viewport:not(.dashboard-top-items-scroll) ::deep svg {
+        height: 205px !important;
+        min-height: 205px !important;
+    }
+
+    .dashboard-top-items-scroll ::deep > div,
+    .dashboard-top-items-scroll ::deep .apexcharts-canvas,
+    .dashboard-top-items-scroll ::deep svg {
+        width: 620px !important;
+        min-width: 620px !important;
+        max-width: none !important;
+    }
+
+    .dashboard-top-items-scroll ::deep .apexcharts-canvas,
+    .dashboard-top-items-scroll ::deep svg {
+        height: 285px !important;
+        min-height: 285px !important;
     }
 }

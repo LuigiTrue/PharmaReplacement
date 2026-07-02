@@ -50,3 +50,21 @@
     font-style: italic;
     font-size: 1.05rem;
 }
+
+@media (max-width: 720px) {
+    .home-container {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .hero-card,
+    .info-card,
+    .warning-card,
+    .objective-card {
+        padding: 1rem;
+    }
+
+    .objective-card blockquote {
+        font-size: 0.95rem;
+    }
+}

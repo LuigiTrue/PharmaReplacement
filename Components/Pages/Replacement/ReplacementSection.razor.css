@@ -1,0 +1,22 @@
+.app-grid-card {
+    min-width: 0;
+}
+
+.app-grid {
+    max-width: 100%;
+}
+
+@media (max-width: 720px) {
+    .app-grid-card {
+        padding: 0.85rem !important;
+    }
+
+    .app-grid-card > div:first-child {
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+
+    table {
+        min-width: 48rem;
+    }
+}
