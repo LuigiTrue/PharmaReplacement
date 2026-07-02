@@ -136,3 +136,143 @@
     background-color: var(--app-border);
     box-shadow: 0px 8px 10px rgba(100, 100, 100, 0.05) !important;
 }
+
+
+.replenishment-tabs-host .app-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: 100%;
+    margin-bottom: 0.3rem;
+    padding: 0.35rem;
+    overflow-x: auto;
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 8px;
+    background: var(--app-surface, #FFFFFF);
+    box-shadow: 0 0 10px var(--app-nav-shadow, rgba(42, 27, 158, 0.16));
+}
+
+.replenishment-tabs-host .app-tab {
+    min-width: 9rem;
+    border: 0;
+    border-radius: 6px;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    background: transparent;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+}
+
+.replenishment-tabs-host .app-tab:hover {
+    background-color: #F5F0FA;
+    color: #3320C9;
+}
+
+#replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
+#replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
+#replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"] {
+    background-color: var(--app-nav-hover-bg, #D9A6E8);
+    color: var(--app-nav-fg, #221A3D);
+    box-shadow: inset 0 0 0 1px var(--app-border, #E5DFF0);
+}
+
+.theme-dark .replenishment-tabs-host .app-tab:hover,
+.dark .replenishment-tabs-host .app-tab:hover {
+    background-color: #6E5FA5;
+    color: #F4F1F6;
+}
+
+.theme-dark #replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
+.theme-dark #replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
+.theme-dark #replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"],
+.dark #replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
+.dark #replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
+.dark #replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"] {
+    color: #F4F1F6;
+}
+
+
+.replenishment-tab-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.replenishment-tab-panel {
+    display: none;
+}
+
+#replenishment-tab-table:checked ~ .replenishment-table-panel,
+#replenishment-tab-dashboard:checked ~ .replenishment-dashboard-panel,
+#replenishment-tab-settings:checked ~ .replenishment-settings-tab-panel {
+    display: block;
+}
+
+
+.replenishment-dashboard-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.replenishment-dashboard-summary .metric-card {
+    flex: 1 1 0;
+    min-width: 12rem;
+}
+
+.replenishment-settings-panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 8rem;
+}
+
+.replenishment-settings-title {
+    margin: 0 0 0.5rem;
+    color: var(--app-text, #221A3D);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.replenishment-settings-description {
+    margin: 0;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 720px) {
+    .replenishment-grid-card-content {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .replenishment-dashboard-summary {
+        flex-direction: column;
+    }
+
+    .replenishment-dashboard-summary .metric-card {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 640px) {
+    .replenishment-tabs-host .app-tabs {
+        display: flex;
+        width: 100%;
+    }
+
+    .replenishment-tabs-host .app-tab {
+        min-width: 8rem;
+        flex: 1 0 auto;
+    }
+}

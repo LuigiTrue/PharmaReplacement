@@ -29,40 +29,96 @@
     </section>
 </div>
 
+<div class="replenishment-tabs-host">
+    <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-table" checked />
+    <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-dashboard" />
+    <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-settings" />
 
+    <div class="app-tabs" role="tablist" aria-label="Secoes do relatorio de reposicao">
+        <label class="app-tab" role="tab" for="replenishment-tab-table">Tabela</label>
+        <label class="app-tab" role="tab" for="replenishment-tab-dashboard">Dashboard</label>
+        <label class="app-tab" role="tab" for="replenishment-tab-settings">Configurações</label>
+    </div>
 
+    <div class="replenishment-tab-panel replenishment-table-panel" role="tabpanel">
+        @if (_loading)
+        {
+            <p>Carregando...</p>
+        }
+        else if (_report is null)
+        {
+            <p>Nenhum item necessita de reposição no momento.</p>
+        }
+        else
+        {
+            <ReplacementSection Title="1ª Etapa — Fracionamento" Items="_report.FromFractionation" LocationId="@Fractionation" />
 
+            <ReplacementSection Title="2ª Etapa — CAF" Items="_report.FromCafOnly" LocationId="@Caf" />
 
+            <ReplacementSection Title="3ª Etapa — Almoxarifado" Items="_report.FromStockOnly" LocationId="@Stock" />
+        }
+    </div>
 
+    <div class="replenishment-tab-panel replenishment-dashboard-panel" role="tabpanel">
+        @if (_loading)
+        {
+            <p>Carregando...</p>
+        }
+        else if (_summary is null)
+        {
+            <p>Nenhum dado disponível para o dashboard.</p>
+        }
+        else
+        {
+            <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+                <div class="section-conteiner replenishment-dashboard-summary">
+                    <div class="metric-card border-slate-200 dark:border-slate-500">
+                        <p class="metric-label">Precisam ser comprados</p>
+                        <p class="metric-value danger">@_summary.NeedToBuy.Count</p>
+                    </div>
+                    <div class="metric-card">
+                        <p class="metric-label">Acabando em breve</p>
+                        <p class="metric-value warning">@_summary.RunningLow.Count</p>
+                    </div>
+                    <div class="metric-card">
+                        <p class="metric-label">Acima do normal</p>
+                        <p class="metric-value info">@_summary.AboveNormal.Count</p>
+                    </div>
+                </div>
+            </section>
 
-@if (_loading)
-{
-    <p>Carregando...</p>
-}
-else if (_report is null)
-{
-    <p>Nenhum item necessita de reposição no momento.</p>
-}
-else
-{
-    <ReplacementSection Title="1ª Etapa — Fracionamento" Items="_report.FromFractionation" LocationId="@Fractionation" />
+            <DashboardSection Title="Precisam ser comprados" BadgeClass="danger" BadgeLabel="Crítico" Items="_summary.NeedToBuy" />
 
-    <ReplacementSection Title="2ª Etapa — CAF" Items="_report.FromCafOnly" LocationId="@Caf" />
+            <DashboardSection Title="Acabando em breve" BadgeClass="warning" BadgeLabel="Atenção" Items="_summary.RunningLow" />
 
-    <ReplacementSection Title="3ª Etapa — Almoxarifado" Items="_report.FromStockOnly" LocationId="@Stock" />
-}
+            <DashboardSection Title="Acima do normal" BadgeClass="info" BadgeLabel="Informativo" Items="_summary.AboveNormal" />
+        }
+    </div>
+
+    <div class="replenishment-tab-panel replenishment-settings-tab-panel" role="tabpanel">
+        <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+            <div class="replenishment-settings-panel">
+                <div>
+                    <h4 class="replenishment-settings-title">Configurações</h4>
+                    <p class="replenishment-settings-description">Ajustes do relatório de reposição serão exibidos aqui.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
 
 @code {
     private ReplenishmentReport? _report;
+    private DashboardSummary? _summary;
     private bool _loading = true;
 
     private const string Fractionation = "1059";
     private const string Caf = "999";
     private const string Stock = "996";
-
     protected override async Task OnInitializedAsync()
     {
         _report = await ReplenishmentService.GenerateReportAsync();
+        _summary = await ReplenishmentService.GetDashboardSummaryAsync();
         _loading = false;
     }
 
@@ -97,4 +153,3 @@ else
     
     }
 }
-
