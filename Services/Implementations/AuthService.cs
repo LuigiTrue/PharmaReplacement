@@ -10,6 +10,7 @@ public class AuthService : IAuthService
     private const string StorageKey = "repypharma.auth.user";
     private readonly string _usersFilePath;
     private readonly IJSRuntime _jsRuntime;
+    private string? _currentStorageName;
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -27,14 +28,26 @@ public class AuthService : IAuthService
     public bool IsInitialized { get; private set; }
     public AuthUserSession? CurrentUser { get; private set; }
     public bool IsAuthenticated => CurrentUser is not null;
+    public bool IsAdmin =>
+        CurrentUser?.IsAdmin == true ||
+        string.Equals(CurrentUser?.Email, "admin@repypharma.local", StringComparison.OrdinalIgnoreCase);
 
     public async Task InitializeAsync()
     {
         if (IsInitialized)
             return;
 
-        CurrentUser = await ReadStoredSessionAsync("sessionStorage")
-            ?? await ReadStoredSessionAsync("localStorage");
+        CurrentUser = await ReadStoredSessionAsync("sessionStorage");
+        if (CurrentUser is not null)
+        {
+            _currentStorageName = "sessionStorage";
+        }
+        else
+        {
+            CurrentUser = await ReadStoredSessionAsync("localStorage");
+            if (CurrentUser is not null)
+                _currentStorageName = "localStorage";
+        }
 
         IsInitialized = true;
         NotifyStateChanged();
@@ -56,22 +69,39 @@ public class AuthService : IAuthService
 
         CurrentUser = new AuthUserSession
         {
+            Username = user.Username,
             Email = user.Email,
             Name = string.IsNullOrWhiteSpace(user.Name) ? user.Email : user.Name,
+            IsAdmin = user.IsAdmin,
+            AvatarDataUrl = user.AvatarDataUrl,
             CreatedAt = DateTime.UtcNow
         };
 
         await ClearBrowserStorageAsync();
-        await WriteStoredSessionAsync(rememberMe ? "localStorage" : "sessionStorage", CurrentUser);
+        _currentStorageName = rememberMe ? "localStorage" : "sessionStorage";
+        await WriteStoredSessionAsync(_currentStorageName, CurrentUser);
 
         IsInitialized = true;
         NotifyStateChanged();
         return AuthLoginResult.Success(CurrentUser);
     }
 
+    public async Task UpdateCurrentUserProfileAsync(string name, string avatarDataUrl)
+    {
+        if (CurrentUser is null)
+            return;
+
+        CurrentUser.Name = name;
+        CurrentUser.AvatarDataUrl = avatarDataUrl;
+
+        await WriteStoredSessionAsync(_currentStorageName ?? "sessionStorage", CurrentUser);
+        NotifyStateChanged();
+    }
+
     public async Task LogoutAsync()
     {
         CurrentUser = null;
+        _currentStorageName = null;
         IsInitialized = true;
         await ClearBrowserStorageAsync();
         NotifyStateChanged();
@@ -111,7 +141,8 @@ public class AuthService : IAuthService
                 Email = "admin@repypharma.local",
                 Name = "Administrador",
                 Password = "apocalipse16",
-                Active = true
+                Active = true,
+                IsAdmin = true
             }
         };
 

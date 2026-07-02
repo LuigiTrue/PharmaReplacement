@@ -7,6 +7,7 @@ public class ReplenishmentDashboardService : IReplenishmentDashboardService
 {
     private const string PharmacyCentralLocationId = "997";
     private const string PharmacyCentralName = "Farmácia Central";
+    private const int TopReplenishmentItemsLimit = 10;
     private readonly IStockJsonService _stockService;
     private readonly IMinimumStockService _minimumStockService;
 
@@ -90,7 +91,8 @@ public class ReplenishmentDashboardService : IReplenishmentDashboardService
             BelowMinimumItems = belowMinimumItems,
             Items = orderedItems,
             CompletionChart = BuildCompletionChart(completedItems, belowMinimumItems),
-            MissingByItemChart = BuildMissingByItemChart(orderedItems)
+            MissingByItemChart = BuildMissingByItemChart(orderedItems),
+            TopReplenishmentItemsChart = BuildTopReplenishmentItemsChart(orderedItems)
         };
     }
 
@@ -123,6 +125,40 @@ public class ReplenishmentDashboardService : IReplenishmentDashboardService
         {
             new() { Label = "Sem pendências", Value = 0 }
         };
+    }
+
+    private static List<ReplenishmentDashboardChartPoint> BuildTopReplenishmentItemsChart(List<ReplenishmentDashboardItem> items)
+    {
+        var topItems = items
+            .Where(i => i.IsBelowMinimum)
+            .OrderBy(i => i.SupplyPriorityRank)
+            .ThenByDescending(i => i.MissingQuantity)
+            .ThenBy(i => i.Name)
+            .Take(TopReplenishmentItemsLimit)
+            .Select(i => new ReplenishmentDashboardChartPoint
+            {
+                Label = FormatChartLabel(i.Name),
+                Value = i.MissingQuantity
+            })
+            .ToList();
+
+        if (topItems.Count > 0)
+            return topItems;
+
+        return new List<ReplenishmentDashboardChartPoint>
+        {
+            new() { Label = "Sem pendências", Value = 0 }
+        };
+    }
+
+    private static string FormatChartLabel(string label)
+    {
+        const int maxLength = 42;
+
+        if (label.Length <= maxLength)
+            return label;
+
+        return $"{label[..(maxLength - 3)]}...";
     }
 
     private static decimal GetStockAtLocation(ProductStock product, string locationId)

@@ -58,11 +58,17 @@ else if (_summary is not null && _dashboardData is not null)
         </div>
     </section>
 
-    <DashboardSection Title="Precisam ser comprados" BadgeClass="danger" BadgeLabel="Crítico" Items="_summary.NeedToBuy" />
-
-    <DashboardSection Title="Acabando em breve" BadgeClass="warning" BadgeLabel="Atenção" Items="_summary.RunningLow" />
-
-    <DashboardSection Title="Acima do normal" BadgeClass="info" BadgeLabel="Informativo" Items="_summary.AboveNormal" />
+    <section class="app-grid-card dashboard-chart-card dashboard-chart-card-wide dashboard-top-items-chart rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+        <h4 class="dashboard-chart-title">Top 10 itens para reposição</h4>
+        <ApexChart TItem="ReplenishmentDashboardChartPoint" Height="420" Options="_topItemsChartOptions">
+            <ApexPointSeries TItem="ReplenishmentDashboardChartPoint"
+                             Name="Quantidade faltante"
+                             Items="_dashboardData.TopReplenishmentItemsChart"
+                             SeriesType="SeriesType.Bar"
+                             XValue="@(item => item.Label)"
+                             YValue="@(item => item.Value)" />
+        </ApexChart>
+    </section>
 
 }
 
@@ -72,6 +78,7 @@ else if (_summary is not null && _dashboardData is not null)
     private bool _loading = true;
     private ApexChartOptions<ReplenishmentDashboardChartPoint> _pieChartOptions = new();
     private ApexChartOptions<ReplenishmentDashboardChartPoint> _barChartOptions = new();
+    private ApexChartOptions<ReplenishmentDashboardChartPoint> _topItemsChartOptions = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,6 +86,7 @@ else if (_summary is not null && _dashboardData is not null)
         _dashboardData = await ReplenishmentDashboardService.GetDashboardDataAsync();
         _pieChartOptions = BuildPieChartOptions();
         _barChartOptions = BuildBarChartOptions();
+        _topItemsChartOptions = BuildTopItemsChartOptions();
         _loading = false;
     }
 
@@ -137,9 +145,47 @@ else if (_summary is not null && _dashboardData is not null)
         };
     }
 
+    private static ApexChartOptions<ReplenishmentDashboardChartPoint> BuildTopItemsChartOptions()
+    {
+        return new ApexChartOptions<ReplenishmentDashboardChartPoint>
+        {
+            Chart = new Chart
+            {
+                Type = ChartType.Bar,
+                Toolbar = new Toolbar { Show = false }
+            },
+            Colors = TopItemsChartColors,
+            Legend = new Legend
+            {
+                Show = false
+            },
+            PlotOptions = new PlotOptions
+            {
+                Bar = new PlotOptionsBar
+                {
+                    Horizontal = true,
+                    BorderRadius = 6,
+                    BarHeight = "70%"
+                }
+            },
+            DataLabels = new DataLabels
+            {
+                Enabled = false
+            }
+        };
+    }
+
     private static readonly List<string> ChartColors = new()
     {
-        "#22C55E",
-        "#F97316"
+        "var(--dashboard-chart-green, #16A34A)",
+        "var(--dashboard-chart-orange, #F97316)",
+        "var(--dashboard-chart-pink, #E03F97)",
+        "var(--dashboard-chart-purple, #8B3FE0)",
+        "var(--dashboard-chart-blue, #1BAEDB)"
+    };
+
+    private static readonly List<string> TopItemsChartColors = new()
+    {
+        "var(--dashboard-chart-top-items, #EA580C)"
     };
 }

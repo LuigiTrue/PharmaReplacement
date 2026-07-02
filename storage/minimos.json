@@ -1,746 +1,20 @@
 [
   {
-    "Code": "222",
-    "Name": "COLETOR DE URINA SISTEMA ABERTO NAO ESTERIL 2000ML C/ CORDA*",
-    "MinimumQuantity": 70.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "350",
-    "Name": "ATADURA ALGODAO ORTOPEDICA 20CM X 1M",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "368",
-    "Name": "ATADURA ALGODAO ORTOPEDICA 10CM X 1M",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "381",
-    "Name": "LUVA CIRURGICA ESTERIL N\u00BA 7.5",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "382",
-    "Name": "LUVA CIRURGICA ESTERIL N\u00BA 7.0",
-    "MinimumQuantity": 25.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "383",
-    "Name": "LUVA CIRURGICA ESTERIL N\u00BA 8.0",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "390",
-    "Name": "DISPOSITIVO INTRAVENOSO PERIFERICO S/ DISP. SEGURANCA N\u00BA 21",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "391",
-    "Name": "DISPOSITIVO INTRAVENOSO PERIFERICO S/ DISP. SEGURANCA N\u00BA 23",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "394",
-    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 12",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "395",
-    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 06",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "396",
-    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 08",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "397",
-    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 14",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "398",
-    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 16",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "399",
-    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 06",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "443",
-    "Name": "SERINGA DESC 01ML C/ AGG 13 X 0,45 MM P/ INSULINA",
-    "MinimumQuantity": 80.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "446",
-    "Name": "ATROPINA SOL INJ 0,25MG/ML 1ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "450",
-    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 16",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "452",
-    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 12",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "454",
-    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 10",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "457",
-    "Name": "TIRA TESTE P/ DETERMINACAO GLUCOSE NO SANGUE",
-    "MinimumQuantity": 400.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "499",
-    "Name": "EPINEFRINA SOL INJ 1MG/ML 1ML (1:1000)",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "609",
-    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 2 VIAS N\u00BA 14",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "644",
-    "Name": "AGULHA HIPODERMICA DESC. S/ DISP DE SEGURANCA 40 X 1,20 MM",
-    "MinimumQuantity": 700.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "1174",
-    "Name": "CATETER VENOSO CENTRAL MONO LUMEN 14G X 20CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "1263",
-    "Name": "APARELHO P/ TRICOTOMIA DESCARTAVEL",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "2191",
-    "Name": "CURATIVO ALGINATO DE CALCIO ESTERIL APROX. 10 X 20 CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "3895",
-    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00BA 7,0",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "3896",
-    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00BA 8,0",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "3907",
-    "Name": "DISPOSITIVO INTRAVENOSO PERIFERICO S/ DISP. SEGURANCA N\u00BA 25",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "3912",
-    "Name": "INSULINA REGULAR SOL INJ 100UI/ML 10ML",
+    "Code": "27683",
+    "Name": "ACETATO DE TERLIPRESSINA PO P/ SOL INJ 1MG",
     "MinimumQuantity": 5.0,
     "ItemPriority": 0
   },
   {
-    "Code": "4086",
-    "Name": "COLETOR P/ INCONTINENCIA URINARIA ADULTO MASCULINO MIN 120CM",
+    "Code": "29288",
+    "Name": "ACETILCISTEINA GRANULADO 600MG 5G",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "29935",
+    "Name": "ACETILCISTEINA SOL INJ E INALATORIA 100MG/ML 3ML",
     "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "4167",
-    "Name": "CAPTOPRIL COMP 25MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "4608",
-    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 2 VIAS N\u00BA 16",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "4609",
-    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 2 VIAS N\u00BA 18",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "4610",
-    "Name": "COLETOR DE URINA SIST UNIDADE FECHAD ESTERIL C/PONTO DE COLET 2000ML",
-    "MinimumQuantity": 20.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "4817",
-    "Name": "TORNEIRA 3 VIAS C/ CONEXAO LUER LOCK / LUER SLIP",
-    "MinimumQuantity": 50.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "4880",
-    "Name": "BROMETO DE IPRATROPIO 0,025% SOL INALATORIA 20ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "4890",
-    "Name": "CEFTRIAXONA PO P/ SOL INJ 1G",
-    "MinimumQuantity": 50.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "4896",
-    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 3 VIAS N\u00BA 18",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "4900",
-    "Name": "SERINGA DESC 60ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "4908",
-    "Name": "METOCLOPRAMIDA SOL INJ 5MG/ML 2ML",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "4944",
-    "Name": "ACIDO ACETILSALICILICO COMPRIMIDO COMP 100MG",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "4946",
-    "Name": "PROMETAZINA COMP 25MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "4975",
-    "Name": "AMIODARONA SOL INJ 50MG/ML 3ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "4995",
-    "Name": "DOBUTAMINA SOL INJ 12,5MG/ML 20ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "4999",
-    "Name": "PROPANOLOL COMP 40MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5001",
-    "Name": "ENALAPRIL COMP 10MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5013",
-    "Name": "FUROSEMIDA COMP 40MG",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5020",
-    "Name": "DIPIRONA COMP 500MG",
-    "MinimumQuantity": 20.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5040",
-    "Name": "ATENOLOL COMP 25MG",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5044",
-    "Name": "INSULINA NPH SOL INJ 100UI/ML 10ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5098",
-    "Name": "LOPERAMIDA COMP 2MG COMPRIMIDO - INATIVAR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "5164",
-    "Name": "BISACODIL COMP 5MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5166",
-    "Name": "SULFATO FERROSO COMP C/ 40MG DE FERMO ELEMENTAR",
-    "MinimumQuantity": 25.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "5173",
-    "Name": "DEXAMETASONA SOL INJ FR/A 10 MG 4MG/ML 2.5ML",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5225",
-    "Name": "AZITROMICINA COMP 500MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5246",
-    "Name": "NISTATINA CREME VAGINAL 25,000UI/G 60G",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5416",
-    "Name": "HEPARINA SODICA SOL INJ EV/SC 5000UI/ML 5ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5448",
-    "Name": "AGUA BIDESTILADA SOL INJ 500ML",
-    "MinimumQuantity": 60.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5460",
-    "Name": "BICARBONATO DE SODIO FR 250 ML SOL INJ 8,4% 250 ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5467",
-    "Name": "SALBUTAMOL SUSP AEROSSOL",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5528",
-    "Name": "AMICACINA SOL INJ AMP 500MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5552",
-    "Name": "CLORETO DE SODIO 20% SOL INJ 10ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "5583",
-    "Name": "HIOSCINA \u002B DIPIRONA SOL INJ AMPOLA DE 5ML",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5616",
-    "Name": "CLORETO DE POTASSIO 10% SOL INJ 10ML",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5617",
-    "Name": "AGUA BIDESTILADA SOL INJ 10ML",
-    "MinimumQuantity": 80.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5618",
-    "Name": "BICARBONATO DE SODIO SOL INJ 8,4% 10ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5620",
-    "Name": "GLUCONATO DE CALCIO 10% SOL INJ 100MG/ML 10ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5621",
-    "Name": "BROMOPRIDA SOL INJ 5MG/ML 2ML",
-    "MinimumQuantity": 50.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5622",
-    "Name": "FUROSEMIDA SOL INJ 10MG/ML 2ML",
-    "MinimumQuantity": 25.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5623",
-    "Name": "DOPAMINA SOL INJ 5MG/ML 10ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5624",
-    "Name": "HIDROCORTISONA PO P/ SOL INJ 100MG",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5625",
-    "Name": "HIDROCORTISONA PO P/ SOL INJ 500MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "5626",
-    "Name": "DIPIRONA SOL INJ 500MG/ML 2ML",
-    "MinimumQuantity": 50.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5632",
-    "Name": "DICLOFENACO SODICO SOL INJ 25MG/ML 3ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "5651",
-    "Name": "OLEO MINERAL SOL ORAL 100ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5653",
-    "Name": "PROMETAZINA SOL INJ 25MG/ML 2ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "5681",
-    "Name": "CLORETO DE SODIO 0,9% SOL INJ 10ML",
-    "MinimumQuantity": 60.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "5833",
-    "Name": "LAMINA DE BISTURI N\u00BA23",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5880",
-    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 2 VIAS N\u00BA 20",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5910",
-    "Name": "LAMINA DE BISTURI RETA N\u00BA 11",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "5991",
-    "Name": "ALBUMINA HUMANA 20% SOL INJ 0,2G/ML 50ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6038",
-    "Name": "SULFATO DE MAGNESIO 50% SOL INJ 500MG/ML 10ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "6068",
-    "Name": "VANCOMICINA PO P/ SOL INJ 500MG",
-    "MinimumQuantity": 25.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6069",
-    "Name": "CEFAZOLINA PO P/ SOL INJ 1G",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6149",
-    "Name": "LEVOTIROXINA SODICA COMP 25MCG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "6278",
-    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00BA 6,5",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6279",
-    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00BA 7,5",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6397",
-    "Name": "FLUCONAZOL CAPS 150MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "6449",
-    "Name": "CLORIDRATO DE ETILEFRINA SOL INJ 10MG/ML 1ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6454",
-    "Name": "CLONIDINA SOL INJ 150MCG/ML 1ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "6455",
-    "Name": "ONDANSETRONA SOL INJ 2MG/ML 2ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6456",
-    "Name": "NITROPRUSSETO DE SODIO PO P/ SOL INJ 50MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "6458",
-    "Name": "LIDOCAINA 2%\u002BEPINEFRINA 1:200.000 SOL INJ 20MG\u002B5MCG/ML 20ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "6484",
-    "Name": "TENOXICAM PO P/ SOL INJ 20MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "6627",
-    "Name": "CANULA ENDOTRAQUEAL DESC. S/ BALAO N\u00B0 3,0",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6661",
-    "Name": "FIO POLIGLICOLICO 4-0 AG 2,0CM CIL 1/2 70CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "6717",
-    "Name": "PREDNISONA COMP 20MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "6746",
-    "Name": "OXACILINA PO P/ SOL INJ FR 500MG",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6748",
-    "Name": "CLINDAMICINA SOL INJ 150MG/ML 4ML",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6779",
-    "Name": "SACCHAROMYCES BOULARDII CAPS 200MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "6827",
-    "Name": "CLOPIDOGREL COMP 75MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "6943",
-    "Name": "SULFAMETOXAZOL \u002B TRIMETOPRIMA COMP 400 \u002B 80MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "7000",
-    "Name": "LUVA CIRURGICA ESTERIL N\u00B0 8,5",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "7140",
-    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00B0 8,5",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "7291",
-    "Name": "IVERMECTINA COMP 6MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "7556",
-    "Name": "ACIDO ASCORBICO (VITAMINA C) SOL INJ 100MG/ML 5ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "7557",
-    "Name": "VITAMINAS DO COMPLEXO B SOL INJ 2ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "7561",
-    "Name": "GENTAMICINA SOL INJ 40MG/ML 2ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "7562",
-    "Name": "CEFEPIME PO P/ SOL INJ 1G",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "8037",
-    "Name": "ANLODIPINO COMP 5MG",
-    "MinimumQuantity": 20.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "8087",
-    "Name": "AMIODARONA COMP 200MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "8099",
-    "Name": "FIO NYLON PRT 3-0 AG 3,0CM TR 3/8 45CM",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "8549",
-    "Name": "PARACETAMOL COMP 500MG",
-    "MinimumQuantity": 60.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "8565",
-    "Name": "CARVEDILOL COMP 6,25MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "8572",
-    "Name": "SONDA DE ASPIRACAO TRAQUEAL C/ VALVULA 12FR",
-    "MinimumQuantity": 25.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "8574",
-    "Name": "SONDA DE ASPIRACAO TRAQUEAL C/ VALVULA 14FR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "8804",
-    "Name": "PROPATILNITRATO COMP 10MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "8805",
-    "Name": "HIDROCLOROTIAZIDA COMP 25MG",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "8853",
-    "Name": "METFORMINA COMP 850MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "10073",
-    "Name": "SERINGA DESC 20ML",
-    "MinimumQuantity": 250.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "10084",
-    "Name": "LOSARTANA COMP 50MG COMPRIMIDO",
-    "MinimumQuantity": 20.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "10187",
-    "Name": "DOMPERIDONA COMP 10MG",
-    "MinimumQuantity": 40.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "10188",
-    "Name": "SINVASTATINA COMP 20MG",
-    "MinimumQuantity": 15.0,
     "ItemPriority": 1
   },
   {
@@ -750,32 +24,14 @@
     "ItemPriority": 2
   },
   {
-    "Code": "10535",
-    "Name": "BETAMETASONA SOL INJ 7MG/ML 1ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "10902",
-    "Name": "PANTOPRAZOL COMP 20MG",
-    "MinimumQuantity": 25.0,
+    "Code": "4944",
+    "Name": "ACIDO ACETILSALICILICO COMPRIMIDO COMP 100MG",
+    "MinimumQuantity": 15.0,
     "ItemPriority": 1
   },
   {
-    "Code": "11183",
-    "Name": "TENOXICAM COMP 20MG COMPRIMIDO",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "11306",
-    "Name": "AMOXICILINA \u002B ACIDO CLAVULANICO PO P/ SOL INJ 1G \u002B 200MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "11323",
-    "Name": "RINGER SIMPLES SOL INJ 500ML",
+    "Code": "7556",
+    "Name": "ACIDO ASCORBICO (VITAMINA C) SOL INJ 100MG/ML 5ML",
     "MinimumQuantity": 5.0,
     "ItemPriority": 2
   },
@@ -786,45 +42,99 @@
     "ItemPriority": 1
   },
   {
-    "Code": "11783",
-    "Name": "METRONIDAZOL COMP 250MG",
+    "Code": "20436",
+    "Name": "ADENOSINA SOL INJ 3MG/ML 2ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "5617",
+    "Name": "AGUA BIDESTILADA SOL INJ 10ML",
+    "MinimumQuantity": 80.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5448",
+    "Name": "AGUA BIDESTILADA SOL INJ 500ML",
+    "MinimumQuantity": 60.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "25467",
+    "Name": "AGULHA DESC S/ DISP DE SEGURANCA 13 X 0,45 MM (26G 1/2)",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "37256",
+    "Name": "AGULHA DESC. S/ DISP DE SEGURANCA 25 X 0,70 MM - INATIVAR",
+    "MinimumQuantity": 120.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "37600",
+    "Name": "AGULHA HIPODERMICA DESC. S/ DISP DE SEGURANCA 20 X 0,55 MM",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "644",
+    "Name": "AGULHA HIPODERMICA DESC. S/ DISP DE SEGURANCA 40 X 1,20 MM",
+    "MinimumQuantity": 700.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "5991",
+    "Name": "ALBUMINA HUMANA 20% SOL INJ 0,2G/ML 50ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "96901",
+    "Name": "ALFAEPOETINA SOL INJ 4.000UI/ML 1ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "25305",
+    "Name": "ALTEPLASE PO P/ SOL INJ 50MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "21889",
+    "Name": "AMBROXOL SOL ORAL ADULTO 30MG/5ML 120ML",
     "MinimumQuantity": 5.0,
     "ItemPriority": 2
   },
   {
-    "Code": "11861",
-    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 18",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "11862",
-    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 20",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "12019",
-    "Name": "CIPROFLOXACINO SOL INJ 2MG/ML 100ML",
+    "Code": "5528",
+    "Name": "AMICACINA SOL INJ AMP 500MG",
     "MinimumQuantity": 10.0,
     "ItemPriority": 1
   },
   {
-    "Code": "12210",
-    "Name": "LACTULOSE XPE 667MG/ML 120ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
+    "Code": "8087",
+    "Name": "AMIODARONA COMP 200MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
   },
   {
-    "Code": "12226",
-    "Name": "BROMOPRIDA SOL ORAL 4MG/ML 20ML",
+    "Code": "4975",
+    "Name": "AMIODARONA SOL INJ 50MG/ML 3ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "18520",
+    "Name": "AMITRIPTILINA COMP 25MG - GEN TEUTO",
     "MinimumQuantity": 5.0,
     "ItemPriority": 2
   },
   {
-    "Code": "12459",
-    "Name": "MEROPENEM PO P/ SOL INJ 1G",
-    "MinimumQuantity": 25.0,
+    "Code": "11306",
+    "Name": "AMOXICILINA \u002B ACIDO CLAVULANICO PO P/ SOL INJ 1G \u002B 200MG",
+    "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
   {
@@ -834,146 +144,134 @@
     "ItemPriority": 1
   },
   {
-    "Code": "12993",
-    "Name": "PARACETAMOL SOL ORAL 200MG/ML 15ML",
+    "Code": "91725",
+    "Name": "AMPICILINA SODICA PO P/ SOL INJ 1G",
     "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
   {
-    "Code": "13173",
-    "Name": "METOPROLOL SOL INJ 1MG/ML 5ML",
+    "Code": "8037",
+    "Name": "ANLODIPINO COMP 5MG",
+    "MinimumQuantity": 20.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "1263",
+    "Name": "APARELHO P/ TRICOTOMIA DESCARTAVEL",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "368",
+    "Name": "ATADURA ALGODAO ORTOPEDICA 10CM X 1M",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "350",
+    "Name": "ATADURA ALGODAO ORTOPEDICA 20CM X 1M",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "70537",
+    "Name": "ATADURA CREPE NAO ESTERIL 13 FIOS 10CM X 1,8M G 21,8",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "70536",
+    "Name": "ATADURA CREPE NAO ESTERIL 13 FIOS 15CM X 1,8M G 32,7",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "70538",
+    "Name": "ATADURA CREPE NAO ESTERIL 13 FIOS G 42,8 20CM X 1,8M",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5040",
+    "Name": "ATENOLOL COMP 25MG",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "446",
+    "Name": "ATROPINA SOL INJ 0,25MG/ML 1ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "5225",
+    "Name": "AZITROMICINA COMP 500MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "35430",
+    "Name": "AZITROMICINA PO P/ SOL INJ 500MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "62769",
+    "Name": "AZUL DE METILENO 1% SOL AQUOSA 2ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "26769",
+    "Name": "BENZILPENICILINA BENZATINA PO P/ SOL INJ 1.200.000UI",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "10535",
+    "Name": "BETAMETASONA SOL INJ 7MG/ML 1ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "5460",
+    "Name": "BICARBONATO DE SODIO FR 250 ML SOL INJ 8,4% 250 ML",
     "MinimumQuantity": 5.0,
     "ItemPriority": 0
   },
   {
-    "Code": "13648",
-    "Name": "PIPERACILINA \u002B TAZOBACTAM PO P/ SOL INJ 4 \u002B 0,5G",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "13728",
-    "Name": "METRONIDAZOL SOL INJ 5MG/ML 100ML",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "14417",
-    "Name": "ESPIRONOLACTONA COMPRIMIDO",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "14538",
-    "Name": "PREDNISONA COMP 5MG COMPRIMIDO",
+    "Code": "5618",
+    "Name": "BICARBONATO DE SODIO SOL INJ 8,4% 10ML",
     "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "15044",
-    "Name": "SUXAMETONIO PO P/ SOL INJ 100MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "15605",
-    "Name": "FIO POLIGLECAPRONE 4-0 AG 1,9CM CIL 3/8 70CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "15619",
-    "Name": "FIO NYLON PRT 2-0 AG 4,0CM TR 3/8 45CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "15690",
-    "Name": "CLORETO DE SODIO 0,9% SOL INJ 250ML",
-    "MinimumQuantity": 150.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "15691",
-    "Name": "CLORETO DE SODIO 0,9% SOL INJ 100ML",
-    "MinimumQuantity": 200.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "15743",
-    "Name": "HEPARINA SODICA SOL INJ SUBCUTANEA 5000UI/0,25ML",
-    "MinimumQuantity": 60.0,
     "ItemPriority": 0
   },
   {
-    "Code": "16117",
-    "Name": "LINEZOLIDA SOL INJ 2MG/ML 300ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "16119",
-    "Name": "POLIMIXINA B PO P/ SOL INJ 500.000UI - INATIVAR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "16123",
-    "Name": "FLUCONAZOL SOL INJ 2MG/ML 100ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "16371",
-    "Name": "TERBUTALINA SOL INJ 0,5MG/ML 1ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "16372",
-    "Name": "GLICOSE 50% SOL INJ 500MG/ML 10ML",
-    "MinimumQuantity": 80.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "16540",
-    "Name": "CATETER VENOSO CENTRAL DUPLO LUMEN 7FR 14/18G X 20CM S/ BIST",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "16579",
-    "Name": "COLETOR DE SECRECAO UNIDADE VIAS AEREAS 70ML A 120ML (BRONQUINHO)",
+    "Code": "5164",
+    "Name": "BISACODIL COMP 5MG",
     "MinimumQuantity": 5.0,
     "ItemPriority": 3
   },
   {
-    "Code": "16606",
-    "Name": "EQUIPO MED. FOTOSSENSIVEL P/ BOMBA DE INFUSAO",
+    "Code": "64242",
+    "Name": "BOLSA DE COLOSTOMIA DRENAVEL RECORTAVEL TRANSPAR 19-64MM",
     "MinimumQuantity": 10.0,
     "ItemPriority": 3
   },
   {
-    "Code": "17655",
-    "Name": "ESCOVA P/ DEGERMACAO DAS MAOS C/ CLOREXIDINA 2% 22ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "17854",
-    "Name": "KIT DRENO DE TORAX N\u00BA 32 FR. 2000ML",
+    "Code": "4880",
+    "Name": "BROMETO DE IPRATROPIO 0,025% SOL INALATORIA 20ML",
     "MinimumQuantity": 5.0,
-    "ItemPriority": 2
+    "ItemPriority": 1
   },
   {
-    "Code": "17939",
-    "Name": "COLAGENASE POMADA TUBO 30G",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
+    "Code": "5621",
+    "Name": "BROMOPRIDA SOL INJ 5MG/ML 2ML",
+    "MinimumQuantity": 50.0,
+    "ItemPriority": 1
   },
   {
-    "Code": "17944",
-    "Name": "LIDOCAINA 2% GELEIA TOPICA ESTERIL 20MG/G 30G",
+    "Code": "12226",
+    "Name": "BROMOPRIDA SOL ORAL 4MG/ML 20ML",
     "MinimumQuantity": 5.0,
     "ItemPriority": 2
   },
@@ -984,94 +282,82 @@
     "ItemPriority": 1
   },
   {
-    "Code": "18252",
-    "Name": "ROCURONIO, BROMETO SOL INJ 10MG/ML 5ML",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "18520",
-    "Name": "AMITRIPTILINA COMP 25MG - GEN TEUTO",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "18529",
-    "Name": "FENITOINA COMP 100MG - GEN TEUTO",
+    "Code": "39779",
+    "Name": "CABERGOLINA COMP 0,5MG",
     "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
   {
-    "Code": "18531",
-    "Name": "DIAZEPAM COMP 10MG - SANTIAZEPAM",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "18563",
-    "Name": "MORFINA SOL INJ 10MG/ML 1ML - DOLO MOFF/UNIAO QUIMICA",
-    "MinimumQuantity": 25.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "18571",
-    "Name": "CLORPROMAZINA 4% SOL ORAL 40MG/ML 20ML - LONGACTIL/CRISTALIA",
+    "Code": "38503",
+    "Name": "CANULA DE TRAQUEOSTOMIA PVC C/ BALAO N\u00BA 6,5",
     "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
   {
-    "Code": "18630",
-    "Name": "CLONAZEPAM SOL ORAL 2,5MG/ML 20ML - GEN GEOLAB",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "18635",
-    "Name": "CODEINA COMP 30MG - CODEIN/CRISTALIA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "18639",
-    "Name": "FENITOINA SOL INJ 50MG/ML 5ML - GEN HIPOLABOR",
+    "Code": "38504",
+    "Name": "CANULA DE TRAQUEOSTOMIA PVC C/ BALAO N\u00BA 7,0",
     "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
   {
-    "Code": "18644",
-    "Name": "ETOMIDATO SOL INJ 2MG/ML 10ML - GEN CRISTALIA",
+    "Code": "7140",
+    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00B0 8,5",
     "MinimumQuantity": 5.0,
-    "ItemPriority": 0
+    "ItemPriority": 1
   },
   {
-    "Code": "18673",
-    "Name": "PROPOFOL SOL INJ 10MG/ML 20ML - PROVIVE/UNIAO QUIMICA",
-    "MinimumQuantity": 50.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "19002",
-    "Name": "FLUOXETINA COMP 20MG - GEN TEUTO",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "19381",
-    "Name": "FOSFATO DE POTASSIO SOL INJ 2MEQ/ML 10ML",
+    "Code": "6278",
+    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00BA 6,5",
     "MinimumQuantity": 5.0,
-    "ItemPriority": 2
+    "ItemPriority": 1
   },
   {
-    "Code": "19441",
-    "Name": "NISTATINA \u002B OXIDO DE ZINCO POMADA 100.000UI \u002B 200MG/G 60G",
+    "Code": "3895",
+    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00BA 7,0",
     "MinimumQuantity": 5.0,
-    "ItemPriority": 3
+    "ItemPriority": 1
   },
   {
-    "Code": "19584",
-    "Name": "CURATIVO CARVAO ATIVADO E PRATA ESTERIL APROX. 10X10CM",
+    "Code": "6279",
+    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00BA 7,5",
     "MinimumQuantity": 5.0,
-    "ItemPriority": 3
+    "ItemPriority": 1
+  },
+  {
+    "Code": "3896",
+    "Name": "CANULA ENDOTRAQUEAL DESC. C/ BALAO N\u00BA 8,0",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "6627",
+    "Name": "CANULA ENDOTRAQUEAL DESC. S/ BALAO N\u00B0 3,0",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "4167",
+    "Name": "CAPTOPRIL COMP 25MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "35052",
+    "Name": "CARBAMAZEPINA COMP 200MG - UNI CARBAMAZ",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "27665",
+    "Name": "CARVEDILOL COMP 3,125MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "8565",
+    "Name": "CARVEDILOL COMP 6,25MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
   },
   {
     "Code": "19685",
@@ -1110,188 +396,20 @@
     "ItemPriority": 2
   },
   {
-    "Code": "19696",
-    "Name": "EQUIPO P/ SOL PARENT MACROGOTAS GRAVIT C/ INJ LAT E DISP SEG",
-    "MinimumQuantity": 200.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "19697",
-    "Name": "LANCETA DESC. CORTANTE ESTERIL COM DISPOSITIVO DE SEGURANCA",
-    "MinimumQuantity": 350.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "20120",
-    "Name": "PROTAMINA SOL INJ 1000UI/ML 5ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "20436",
-    "Name": "ADENOSINA SOL INJ 3MG/ML 2ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "21253",
-    "Name": "SERTRALINA COMP 50MG - GEN EMS",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "21400",
-    "Name": "TRAMADOL SOL INJ 50MG/ML 2ML - GEN HIPOLABOR",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "21889",
-    "Name": "AMBROXOL SOL ORAL ADULTO 30MG/5ML 120ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "21994",
-    "Name": "LORATADINA COMP 10MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "22080",
-    "Name": "LEVOTIROXINA SODICA COMP 75MCG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "22150",
-    "Name": "DEXCLORFENIRAMINA SOL ORAL 0,4MG/ML 100ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "22267",
-    "Name": "CURATIVO FILME TRANSPARENTE ESTERIL APROX. 6 X 7 CM",
-    "MinimumQuantity": 60.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "22482",
-    "Name": "LUVA CIRURGICA ESTERIL N\u00BA 6,5",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "22958",
-    "Name": "IBUPROFENO SUSP ORAL 50MG/ML 30ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "23683",
-    "Name": "RACECADOTRILA CAPS 100MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "24279",
-    "Name": "DIAZEPAM SOL INJ 5MG/ML 2ML - GEN SANTISA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "24568",
-    "Name": "CLORETO DE POTASSIO 6% SOL ORAL 60MG/ML 100ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "24834",
-    "Name": "FIXADOR DE SONDA NASOGASTRICA/NASOENTERAL ADULTO",
+    "Code": "65618",
+    "Name": "CATETER P/ OXIGENIO TIPO OCULOS N\u00B0 12 (ADULTO)",
     "MinimumQuantity": 10.0,
     "ItemPriority": 3
   },
   {
-    "Code": "25042",
-    "Name": "VASOPRESSINA SOL INJ 20U/ML 1ML",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "25164",
-    "Name": "ETOMIDATO SOL INJ 2MG/ML 10ML - GEN BLAU",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "25300",
-    "Name": "ISOSSORBIDA (MONONITRATO) COMP 20MG",
+    "Code": "16540",
+    "Name": "CATETER VENOSO CENTRAL DUPLO LUMEN 7FR 14/18G X 20CM S/ BIST",
     "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
   {
-    "Code": "25305",
-    "Name": "ALTEPLASE PO P/ SOL INJ 50MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "25467",
-    "Name": "AGULHA DESC S/ DISP DE SEGURANCA 13 X 0,45 MM (26G 1/2)",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "25469",
-    "Name": "KIT DRENO DE TORAX N\u00BA 28 FRASCO 2000ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "25640",
-    "Name": "FENOBARBITAL COMP 100MG - GEN UNIAO QUIMICA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "25822",
-    "Name": "KIT CATETER DUPLO ADULTO 11-12FR C/ APROX. 20CM HEMODIALISE",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "26451",
-    "Name": "CLORETO DE SODIO 0,9% SOL INJ 500ML",
-    "MinimumQuantity": 50.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "26769",
-    "Name": "BENZILPENICILINA BENZATINA PO P/ SOL INJ 1.200.000UI",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "27265",
-    "Name": "METADONA COMP 5MG - MYTEDOM/CRISTALIA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "27665",
-    "Name": "CARVEDILOL COMP 3,125MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "27683",
-    "Name": "ACETATO DE TERLIPRESSINA PO P/ SOL INJ 1MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "27739",
-    "Name": "HALOPERIDOL SOL INJ 5MG/ML 1ML - HALO/CRISTALIA",
+    "Code": "1174",
+    "Name": "CATETER VENOSO CENTRAL MONO LUMEN 14G X 20CM",
     "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
@@ -1302,472 +420,22 @@
     "ItemPriority": 2
   },
   {
-    "Code": "27925",
-    "Name": "PARACETAMOL \u002B CODEINA COMP 500 \u002B 30MG - GEN GEOLAB",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "27968",
-    "Name": "MORFINA SOL INJ 10MG/ML 1ML - GEN HIPOLABOR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "28660",
-    "Name": "FENTANILA, CITRATO SOL INJ 50MCG/ML 10ML - GEN HIPOLABOR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "29288",
-    "Name": "ACETILCISTEINA GRANULADO 600MG 5G",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "29494",
-    "Name": "SONDA DE ASPIRACAO TRAQUEAL S/ VALVULA 08FR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "29910",
-    "Name": "MIDAZOLAM SOL INJ 5MG/ML 10ML - GEN TEUTO",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "29935",
-    "Name": "ACETILCISTEINA SOL INJ E INALATORIA 100MG/ML 3ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "29937",
-    "Name": "HIDRALAZINA SOL INJ 20MG/ML 1ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "30162",
-    "Name": "CURATIVO HIDROFIBRA PRATA C/ ALGINATO APROX. 10 X 10 CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "31508",
-    "Name": "OSELTAMIVIR FOSFATO CAPS 75MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "31550",
-    "Name": "FITOMENADIONA (VITAMINA K1) SOL INJ IM 10MG/ML 1ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "31719",
-    "Name": "MIDAZOLAM SOL INJ 5MG/ML 3ML - DORMIUM/UNIAO QUIMICA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "32064",
-    "Name": "HALOPERIDOL SOL INJ 5MG/ML 1ML - UNI HALOPER/UNIAO QUIMICA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "32232",
-    "Name": "DEXMEDETOMIDINA SOL INJ 100MCG/ML 2ML - EXTODIN/UNIAO QUIMIC",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "32779",
-    "Name": "QUETIAPINA COMP 25MG - GEN GEOLAB",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "34081",
-    "Name": "SUCCINATO DE METOPROLOL COMP 25MG",
+    "Code": "6069",
+    "Name": "CEFAZOLINA PO P/ SOL INJ 1G",
     "MinimumQuantity": 15.0,
     "ItemPriority": 1
   },
   {
-    "Code": "34089",
-    "Name": "SACARATO DE HIDROXIDO FERRICO SOL INJ 20MG/ML 5ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "34090",
-    "Name": "TIAMINA SOL INJ 100MG/ML 1ML",
-    "MinimumQuantity": 25.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "34177",
-    "Name": "FILTRO UMIDIFICADOR DE BARREIRA HME/HMEF ADULTO C/ TUBO EXT.",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "34376",
-    "Name": "PROTETOR OCULAR PARA FOTOTERAPIA TAM. M",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "34380",
-    "Name": "CIRCUITO DE CPAP NASAL INFANTIL N\u00B0 02 (1250 A 2000G)",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "35052",
-    "Name": "CARBAMAZEPINA COMP 200MG - UNI CARBAMAZ",
+    "Code": "7562",
+    "Name": "CEFEPIME PO P/ SOL INJ 1G",
     "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
   {
-    "Code": "35430",
-    "Name": "AZITROMICINA PO P/ SOL INJ 500MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "36118",
-    "Name": "PROPOFOL SOL INJ 10MG/ML 20ML - GEN FRESENIUS KABI",
-    "MinimumQuantity": 60.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "36446",
-    "Name": "SEVOFLURANO SOL INALATORIA 250ML - VOFLUR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "37042",
-    "Name": "CLORETO DE POTASSIO 19,1% SOL INJ 10ML",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "37246",
-    "Name": "COLAGENASE C/ CLORANFENICOL POMADA 0,6U \u002B 0,01G/G 30G",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "37256",
-    "Name": "AGULHA DESC. S/ DISP DE SEGURANCA 25 X 0,70 MM - INATIVAR",
-    "MinimumQuantity": 120.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "37263",
-    "Name": "SERINGA DESC 10ML LUER SLIP (LISA) S/ AGULHA",
-    "MinimumQuantity": 500.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "37264",
-    "Name": "SERINGA DESC 03ML LUER SLIP (LISA) S/ AGULHA",
-    "MinimumQuantity": 20.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "37600",
-    "Name": "AGULHA HIPODERMICA DESC. S/ DISP DE SEGURANCA 20 X 0,55 MM",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "37893",
-    "Name": "DOLUTEGRAVIR COMP 50MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "37922",
-    "Name": "SERINGA DESC 05ML (GRAD 0,02ML) LUER SLIP (LISA) S/ AGULHA",
-    "MinimumQuantity": 150.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "38127",
-    "Name": "OCITOCINA SOL INJ 5UI/ML 1ML",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "38173",
-    "Name": "ELETRODO DESC P/ MONITORIZACAO CARDIACA ADULTO",
-    "MinimumQuantity": 130.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "38184",
-    "Name": "MISOPROSTOL COMP VAGINAL 25MCG - PROSTOKOS/ HEBROM/INFAN",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "38185",
-    "Name": "MISOPROSTOL COMP VAGINAL 200MCG - PROSTOKOS/HEBRON/INFAN",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "38199",
-    "Name": "LEVONORGESTREL COMP 0,75MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "38204",
-    "Name": "SONDA DE ASPIRACAO TRAQUEAL S/ VALVULA 04FR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38207",
-    "Name": "SONDA NASOGASTRICA CURTA ESTERIL N\u00BA 18",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38212",
-    "Name": "FIXADOR P/ CANULA DE TRAQUEOSTOMIA ADULTO",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38218",
-    "Name": "HIDRALAZINA COMP 25MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "38242",
-    "Name": "FIO NYLON PRT 6-0 AG 2,0CM TR 3/8 45CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38259",
-    "Name": "FIXADOR P/TUBO ENDOTRAQUEAL ADULTO",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38261",
-    "Name": "SONDA P/ ALIMENTACAO ENTERAL ADULTO EM POLIURETANO 12FR",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38269",
-    "Name": "INVOLUCRO P/ OBITO RN 30 X 60 CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38271",
-    "Name": "INVOLUCRO P/ OBITO ADULTO 210 X 90 CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38503",
-    "Name": "CANULA DE TRAQUEOSTOMIA PVC C/ BALAO N\u00BA 6,5",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "38504",
-    "Name": "CANULA DE TRAQUEOSTOMIA PVC C/ BALAO N\u00BA 7,0",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "38837",
-    "Name": "CLIP PARA BOLSA DE COLOSTOMIA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "38989",
-    "Name": "ENOXAPARINA SODICA SOL INJ SUBCUTANEA 40MG/0,4ML",
-    "MinimumQuantity": 20.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "39001",
-    "Name": "ENOXAPARINA SODICA SOL INJ SUBCUTANEA 60MG/0,6ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "39003",
-    "Name": "PANTOPRAZOL PO P/ SOL INJ 40MG \u002B DILUENTE 10ML",
-    "MinimumQuantity": 30.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "39016",
-    "Name": "MASCARA DE OXIGENIO DE ALTA CONCENTRACAO ALONGADA ADULTO",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "39037",
-    "Name": "GLICERINA/GLICEROL 12% SOL CLISTER/ENEMA 500ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "39374",
-    "Name": "DISPOSITIVO 2 VIAS C/ CLAMP",
+    "Code": "4890",
+    "Name": "CEFTRIAXONA PO P/ SOL INJ 1G",
     "MinimumQuantity": 50.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "39414",
-    "Name": "CIRCUITO DE CPAP NASAL INFANTIL N\u00B0 03 (2000 A 3000G)",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "39777",
-    "Name": "SULFATO DE MAGNESIO 10% SOL INJ 100MG/ML 10ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "39779",
-    "Name": "CABERGOLINA COMP 0,5MG",
-    "MinimumQuantity": 5.0,
     "ItemPriority": 1
-  },
-  {
-    "Code": "40325",
-    "Name": "SULFADIAZINA DE PRATA TUBO 1% TUBO 30G",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "40328",
-    "Name": "MASCARA RESPIRATORIA N95",
-    "MinimumQuantity": 20.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "40506",
-    "Name": "TAMPA PARA DISPOSITIVO DE DUAS VIAS PARA INFUSOR DE SOLUCAO",
-    "MinimumQuantity": 50.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "40773",
-    "Name": "IMUNOGLOBULINA ANTI-RHO (D) SOL INJ 150MCG/ML 2ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "40849",
-    "Name": "NIFEDIPINO COMP 20MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "40910",
-    "Name": "TENOXICAM PO P/ SOL INJ 40MG",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "41108",
-    "Name": "MICAFUNGINA SODICA PO P/ SOL INJ 100MG",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "42266",
-    "Name": "CLOPERASTINA XAROPE 3,54MG/ML 120ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "42781",
-    "Name": "RISPERIDONA COMP 1MG - GEN PRATI",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "42791",
-    "Name": "DEXMEDETOMIDINA SOL INJ 100MCG/ML 2ML - GEN ABL",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "42816",
-    "Name": "SEVOFLURANO SOL INALATORIA 250ML - SEVOCRIS/CRISTALIA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "42936",
-    "Name": "HEMITARTARATO DE NOREPINEFRINA SOL INJ 2MG/ML 4ML",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "42949",
-    "Name": "SONDA DE ASPIRACAO TRAQUEAL SISTEMA FECHADO 14FR 55CM",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "42999",
-    "Name": "METILERGOMETRINA SOL INJ 0,2MG/ML 1ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "43332",
-    "Name": "ENOXAPARINA SODICA 20MG SER 0,2ML",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "43461",
-    "Name": "SIMETICONA SOL ORAL 75MG/ML 15ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "43977",
-    "Name": "FUM DE TENOFOVIR DESOPROXILA \u002B LAMIVUDINA COMP 300 \u002B 300MG",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 1
-  },
-  {
-    "Code": "43980",
-    "Name": "FENTANILA, CITRATO SOL INJ 50MCG/ML 10ML - UNIFENTAL",
-    "MinimumQuantity": 15.0,
-    "ItemPriority": 0
-  },
-  {
-    "Code": "46178",
-    "Name": "FENTANILA, CITRATO SOL INJ 50MCG/ML 2ML - UNIFENTAL",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 0
   },
   {
     "Code": "48150",
@@ -1782,10 +450,532 @@
     "ItemPriority": 2
   },
   {
-    "Code": "50397",
-    "Name": "QUETIAPINA COMP 25MG - GEN BIOLAB",
+    "Code": "12019",
+    "Name": "CIPROFLOXACINO SOL INJ 2MG/ML 100ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "34380",
+    "Name": "CIRCUITO DE CPAP NASAL INFANTIL N\u00B0 02 (1250 A 2000G)",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "39414",
+    "Name": "CIRCUITO DE CPAP NASAL INFANTIL N\u00B0 03 (2000 A 3000G)",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "6748",
+    "Name": "CLINDAMICINA SOL INJ 150MG/ML 4ML",
     "MinimumQuantity": 15.0,
     "ItemPriority": 1
+  },
+  {
+    "Code": "38837",
+    "Name": "CLIP PARA BOLSA DE COLOSTOMIA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "18630",
+    "Name": "CLONAZEPAM SOL ORAL 2,5MG/ML 20ML - GEN GEOLAB",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "6454",
+    "Name": "CLONIDINA SOL INJ 150MCG/ML 1ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "42266",
+    "Name": "CLOPERASTINA XAROPE 3,54MG/ML 120ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "6827",
+    "Name": "CLOPIDOGREL COMP 75MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5616",
+    "Name": "CLORETO DE POTASSIO 10% SOL INJ 10ML",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "37042",
+    "Name": "CLORETO DE POTASSIO 19,1% SOL INJ 10ML",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "24568",
+    "Name": "CLORETO DE POTASSIO 6% SOL ORAL 60MG/ML 100ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "15691",
+    "Name": "CLORETO DE SODIO 0,9% SOL INJ 100ML",
+    "MinimumQuantity": 200.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "5681",
+    "Name": "CLORETO DE SODIO 0,9% SOL INJ 10ML",
+    "MinimumQuantity": 60.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "15690",
+    "Name": "CLORETO DE SODIO 0,9% SOL INJ 250ML",
+    "MinimumQuantity": 150.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "26451",
+    "Name": "CLORETO DE SODIO 0,9% SOL INJ 500ML",
+    "MinimumQuantity": 50.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "5552",
+    "Name": "CLORETO DE SODIO 20% SOL INJ 10ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "6449",
+    "Name": "CLORIDRATO DE ETILEFRINA SOL INJ 10MG/ML 1ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "18571",
+    "Name": "CLORPROMAZINA 4% SOL ORAL 40MG/ML 20ML - LONGACTIL/CRISTALIA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "18635",
+    "Name": "CODEINA COMP 30MG - CODEIN/CRISTALIA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "37246",
+    "Name": "COLAGENASE C/ CLORANFENICOL POMADA 0,6U \u002B 0,01G/G 30G",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "17939",
+    "Name": "COLAGENASE POMADA TUBO 30G",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "16579",
+    "Name": "COLETOR DE SECRECAO UNIDADE VIAS AEREAS 70ML A 120ML (BRONQUINHO)",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "4610",
+    "Name": "COLETOR DE URINA SIST UNIDADE FECHAD ESTERIL C/PONTO DE COLET 2000ML",
+    "MinimumQuantity": 20.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "222",
+    "Name": "COLETOR DE URINA SISTEMA ABERTO NAO ESTERIL 2000ML C/ CORDA*",
+    "MinimumQuantity": 70.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "4086",
+    "Name": "COLETOR P/ INCONTINENCIA URINARIA ADULTO MASCULINO MIN 120CM",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "2191",
+    "Name": "CURATIVO ALGINATO DE CALCIO ESTERIL APROX. 10 X 20 CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "19584",
+    "Name": "CURATIVO CARVAO ATIVADO E PRATA ESTERIL APROX. 10X10CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "93319",
+    "Name": "CURATIVO FILME TRANSPARENTE ESTERIL 10CM X 12CM",
+    "MinimumQuantity": 60.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "22267",
+    "Name": "CURATIVO FILME TRANSPARENTE ESTERIL APROX. 6 X 7 CM",
+    "MinimumQuantity": 60.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "30162",
+    "Name": "CURATIVO HIDROFIBRA PRATA C/ ALGINATO APROX. 10 X 10 CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5173",
+    "Name": "DEXAMETASONA SOL INJ FR/A 10 MG 4MG/ML 2.5ML",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "22150",
+    "Name": "DEXCLORFENIRAMINA SOL ORAL 0,4MG/ML 100ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "32232",
+    "Name": "DEXMEDETOMIDINA SOL INJ 100MCG/ML 2ML - EXTODIN/UNIAO QUIMIC",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "42791",
+    "Name": "DEXMEDETOMIDINA SOL INJ 100MCG/ML 2ML - GEN ABL",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "18531",
+    "Name": "DIAZEPAM COMP 10MG - SANTIAZEPAM",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "24279",
+    "Name": "DIAZEPAM SOL INJ 5MG/ML 2ML - GEN SANTISA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "5632",
+    "Name": "DICLOFENACO SODICO SOL INJ 25MG/ML 3ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "74053",
+    "Name": "DIETA PARENTERAL ADULTO BAXTER OLIMEL N9E 1000ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5020",
+    "Name": "DIPIRONA COMP 500MG",
+    "MinimumQuantity": 20.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5626",
+    "Name": "DIPIRONA SOL INJ 500MG/ML 2ML",
+    "MinimumQuantity": 50.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "39374",
+    "Name": "DISPOSITIVO 2 VIAS C/ CLAMP",
+    "MinimumQuantity": 50.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "390",
+    "Name": "DISPOSITIVO INTRAVENOSO PERIFERICO S/ DISP. SEGURANCA N\u00BA 21",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "391",
+    "Name": "DISPOSITIVO INTRAVENOSO PERIFERICO S/ DISP. SEGURANCA N\u00BA 23",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "3907",
+    "Name": "DISPOSITIVO INTRAVENOSO PERIFERICO S/ DISP. SEGURANCA N\u00BA 25",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "4995",
+    "Name": "DOBUTAMINA SOL INJ 12,5MG/ML 20ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "37893",
+    "Name": "DOLUTEGRAVIR COMP 50MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "10187",
+    "Name": "DOMPERIDONA COMP 10MG",
+    "MinimumQuantity": 40.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5623",
+    "Name": "DOPAMINA SOL INJ 5MG/ML 10ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "38173",
+    "Name": "ELETRODO DESC P/ MONITORIZACAO CARDIACA ADULTO",
+    "MinimumQuantity": 130.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "5001",
+    "Name": "ENALAPRIL COMP 10MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "43332",
+    "Name": "ENOXAPARINA SODICA 20MG SER 0,2ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "38989",
+    "Name": "ENOXAPARINA SODICA SOL INJ SUBCUTANEA 40MG/0,4ML",
+    "MinimumQuantity": 20.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "39001",
+    "Name": "ENOXAPARINA SODICA SOL INJ SUBCUTANEA 60MG/0,6ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "499",
+    "Name": "EPINEFRINA SOL INJ 1MG/ML 1ML (1:1000)",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "16606",
+    "Name": "EQUIPO MED. FOTOSSENSIVEL P/ BOMBA DE INFUSAO",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "19696",
+    "Name": "EQUIPO P/ SOL PARENT MACROGOTAS GRAVIT C/ INJ LAT E DISP SEG",
+    "MinimumQuantity": 200.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "101759",
+    "Name": "ESCETAMINA SOL INJ 50MG/ML 10ML - KETAH/UNIAO QUIMICA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "17655",
+    "Name": "ESCOVA P/ DEGERMACAO DAS MAOS C/ CLOREXIDINA 2% 22ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "14417",
+    "Name": "ESPIRONOLACTONA COMPRIMIDO",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "25164",
+    "Name": "ETOMIDATO SOL INJ 2MG/ML 10ML - GEN BLAU",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "18644",
+    "Name": "ETOMIDATO SOL INJ 2MG/ML 10ML - GEN CRISTALIA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "18529",
+    "Name": "FENITOINA COMP 100MG - GEN TEUTO",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "18639",
+    "Name": "FENITOINA SOL INJ 50MG/ML 5ML - GEN HIPOLABOR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "25640",
+    "Name": "FENOBARBITAL COMP 100MG - GEN UNIAO QUIMICA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "28660",
+    "Name": "FENTANILA, CITRATO SOL INJ 50MCG/ML 10ML - GEN HIPOLABOR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "43980",
+    "Name": "FENTANILA, CITRATO SOL INJ 50MCG/ML 10ML - UNIFENTAL",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "46178",
+    "Name": "FENTANILA, CITRATO SOL INJ 50MCG/ML 2ML - UNIFENTAL",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "34177",
+    "Name": "FILTRO UMIDIFICADOR DE BARREIRA HME/HMEF ADULTO C/ TUBO EXT.",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "15619",
+    "Name": "FIO NYLON PRT 2-0 AG 4,0CM TR 3/8 45CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "8099",
+    "Name": "FIO NYLON PRT 3-0 AG 3,0CM TR 3/8 45CM",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "38242",
+    "Name": "FIO NYLON PRT 6-0 AG 2,0CM TR 3/8 45CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "15605",
+    "Name": "FIO POLIGLECAPRONE 4-0 AG 1,9CM CIL 3/8 70CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "6661",
+    "Name": "FIO POLIGLICOLICO 4-0 AG 2,0CM CIL 1/2 70CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "31550",
+    "Name": "FITOMENADIONA (VITAMINA K1) SOL INJ IM 10MG/ML 1ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "24834",
+    "Name": "FIXADOR DE SONDA NASOGASTRICA/NASOENTERAL ADULTO",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "38212",
+    "Name": "FIXADOR P/ CANULA DE TRAQUEOSTOMIA ADULTO",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "38259",
+    "Name": "FIXADOR P/TUBO ENDOTRAQUEAL ADULTO",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "6397",
+    "Name": "FLUCONAZOL CAPS 150MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "16123",
+    "Name": "FLUCONAZOL SOL INJ 2MG/ML 100ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "19002",
+    "Name": "FLUOXETINA COMP 20MG - GEN TEUTO",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "19381",
+    "Name": "FOSFATO DE POTASSIO SOL INJ 2MEQ/ML 10ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "43977",
+    "Name": "FUM DE TENOFOVIR DESOPROXILA \u002B LAMIVUDINA COMP 300 \u002B 300MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5013",
+    "Name": "FUROSEMIDA COMP 40MG",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5622",
+    "Name": "FUROSEMIDA SOL INJ 10MG/ML 2ML",
+    "MinimumQuantity": 25.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "60169",
+    "Name": "GABAPENTINA CAPS 300MG - EMPAK/BIOLAB",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "7561",
+    "Name": "GENTAMICINA SOL INJ 40MG/ML 2ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "39037",
+    "Name": "GLICERINA/GLICEROL 12% SOL CLISTER/ENEMA 500ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
   },
   {
     "Code": "54252",
@@ -1800,8 +990,404 @@
     "ItemPriority": 2
   },
   {
+    "Code": "16372",
+    "Name": "GLICOSE 50% SOL INJ 500MG/ML 10ML",
+    "MinimumQuantity": 80.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "5620",
+    "Name": "GLUCONATO DE CALCIO 10% SOL INJ 100MG/ML 10ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "27739",
+    "Name": "HALOPERIDOL SOL INJ 5MG/ML 1ML - HALO/CRISTALIA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "32064",
+    "Name": "HALOPERIDOL SOL INJ 5MG/ML 1ML - UNI HALOPER/UNIAO QUIMICA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "42936",
+    "Name": "HEMITARTARATO DE NOREPINEFRINA SOL INJ 2MG/ML 4ML",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "5416",
+    "Name": "HEPARINA SODICA SOL INJ EV/SC 5000UI/ML 5ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "15743",
+    "Name": "HEPARINA SODICA SOL INJ SUBCUTANEA 5000UI/0,25ML",
+    "MinimumQuantity": 60.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "38218",
+    "Name": "HIDRALAZINA COMP 25MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "29937",
+    "Name": "HIDRALAZINA SOL INJ 20MG/ML 1ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "8805",
+    "Name": "HIDROCLOROTIAZIDA COMP 25MG",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5624",
+    "Name": "HIDROCORTISONA PO P/ SOL INJ 100MG",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "5625",
+    "Name": "HIDROCORTISONA PO P/ SOL INJ 500MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
     "Code": "56206",
     "Name": "HIDROXIDO DE MAGNESIO SUSP ORAL 120ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5583",
+    "Name": "HIOSCINA \u002B DIPIRONA SOL INJ AMPOLA DE 5ML",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "22958",
+    "Name": "IBUPROFENO SUSP ORAL 50MG/ML 30ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "40773",
+    "Name": "IMUNOGLOBULINA ANTI-RHO (D) SOL INJ 150MCG/ML 2ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5044",
+    "Name": "INSULINA NPH SOL INJ 100UI/ML 10ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "3912",
+    "Name": "INSULINA REGULAR SOL INJ 100UI/ML 10ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "38271",
+    "Name": "INVOLUCRO P/ OBITO ADULTO 210 X 90 CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "38269",
+    "Name": "INVOLUCRO P/ OBITO RN 30 X 60 CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "25300",
+    "Name": "ISOSSORBIDA (MONONITRATO) COMP 20MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "7291",
+    "Name": "IVERMECTINA COMP 6MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "25822",
+    "Name": "KIT CATETER DUPLO ADULTO 11-12FR C/ APROX. 20CM HEMODIALISE",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "25469",
+    "Name": "KIT DRENO DE TORAX N\u00BA 28 FRASCO 2000ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "17854",
+    "Name": "KIT DRENO DE TORAX N\u00BA 32 FR. 2000ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "12210",
+    "Name": "LACTULOSE XPE 667MG/ML 120ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5833",
+    "Name": "LAMINA DE BISTURI N\u00BA23",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5910",
+    "Name": "LAMINA DE BISTURI RETA N\u00BA 11",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "19697",
+    "Name": "LANCETA DESC. CORTANTE ESTERIL COM DISPOSITIVO DE SEGURANCA",
+    "MinimumQuantity": 350.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "38199",
+    "Name": "LEVONORGESTREL COMP 0,75MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "6149",
+    "Name": "LEVOTIROXINA SODICA COMP 25MCG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "22080",
+    "Name": "LEVOTIROXINA SODICA COMP 75MCG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "61784",
+    "Name": "LIDOCAINA 1% S/ VASOCONSTRITOR SOL INJ 10MG/ML 20ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "17944",
+    "Name": "LIDOCAINA 2% GELEIA TOPICA ESTERIL 20MG/G 30G",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "70982",
+    "Name": "LIDOCAINA 2% SOL INJ 20MG/ML 5ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "6458",
+    "Name": "LIDOCAINA 2%\u002BEPINEFRINA 1:200.000 SOL INJ 20MG\u002B5MCG/ML 20ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "16117",
+    "Name": "LINEZOLIDA SOL INJ 2MG/ML 300ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5098",
+    "Name": "LOPERAMIDA COMP 2MG COMPRIMIDO - INATIVAR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "21994",
+    "Name": "LORATADINA COMP 10MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "10084",
+    "Name": "LOSARTANA COMP 50MG COMPRIMIDO",
+    "MinimumQuantity": 20.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "7000",
+    "Name": "LUVA CIRURGICA ESTERIL N\u00B0 8,5",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "22482",
+    "Name": "LUVA CIRURGICA ESTERIL N\u00BA 6,5",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "382",
+    "Name": "LUVA CIRURGICA ESTERIL N\u00BA 7.0",
+    "MinimumQuantity": 25.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "381",
+    "Name": "LUVA CIRURGICA ESTERIL N\u00BA 7.5",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "383",
+    "Name": "LUVA CIRURGICA ESTERIL N\u00BA 8.0",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "59403",
+    "Name": "MANTA TERMICA ALUMINIZADA 2,10 X 1,40 M",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "39016",
+    "Name": "MASCARA DE OXIGENIO DE ALTA CONCENTRACAO ALONGADA ADULTO",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "40328",
+    "Name": "MASCARA RESPIRATORIA N95",
+    "MinimumQuantity": 20.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "12459",
+    "Name": "MEROPENEM PO P/ SOL INJ 1G",
+    "MinimumQuantity": 25.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "27265",
+    "Name": "METADONA COMP 5MG - MYTEDOM/CRISTALIA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "8853",
+    "Name": "METFORMINA COMP 850MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "42999",
+    "Name": "METILERGOMETRINA SOL INJ 0,2MG/ML 1ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "4908",
+    "Name": "METOCLOPRAMIDA SOL INJ 5MG/ML 2ML",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "13173",
+    "Name": "METOPROLOL SOL INJ 1MG/ML 5ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "11783",
+    "Name": "METRONIDAZOL COMP 250MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "13728",
+    "Name": "METRONIDAZOL SOL INJ 5MG/ML 100ML",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "41108",
+    "Name": "MICAFUNGINA SODICA PO P/ SOL INJ 100MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "58922",
+    "Name": "MIDAZOLAM SOL INJ 5MG/ML 10ML - GEN FRESENIUS KABI",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "29910",
+    "Name": "MIDAZOLAM SOL INJ 5MG/ML 10ML - GEN TEUTO",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "31719",
+    "Name": "MIDAZOLAM SOL INJ 5MG/ML 3ML - DORMIUM/UNIAO QUIMICA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "38185",
+    "Name": "MISOPROSTOL COMP VAGINAL 200MCG - PROSTOKOS/HEBRON/INFAN",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "38184",
+    "Name": "MISOPROSTOL COMP VAGINAL 25MCG - PROSTOKOS/ HEBROM/INFAN",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "18563",
+    "Name": "MORFINA SOL INJ 10MG/ML 1ML - DOLO MOFF/UNIAO QUIMICA",
+    "MinimumQuantity": 25.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "27968",
+    "Name": "MORFINA SOL INJ 10MG/ML 1ML - GEN HIPOLABOR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "40849",
+    "Name": "NIFEDIPINO COMP 20MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "19441",
+    "Name": "NISTATINA \u002B OXIDO DE ZINCO POMADA 100.000UI \u002B 200MG/G 60G",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5246",
+    "Name": "NISTATINA CREME VAGINAL 25,000UI/G 60G",
     "MinimumQuantity": 5.0,
     "ItemPriority": 3
   },
@@ -1812,52 +1398,160 @@
     "ItemPriority": 3
   },
   {
-    "Code": "58922",
-    "Name": "MIDAZOLAM SOL INJ 5MG/ML 10ML - GEN FRESENIUS KABI",
+    "Code": "6456",
+    "Name": "NITROPRUSSETO DE SODIO PO P/ SOL INJ 50MG",
     "MinimumQuantity": 5.0,
     "ItemPriority": 0
   },
   {
-    "Code": "59403",
-    "Name": "MANTA TERMICA ALUMINIZADA 2,10 X 1,40 M",
+    "Code": "38127",
+    "Name": "OCITOCINA SOL INJ 5UI/ML 1ML",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "5651",
+    "Name": "OLEO MINERAL SOL ORAL 100ML",
     "MinimumQuantity": 5.0,
     "ItemPriority": 3
   },
   {
-    "Code": "59580",
-    "Name": "TRANSDUTOR DE PRESSAO INVASIVA C/ TORNEIRA VALVULADA",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "60169",
-    "Name": "GABAPENTINA CAPS 300MG - EMPAK/BIOLAB",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "61784",
-    "Name": "LIDOCAINA 1% S/ VASOCONSTRITOR SOL INJ 10MG/ML 20ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "62769",
-    "Name": "AZUL DE METILENO 1% SOL AQUOSA 2ML",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 2
-  },
-  {
-    "Code": "64242",
-    "Name": "BOLSA DE COLOSTOMIA DRENAVEL RECORTAVEL TRANSPAR 19-64MM",
+    "Code": "6455",
+    "Name": "ONDANSETRONA SOL INJ 2MG/ML 2ML",
     "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "31508",
+    "Name": "OSELTAMIVIR FOSFATO CAPS 75MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "6746",
+    "Name": "OXACILINA PO P/ SOL INJ FR 500MG",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "10902",
+    "Name": "PANTOPRAZOL COMP 20MG",
+    "MinimumQuantity": 25.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "39003",
+    "Name": "PANTOPRAZOL PO P/ SOL INJ 40MG \u002B DILUENTE 10ML",
+    "MinimumQuantity": 40,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "27925",
+    "Name": "PARACETAMOL \u002B CODEINA COMP 500 \u002B 30MG - GEN GEOLAB",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "8549",
+    "Name": "PARACETAMOL COMP 500MG",
+    "MinimumQuantity": 60.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "12993",
+    "Name": "PARACETAMOL SOL ORAL 200MG/ML 15ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "13648",
+    "Name": "PIPERACILINA \u002B TAZOBACTAM PO P/ SOL INJ 4 \u002B 0,5G",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "16119",
+    "Name": "POLIMIXINA B PO P/ SOL INJ 500.000UI - INATIVAR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "6717",
+    "Name": "PREDNISONA COMP 20MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "14538",
+    "Name": "PREDNISONA COMP 5MG COMPRIMIDO",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "4946",
+    "Name": "PROMETAZINA COMP 25MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "5653",
+    "Name": "PROMETAZINA SOL INJ 25MG/ML 2ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "4999",
+    "Name": "PROPANOLOL COMP 40MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "8804",
+    "Name": "PROPATILNITRATO COMP 10MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "36118",
+    "Name": "PROPOFOL SOL INJ 10MG/ML 20ML - GEN FRESENIUS KABI",
+    "MinimumQuantity": 0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "18673",
+    "Name": "PROPOFOL SOL INJ 10MG/ML 20ML - PROVIVE/UNIAO QUIMICA",
+    "MinimumQuantity": 0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "20120",
+    "Name": "PROTAMINA SOL INJ 1000UI/ML 5ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "34376",
+    "Name": "PROTETOR OCULAR PARA FOTOTERAPIA TAM. M",
+    "MinimumQuantity": 5.0,
     "ItemPriority": 3
   },
   {
-    "Code": "65618",
-    "Name": "CATETER P/ OXIGENIO TIPO OCULOS N\u00B0 12 (ADULTO)",
+    "Code": "50397",
+    "Name": "QUETIAPINA COMP 25MG - GEN BIOLAB",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "32779",
+    "Name": "QUETIAPINA COMP 25MG - GEN GEOLAB",
     "MinimumQuantity": 10.0,
-    "ItemPriority": 3
+    "ItemPriority": 1
+  },
+  {
+    "Code": "23683",
+    "Name": "RACECADOTRILA CAPS 100MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
   },
   {
     "Code": "69316",
@@ -1866,40 +1560,316 @@
     "ItemPriority": 2
   },
   {
-    "Code": "70536",
-    "Name": "ATADURA CREPE NAO ESTERIL 13 FIOS 15CM X 1,8M G 32,7",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "70537",
-    "Name": "ATADURA CREPE NAO ESTERIL 13 FIOS 10CM X 1,8M G 21,8",
-    "MinimumQuantity": 10.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "70538",
-    "Name": "ATADURA CREPE NAO ESTERIL 13 FIOS G 42,8 20CM X 1,8M",
-    "MinimumQuantity": 5.0,
-    "ItemPriority": 3
-  },
-  {
-    "Code": "70982",
-    "Name": "LIDOCAINA 2% SOL INJ 20MG/ML 5ML",
+    "Code": "11323",
+    "Name": "RINGER SIMPLES SOL INJ 500ML",
     "MinimumQuantity": 5.0,
     "ItemPriority": 2
   },
   {
-    "Code": "74053",
-    "Name": "DIETA PARENTERAL ADULTO BAXTER OLIMEL N9E 1000ML",
+    "Code": "42781",
+    "Name": "RISPERIDONA COMP 1MG - GEN PRATI",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "18252",
+    "Name": "ROCURONIO, BROMETO SOL INJ 10MG/ML 5ML",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "34089",
+    "Name": "SACARATO DE HIDROXIDO FERRICO SOL INJ 20MG/ML 5ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "6779",
+    "Name": "SACCHAROMYCES BOULARDII CAPS 200MG",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5467",
+    "Name": "SALBUTAMOL SUSP AEROSSOL",
     "MinimumQuantity": 5.0,
     "ItemPriority": 1
   },
   {
-    "Code": "76992",
-    "Name": "TRAMADOL COMP 50MG - GEN HIPOLABOR",
+    "Code": "443",
+    "Name": "SERINGA DESC 01ML C/ AGG 13 X 0,45 MM P/ INSULINA",
+    "MinimumQuantity": 80.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "37264",
+    "Name": "SERINGA DESC 03ML LUER SLIP (LISA) S/ AGULHA",
+    "MinimumQuantity": 20.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "37922",
+    "Name": "SERINGA DESC 05ML (GRAD 0,02ML) LUER SLIP (LISA) S/ AGULHA",
+    "MinimumQuantity": 150.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "37263",
+    "Name": "SERINGA DESC 10ML LUER SLIP (LISA) S/ AGULHA",
+    "MinimumQuantity": 500.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "10073",
+    "Name": "SERINGA DESC 20ML",
+    "MinimumQuantity": 250.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "4900",
+    "Name": "SERINGA DESC 60ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "21253",
+    "Name": "SERTRALINA COMP 50MG - GEN EMS",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "42816",
+    "Name": "SEVOFLURANO SOL INALATORIA 250ML - SEVOCRIS/CRISTALIA",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "36446",
+    "Name": "SEVOFLURANO SOL INALATORIA 250ML - VOFLUR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "43461",
+    "Name": "SIMETICONA SOL ORAL 75MG/ML 15ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "10188",
+    "Name": "SINVASTATINA COMP 20MG",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "8572",
+    "Name": "SONDA DE ASPIRACAO TRAQUEAL C/ VALVULA 12FR",
+    "MinimumQuantity": 25.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "8574",
+    "Name": "SONDA DE ASPIRACAO TRAQUEAL C/ VALVULA 14FR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "38204",
+    "Name": "SONDA DE ASPIRACAO TRAQUEAL S/ VALVULA 04FR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "29494",
+    "Name": "SONDA DE ASPIRACAO TRAQUEAL S/ VALVULA 08FR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "42949",
+    "Name": "SONDA DE ASPIRACAO TRAQUEAL SISTEMA FECHADO 14FR 55CM",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "609",
+    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 2 VIAS N\u00BA 14",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "4608",
+    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 2 VIAS N\u00BA 16",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "4609",
+    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 2 VIAS N\u00BA 18",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "5880",
+    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 2 VIAS N\u00BA 20",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "4896",
+    "Name": "SONDA DE FOLEY LATEX SILICONIZADO 3 VIAS N\u00BA 18",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "38207",
+    "Name": "SONDA NASOGASTRICA CURTA ESTERIL N\u00BA 18",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "395",
+    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 06",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "396",
+    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 08",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "394",
+    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 12",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "11861",
+    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 18",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "11862",
+    "Name": "SONDA NASOGASTRICA LONGA ESTERIL EM PVC SILICONIZADO N\u00BA 20",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "38261",
+    "Name": "SONDA P/ ALIMENTACAO ENTERAL ADULTO EM POLIURETANO 12FR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "399",
+    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 06",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "454",
+    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 10",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "452",
+    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 12",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "397",
+    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 14",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "398",
+    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 16",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "450",
+    "Name": "SONDA URETRAL PVC SILICONIZADO N\u00BA 16",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "34081",
+    "Name": "SUCCINATO DE METOPROLOL COMP 25MG",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "40325",
+    "Name": "SULFADIAZINA DE PRATA TUBO 1% TUBO 30G",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 3
+  },
+  {
+    "Code": "6943",
+    "Name": "SULFAMETOXAZOL \u002B TRIMETOPRIMA COMP 400 \u002B 80MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "39777",
+    "Name": "SULFATO DE MAGNESIO 10% SOL INJ 100MG/ML 10ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "6038",
+    "Name": "SULFATO DE MAGNESIO 50% SOL INJ 500MG/ML 10ML",
     "MinimumQuantity": 5.0,
     "ItemPriority": 0
+  },
+  {
+    "Code": "5166",
+    "Name": "SULFATO FERROSO COMP C/ 40MG DE FERMO ELEMENTAR",
+    "MinimumQuantity": 25.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "15044",
+    "Name": "SUXAMETONIO PO P/ SOL INJ 100MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
+  },
+  {
+    "Code": "40506",
+    "Name": "TAMPA PARA DISPOSITIVO DE DUAS VIAS PARA INFUSOR DE SOLUCAO",
+    "MinimumQuantity": 50.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "11183",
+    "Name": "TENOXICAM COMP 20MG COMPRIMIDO",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "6484",
+    "Name": "TENOXICAM PO P/ SOL INJ 20MG",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "40910",
+    "Name": "TENOXICAM PO P/ SOL INJ 40MG",
+    "MinimumQuantity": 15.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "16371",
+    "Name": "TERBUTALINA SOL INJ 0,5MG/ML 1ML",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 1
   },
   {
     "Code": "77679",
@@ -1908,27 +1878,57 @@
     "ItemPriority": 3
   },
   {
-    "Code": "91725",
-    "Name": "AMPICILINA SODICA PO P/ SOL INJ 1G",
-    "MinimumQuantity": 5.0,
+    "Code": "34090",
+    "Name": "TIAMINA SOL INJ 100MG/ML 1ML",
+    "MinimumQuantity": 25.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "457",
+    "Name": "TIRA TESTE P/ DETERMINACAO GLUCOSE NO SANGUE",
+    "MinimumQuantity": 400.0,
     "ItemPriority": 1
   },
   {
-    "Code": "93319",
-    "Name": "CURATIVO FILME TRANSPARENTE ESTERIL 10CM X 12CM",
-    "MinimumQuantity": 60.0,
+    "Code": "4817",
+    "Name": "TORNEIRA 3 VIAS C/ CONEXAO LUER LOCK / LUER SLIP",
+    "MinimumQuantity": 50.0,
+    "ItemPriority": 2
+  },
+  {
+    "Code": "76992",
+    "Name": "TRAMADOL COMP 50MG - GEN HIPOLABOR",
+    "MinimumQuantity": 5.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "21400",
+    "Name": "TRAMADOL SOL INJ 50MG/ML 2ML - GEN HIPOLABOR",
+    "MinimumQuantity": 30.0,
+    "ItemPriority": 0
+  },
+  {
+    "Code": "59580",
+    "Name": "TRANSDUTOR DE PRESSAO INVASIVA C/ TORNEIRA VALVULADA",
+    "MinimumQuantity": 5.0,
     "ItemPriority": 3
   },
   {
-    "Code": "96901",
-    "Name": "ALFAEPOETINA SOL INJ 4.000UI/ML 1ML",
-    "MinimumQuantity": 5.0,
+    "Code": "6068",
+    "Name": "VANCOMICINA PO P/ SOL INJ 500MG",
+    "MinimumQuantity": 25.0,
     "ItemPriority": 1
   },
   {
-    "Code": "101759",
-    "Name": "ESCETAMINA SOL INJ 50MG/ML 10ML - KETAH/UNIAO QUIMICA",
-    "MinimumQuantity": 5.0,
+    "Code": "25042",
+    "Name": "VASOPRESSINA SOL INJ 20U/ML 1ML",
+    "MinimumQuantity": 15.0,
     "ItemPriority": 0
+  },
+  {
+    "Code": "7557",
+    "Name": "VITAMINAS DO COMPLEXO B SOL INJ 2ML",
+    "MinimumQuantity": 10.0,
+    "ItemPriority": 2
   }
 ]

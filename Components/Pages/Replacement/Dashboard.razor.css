@@ -55,7 +55,20 @@
 }
 
 .dashboard-chart-card {
+    --dashboard-chart-green: #16A34A;
+    --dashboard-chart-orange: #F97316;
+    --dashboard-chart-pink: #E03F97;
+    --dashboard-chart-purple: #8B3FE0;
+    --dashboard-chart-blue: #1BAEDB;
     min-width: 0;
+}
+
+.dashboard-chart-card-wide {
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-top-items-chart {
+    --dashboard-chart-top-items: #EA580C;
 }
 
 .dashboard-chart-title {
@@ -92,6 +105,14 @@
     stroke: var(--app-border, #E5DFF0) !important;
 }
 
+.dashboard-chart-card-wide ::deep .apexcharts-yaxis-label {
+    font-size: 0.72rem;
+}
+
+.dashboard-top-items-chart ::deep .apexcharts-bar-area {
+    fill: var(--dashboard-chart-top-items) !important;
+}
+
 .dashboard-chart-card ::deep .apexcharts-tooltip,
 .dashboard-chart-card ::deep .apexcharts-tooltip-title {
     border-color: var(--app-border, #E5DFF0) !important;
@@ -106,6 +127,20 @@
 .dark .dashboard-chart-card ::deep .apexcharts-yaxis-label {
     fill: #EDE9FE !important;
     color: #EDE9FE !important;
+}
+
+.theme-dark .dashboard-chart-card,
+.dark .dashboard-chart-card {
+    --dashboard-chart-green: #4ADE80;
+    --dashboard-chart-orange: #FDBA74;
+    --dashboard-chart-pink: #F472B6;
+    --dashboard-chart-purple: #C084FC;
+    --dashboard-chart-blue: #38BDF8;
+}
+
+.theme-dark .dashboard-top-items-chart,
+.dark .dashboard-top-items-chart {
+    --dashboard-chart-top-items: #FDBA74;
 }
 
 .theme-dark .dashboard-chart-card ::deep .apexcharts-legend-text,

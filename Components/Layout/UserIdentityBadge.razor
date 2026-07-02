@@ -1,0 +1,84 @@
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<div class="user-identity-menu">
+    <button type="button" class="user-identity-badge" title="@UserTitle" @onclick="ToggleMenu" aria-expanded="@_open">
+        <span class="user-identity-avatar" aria-hidden="true">
+            @if (!string.IsNullOrWhiteSpace(User?.AvatarDataUrl))
+            {
+                <img src="@User.AvatarDataUrl" alt="" />
+            }
+            else
+            {
+                @Initials
+            }
+        </span>
+        <span class="user-identity-details">
+            <strong>@DisplayName</strong>
+            <small>@RoleLabel</small>
+        </span>
+        <i class="bi bi-caret-down-fill user-identity-caret" aria-hidden="true"></i>
+    </button>
+
+    @if (_open)
+    {
+        <div class="user-identity-dropdown">
+            <button type="button" class="user-identity-dropdown-item" @onclick="GoToSettings">
+                <i class="bi bi-gear-fill" aria-hidden="true"></i>
+                <span>Configurações</span>
+            </button>
+            <button type="button" class="user-identity-dropdown-item danger" @onclick="LogoutAsync">
+                <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    }
+</div>
+
+@code {
+    private bool _open;
+    private AuthUserSession? User => AuthService.CurrentUser;
+
+    private string DisplayName =>
+        !string.IsNullOrWhiteSpace(User?.Name)
+            ? User.Name
+            : !string.IsNullOrWhiteSpace(User?.Username)
+                ? User.Username
+                : "Usuário";
+
+    private string RoleLabel => AuthService.IsAdmin ? "Administrador" : "Usuário";
+
+    private string UserTitle =>
+        !string.IsNullOrWhiteSpace(User?.Email)
+            ? $"{DisplayName} • {User.Email}"
+            : DisplayName;
+
+    private string Initials
+    {
+        get
+        {
+            var parts = DisplayName
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Take(2)
+                .Select(part => part[0].ToString().ToUpperInvariant());
+
+            var initials = string.Concat(parts);
+            return string.IsNullOrWhiteSpace(initials) ? "U" : initials;
+        }
+    }
+
+    private void ToggleMenu() => _open = !_open;
+
+    private void GoToSettings()
+    {
+        _open = false;
+        Navigation.NavigateTo("/User/Settings");
+    }
+
+    private async Task LogoutAsync()
+    {
+        _open = false;
+        await AuthService.LogoutAsync();
+        Navigation.NavigateTo("/Login", replace: true);
+    }
+}

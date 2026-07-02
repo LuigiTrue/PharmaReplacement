@@ -22,6 +22,7 @@ builder.Services.AddScoped<IReplenishmentService, ReplenishmentService>();
 builder.Services.AddScoped<IReplenishmentDashboardService, ReplenishmentDashboardService>();
 builder.Services.AddScoped<IReplacementSettingsService, ReplacementSettingsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
 
 //Abstractions 
 builder.Services.AddScoped<IGridColumnService, GridColumnService>();

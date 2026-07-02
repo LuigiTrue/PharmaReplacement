@@ -1,16 +1,24 @@
 [
   {
-    "username": "admin",
-    "email": "admin@repypharma.local",
-    "name": "Administrador",
-    "password": "apocalipse16",
-    "active": true
+    "Username": "admin",
+    "Email": "admin@repypharma.local",
+    "Name": "Administrador",
+    "Password": "admin123",
+    "Active": true,
+    "IsAdmin": true,
+    "AvatarDataUrl": "",
+    "PasswordChangeRequested": false,
+    "PasswordChangeRequestedAt": null
   },
-   {
-    "username": "admin",
-    "email": "",
-    "name": "Usuário",
-    "password": "admin123",
-    "active": true
+  {
+    "Username": "luigi",
+    "Email": "",
+    "Name": "Luigi",
+    "Password": "luigi123",
+    "Active": true,
+    "IsAdmin": false,
+    "AvatarDataUrl": "",
+    "PasswordChangeRequested": true,
+    "PasswordChangeRequestedAt": "2026-07-02T20:24:52.7444386Z"
   }
 ]

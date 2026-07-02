@@ -43,14 +43,125 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 main {
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    min-height: 100vh;
+    overflow: hidden;
 }
 
 .app-main-header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4rem;
+    margin-left: 75px;
+    border-bottom: 1px solid var(--app-border);
+    padding: 0.7rem 1.25rem;
+    background: var(--app-surface);
+    color: var(--app-text);
+    box-shadow: 0 1px 3px var(--app-nav-shadow);
     z-index: 10;
+}
+
+.app-main-header-brand,
+.app-main-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.app-main-header-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+    background: var(--app-surface-muted);
+    color: var(--app-link);
+    font-size: 1.1rem;
+}
+
+.app-main-header-title {
+    overflow: hidden;
+    color: var(--app-text);
+    font-size: 1rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.app-notification-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+    background: var(--app-surface-muted);
+    color: var(--app-text-muted);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.app-notification-button:hover {
+    border-color: var(--app-link);
+    background: var(--app-nav-hover-bg);
+    color: var(--app-link);
+    transform: translateY(-1px);
+}
+
+.app-notification-button:disabled {
+    cursor: default;
+    opacity: 0.7;
+}
+
+.app-notification-button:disabled:hover {
+    border-color: var(--app-border);
+    background: var(--app-surface-muted);
+    color: var(--app-text-muted);
+    transform: none;
+}
+
+.theme-dark .app-notification-button:hover,
+.dark .app-notification-button:hover {
+    color: var(--app-text);
+}
+
+.app-notification-dot {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.6rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 2px solid var(--app-surface);
+    border-radius: 999px;
+    background: #E03F97;
+}
+
+.app-notification-count {
+    position: absolute;
+    top: -0.35rem;
+    right: -0.35rem;
+    min-width: 1.15rem;
+    border-radius: 999px;
+    padding: 0.08rem 0.3rem;
+    background: #E03F97;
+    color: #FFFFFF;
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1rem;
 }
 
 #blazor-error-ui {
@@ -74,6 +185,8 @@ main {
 
 
 .app-footer {
+    flex: 0 0 auto;
+    margin-left: 75px;
     text-align: center;
     font-size: .75rem;
     color: var(--app-text-muted);
@@ -86,9 +199,26 @@ main {
 }
 
 .body-content {
+    flex: 1 1 auto;
+    min-height: 0;
     margin-left: 75px;
     padding: 2em;
     overflow-y: auto;
-    overflow-x: none;
+    overflow-x: hidden;
 }
 
+@media (max-width: 720px) {
+    .app-main-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .app-main-header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .app-main-header-actions ::deep .user-identity-badge {
+        max-width: calc(100% - 3.25rem);
+    }
+}

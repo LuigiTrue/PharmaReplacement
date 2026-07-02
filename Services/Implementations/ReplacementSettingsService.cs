@@ -76,6 +76,37 @@ public class ReplacementSettingsService : IReplacementSettingsService
         await File.WriteAllTextAsync(_minimumStockPath, json);
     }
 
+    public async Task AddMinimumStockItemAsync(string code, string name, ItemPriority priority, decimal minimumQuantity)
+    {
+        if (string.IsNullOrWhiteSpace(code))
+            throw new InvalidOperationException("Informe o código do item.");
+
+        if (string.IsNullOrWhiteSpace(name))
+            throw new InvalidOperationException("Informe o nome do item.");
+
+        if (minimumQuantity < 0)
+            throw new InvalidOperationException("O estoque mínimo não pode ser negativo.");
+
+        var normalizedCode = code.Trim();
+        var minimums = await _minimumStockService.GetAllAsync();
+
+        if (minimums.Any(m => string.Equals(m.Code, normalizedCode, StringComparison.OrdinalIgnoreCase)))
+            throw new InvalidOperationException("Este item já possui estoque mínimo cadastrado.");
+
+        var product = await _stockService.GetByCodeAsync(normalizedCode);
+
+        minimums.Add(new MinimumStock
+        {
+            Code = normalizedCode,
+            Name = product?.Name ?? name.Trim(),
+            MinimumQuantity = minimumQuantity,
+            itemPriority = priority
+        });
+
+        var json = JsonSerializer.Serialize(minimums.OrderBy(m => m.Name).ToList(), _jsonOptions);
+        await File.WriteAllTextAsync(_minimumStockPath, json);
+    }
+
     private async Task<List<ReplacementSettingsItem>> GetConfiguredItemsAsync()
     {
         var minimums = await _minimumStockService.GetAllAsync();

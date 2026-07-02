@@ -2,6 +2,9 @@
 @implements IDisposable
 @using Microsoft.FluentUI.AspNetCore.Components
 @inject ThemeState ThemeState
+@inject IAuthService AuthService
+@inject IUserSettingsService UserSettingsService
+@inject NavigationManager Navigation
 
 
 <FluentDesignTheme Mode="@ThemeMode" />
@@ -18,16 +21,32 @@
         
 
         <main>
-           @* <header class="app-main-header sticky top-0 border-b border-slate-200 bg-white px-6 py-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <nav class="flex flex-wrap items-center gap-2" aria-label="Ações do cabeçalho">
-                        <a href="/Home" class="inline-flex items-center gap-2 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition-colors hover:bg-blue-50 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-blue-950 dark:hover:text-blue-200">
-                            <i class="bi bi-info-circle" aria-hidden="true"></i>
-                            <span>Sobre</span>
-                        </a>
-                    </nav>
+            <header class="app-main-header">
+                <div class="app-main-header-brand">
+                    <span class="app-main-header-icon" aria-hidden="true">
+                        <i class="bi bi-hospital-fill"></i>
+                    </span>
+                    <span class="app-main-header-title">RepyPharma</span>
                 </div>
-            </header>*@
+
+                <div class="app-main-header-actions">
+                    <button type="button"
+                            class="app-notification-button"
+                            title="Notificações"
+                            aria-label="Notificações"
+                            disabled="@(!AuthService.IsAdmin || _pendingPasswordRequests == 0)"
+                            @onclick="OpenNotificationsAsync">
+                        <i class="bi bi-bell-fill" aria-hidden="true"></i>
+                        @if (AuthService.IsAdmin && _pendingPasswordRequests > 0)
+                        {
+                            <span class="app-notification-dot" aria-hidden="true"></span>
+                            <span class="app-notification-count">@_pendingPasswordRequests</span>
+                        }
+                    </button>
+
+                    <UserIdentityBadge />
+                </div>
+            </header>
 
             <div class="body-content">
                 @Body
@@ -48,6 +67,8 @@
 </div>
 
 @code {
+    private int _pendingPasswordRequests;
+
     private DesignThemeModes ThemeMode => ThemeState.IsDarkMode
         ? DesignThemeModes.Dark
         : DesignThemeModes.Light;
@@ -57,6 +78,13 @@
     protected override void OnInitialized()
     {
         ThemeState.OnChange += OnThemeChanged;
+        AuthService.OnChange += OnThemeChanged;
+        UserSettingsService.OnChange += OnUserSettingsChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadNotificationsAsync();
     }
 
     private void OnThemeChanged()
@@ -67,8 +95,30 @@
     public void Dispose()
     {
         ThemeState.OnChange -= OnThemeChanged;
+        AuthService.OnChange -= OnThemeChanged;
+        UserSettingsService.OnChange -= OnUserSettingsChanged;
     }
 
+    private async void OnUserSettingsChanged()
+    {
+        await LoadNotificationsAsync();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task LoadNotificationsAsync()
+    {
+        _pendingPasswordRequests = AuthService.IsAdmin
+            ? await UserSettingsService.GetPendingPasswordRequestCountAsync()
+            : 0;
+    }
+
+    private Task OpenNotificationsAsync()
+    {
+        if (AuthService.IsAdmin && _pendingPasswordRequests > 0)
+            Navigation.NavigateTo("/User/Settings?adminPasswordRequests=true");
+
+        return Task.CompletedTask;
+    }
 
     private async Task AtualizarVersaoAsync()
     {

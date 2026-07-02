@@ -5,6 +5,7 @@
 @using Microsoft.FluentUI.AspNetCore.Components.DesignTokens
 @inject IDialogService DialogService
 @inject IJSRuntime JS
+@inject IAuthService AuthService
 
 <PageTitle>Reposição</PageTitle>
 
@@ -15,13 +16,13 @@
     <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
             <div class="replenishment-grid-card-content">
                 <h3 class="replenishment-grid-title">Relatório de Reposição</h3>
-                <div>
-                    <button @onclick="OpenDialogAsync" style="border-radius: 10px;" class="button-top replenishment-grid-action inline-flex items-center gap-2 rounded-md border border-slate-100 bg-slate-0 px-5 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-100">
-                        <i style="color: var(--color-blue-600)" class="bi bi-upload"></i>
+                <div class="replenishment-grid-actions">
+                    <button @onclick="OpenDialogAsync" class="button-top replenishment-grid-action">
+                        <i class="bi bi-upload"></i>
                         <span>Atualizar Dados</span>
                     </button>
-                    <button @onclick="OpenPreview" style="border-radius: 10px;" class="button-top  replenishment-grid-action inline-flex items-center gap-2 rounded-md border border-slate-100 bg-slate-0 px-5 py-2 font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-100">
-                        <i style="color: rgba(197, 50, 50, 0.973)" class="bi bi-file-earmark-pdf-fill"></i>
+                    <button @onclick="OpenPreview" class="button-top replenishment-grid-action">
+                        <i class="bi bi-file-earmark-pdf-fill"></i>
                         <span>Imprimir</span>
                     </button>
                 </div>
@@ -32,12 +33,18 @@
 <div class="replenishment-tabs-host">
     <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-table" checked />
     <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-dashboard" />
-    <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-settings" />
+    @if (AuthService.IsAdmin)
+    {
+        <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-settings" />
+    }
 
     <div class="app-tabs" role="tablist" aria-label="Secoes do relatorio de reposicao">
         <label class="app-tab" role="tab" for="replenishment-tab-table">Tabela</label>
         <label class="app-tab" role="tab" for="replenishment-tab-dashboard">Dashboard</label>
-        <label class="app-tab" role="tab" for="replenishment-tab-settings">Configurações</label>
+        @if (AuthService.IsAdmin)
+        {
+            <label class="app-tab" role="tab" for="replenishment-tab-settings">Configurações</label>
+        }
     </div>
 
     <div class="replenishment-tab-panel replenishment-table-panel" role="tabpanel">
@@ -63,9 +70,12 @@
        <Dashboard></Dashboard>
     </div>
 
-    <div class="replenishment-tab-panel replenishment-settings-tab-panel" role="tabpanel">
-        <ReplenishmentSettings />
-    </div>
+    @if (AuthService.IsAdmin)
+    {
+        <div class="replenishment-tab-panel replenishment-settings-tab-panel" role="tabpanel">
+            <ReplenishmentSettings />
+        </div>
+    }
 </div>
 
 @code {

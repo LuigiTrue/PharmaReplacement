@@ -14,6 +14,7 @@ public class ReplenishmentDashboardData
     public List<ReplenishmentDashboardItem> Items { get; set; } = new();
     public List<ReplenishmentDashboardChartPoint> CompletionChart { get; set; } = new();
     public List<ReplenishmentDashboardChartPoint> MissingByItemChart { get; set; } = new();
+    public List<ReplenishmentDashboardChartPoint> TopReplenishmentItemsChart { get; set; } = new();
 }
 
 public class ReplenishmentDashboardItem

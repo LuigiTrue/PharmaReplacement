@@ -1,0 +1,18 @@
+.shopping-header-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.shopping-title {
+    margin: 0 0 0.35rem;
+    color: var(--app-text, #221A3D);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.shopping-description {
+    margin: 0;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.9rem;
+}

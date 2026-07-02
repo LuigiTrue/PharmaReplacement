@@ -1,0 +1,36 @@
+@page "/Shopping/ShoppingMain"
+@inject IReplenishmentService ReplenishmentService
+@using RepyPharma.Models
+
+<PageTitle>Compras</PageTitle>
+
+<section class="app-grid-card shopping-header-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div>
+        <h3 class="shopping-title">Compras</h3>
+        <p class="shopping-description">Acompanhe os itens que precisam de compra, atenção ou análise de excesso.</p>
+    </div>
+</section>
+
+@if (_loading)
+{
+    <p>Carregando...</p>
+}
+else if (_summary is not null)
+{
+    <DashboardSection Title="Precisam ser comprados" BadgeClass="danger" BadgeLabel="Crítico" Items="_summary.NeedToBuy" />
+
+    <DashboardSection Title="Acabando em breve" BadgeClass="warning" BadgeLabel="Atenção" Items="_summary.RunningLow" />
+
+    <DashboardSection Title="Acima do normal" BadgeClass="info" BadgeLabel="Informativo" Items="_summary.AboveNormal" />
+}
+
+@code {
+    private DashboardSummary? _summary;
+    private bool _loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _summary = await ReplenishmentService.GetDashboardSummaryAsync();
+        _loading = false;
+    }
+}
