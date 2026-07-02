@@ -7,9 +7,9 @@ using RepyPharma.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var renderPort = Environment.GetEnvironmentVariable("PORT");
-if (!string.IsNullOrWhiteSpace(renderPort))
-    builder.WebHost.UseUrls($"http://0.0.0.0:{renderPort}");
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

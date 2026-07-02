@@ -10,7 +10,6 @@ public class AuthService : IAuthService
     private const string StorageKey = "repypharma.auth.user";
     private readonly string _usersFilePath;
     private readonly IJSRuntime _jsRuntime;
-    private readonly IWebHostEnvironment _env;
     private string? _currentStorageName;
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -20,7 +19,6 @@ public class AuthService : IAuthService
 
     public AuthService(IWebHostEnvironment env, IJSRuntime jsRuntime)
     {
-        _env = env;
         _jsRuntime = jsRuntime;
         _usersFilePath = Path.Combine(env.ContentRootPath, "storage", "users.json");
     }
@@ -135,18 +133,14 @@ public class AuthService : IAuthService
         if (File.Exists(_usersFilePath))
             return;
 
-        var adminPassword = Environment.GetEnvironmentVariable("REPY_ADMIN_PASSWORD");
-        if (string.IsNullOrWhiteSpace(adminPassword) && !_env.IsDevelopment())
-            throw new InvalidOperationException("Configure a variável de ambiente REPY_ADMIN_PASSWORD para criar o administrador inicial.");
-
         var users = new List<AppUser>
         {
             new()
             {
-                Username = Environment.GetEnvironmentVariable("REPY_ADMIN_USERNAME") ?? "admin",
-                Email = Environment.GetEnvironmentVariable("REPY_ADMIN_EMAIL") ?? "admin@repypharma.local",
-                Name = Environment.GetEnvironmentVariable("REPY_ADMIN_NAME") ?? "Administrador",
-                Password = adminPassword ?? "admin123",
+                Username = "admin",
+                Email = "admin@repypharma.local",
+                Name = "Administrador",
+                Password = "apocalipse16",
                 Active = true,
                 IsAdmin = true
             }
