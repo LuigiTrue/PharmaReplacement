@@ -15,4 +15,3 @@
 **/.env
 **/.env.*
 **/appsettings.Development.json
-storage/users.json
