@@ -112,6 +112,16 @@
     color: var(--app-link);
 }
 
+.user-identity-dropdown-item.disabled,
+.user-identity-dropdown-item:disabled,
+.user-identity-dropdown-item.disabled:hover,
+.user-identity-dropdown-item:disabled:hover {
+    background: transparent;
+    color: var(--app-text-muted);
+    cursor: default;
+    opacity: 0.65;
+}
+
 .user-identity-dropdown-item.danger:hover {
     color: #E03F97;
 }

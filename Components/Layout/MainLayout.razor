@@ -4,7 +4,6 @@
 @inject ThemeState ThemeState
 @inject IAuthService AuthService
 @inject IUserSettingsService UserSettingsService
-@inject NavigationManager Navigation
 
 
 <FluentDesignTheme Mode="@ThemeMode" />
@@ -30,19 +29,32 @@
                 </div>
 
                 <div class="app-main-header-actions">
-                    <button type="button"
-                            class="app-notification-button"
-                            title="Notificações"
-                            aria-label="Notificações"
-                            disabled="@(!AuthService.IsAdmin || _pendingPasswordRequests == 0)"
-                            @onclick="OpenNotificationsAsync">
-                        <i class="bi bi-bell-fill" aria-hidden="true"></i>
-                        @if (AuthService.IsAdmin && _pendingPasswordRequests > 0)
+                    <div class="app-notification-menu">
+                        <button type="button"
+                                class="app-notification-button"
+                                title="Notificações"
+                                aria-label="Notificações"
+                                aria-expanded="@_notificationsOpen"
+                                disabled="@(!HasNotifications)"
+                                @onclick="ToggleNotificationsAsync">
+                            <i class="bi bi-bell-fill" aria-hidden="true"></i>
+                            @if (HasNotifications)
+                            {
+                                <span class="app-notification-dot" aria-hidden="true"></span>
+                                <span class="app-notification-count">@_pendingPasswordRequests</span>
+                            }
+                        </button>
+
+                        @if (_notificationsOpen && HasNotifications)
                         {
-                            <span class="app-notification-dot" aria-hidden="true"></span>
-                            <span class="app-notification-count">@_pendingPasswordRequests</span>
+                            <div class="app-notification-dropdown" role="status" aria-label="Notificações pendentes">
+                                @foreach (var notification in _passwordRequestNotifications)
+                                {
+                                    <p class="app-notification-text">@GetPasswordRequestNotificationText(notification)</p>
+                                }
+                            </div>
                         }
-                    </button>
+                    </div>
 
                     <UserIdentityBadge />
                 </div>
@@ -67,7 +79,12 @@
 </div>
 
 @code {
-    private int _pendingPasswordRequests;
+    private List<UserPasswordChangeRequest> _passwordRequestNotifications = new();
+    private bool _notificationsOpen;
+
+    private int _pendingPasswordRequests => _passwordRequestNotifications.Count;
+
+    private bool HasNotifications => AuthService.IsAdmin && _pendingPasswordRequests > 0;
 
     private DesignThemeModes ThemeMode => ThemeState.IsDarkMode
         ? DesignThemeModes.Dark
@@ -107,17 +124,35 @@
 
     private async Task LoadNotificationsAsync()
     {
-        _pendingPasswordRequests = AuthService.IsAdmin
-            ? await UserSettingsService.GetPendingPasswordRequestCountAsync()
-            : 0;
+        _passwordRequestNotifications = AuthService.IsAdmin
+            ? await UserSettingsService.GetPendingPasswordRequestsAsync()
+            : new List<UserPasswordChangeRequest>();
+
+        if (!HasNotifications)
+            _notificationsOpen = false;
     }
 
-    private Task OpenNotificationsAsync()
+    private async Task ToggleNotificationsAsync()
     {
-        if (AuthService.IsAdmin && _pendingPasswordRequests > 0)
-            Navigation.NavigateTo("/User/Settings?adminPasswordRequests=true");
+        if (_notificationsOpen)
+        {
+            _notificationsOpen = false;
+            return;
+        }
 
-        return Task.CompletedTask;
+        await LoadNotificationsAsync();
+        _notificationsOpen = HasNotifications;
+    }
+
+    private static string GetPasswordRequestNotificationText(UserPasswordChangeRequest notification)
+    {
+        var displayName = !string.IsNullOrWhiteSpace(notification.Name)
+            ? notification.Name
+            : !string.IsNullOrWhiteSpace(notification.Username)
+                ? notification.Username
+                : "Um usuário";
+
+        return $"{displayName} deseja alterar a senha.";
     }
 
     private async Task AtualizarVersaoAsync()

@@ -66,7 +66,7 @@
     --dashboard-chart-pink: #E03F97;
     --dashboard-chart-purple: #8B3FE0;
     --dashboard-chart-blue: #1BAEDB;
-    --dashboard-radial-progress: #F5F0FA;
+    --dashboard-radial-progress: #3320C9;
     min-width: 0;
     overflow: hidden;
 }
@@ -196,7 +196,7 @@
     --dashboard-chart-pink: #F472B6;
     --dashboard-chart-purple: #C084FC;
     --dashboard-chart-blue: #38BDF8;
-    --dashboard-radial-progress: #6E5FA5;
+    --dashboard-radial-progress: #8B5CF6;
 }
 
 .theme-dark .dashboard-top-items-chart,

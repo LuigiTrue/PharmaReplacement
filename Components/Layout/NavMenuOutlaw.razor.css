@@ -143,6 +143,27 @@ ul {
     color: #F4F1F6;
 }
 
+.sidebar-nav-outlaw ul li.disabled-nav-item,
+.sidebar-nav-outlaw ul li.disabled-nav-item:hover {
+    background-color: transparent;
+}
+
+.sidebar-nav-outlaw ul li.disabled-nav-item a,
+.sidebar-nav-outlaw ul li.disabled-nav-item:hover a {
+    cursor: default;
+    pointer-events: none;
+}
+
+.sidebar-nav-outlaw.sidebar-light ul li.disabled-nav-item a,
+.sidebar-nav-outlaw.sidebar-light ul li.disabled-nav-item:hover a {
+    color: #A4A0AE;
+}
+
+.sidebar-nav-outlaw.sidebar-dark ul li.disabled-nav-item a,
+.sidebar-nav-outlaw.sidebar-dark ul li.disabled-nav-item:hover a {
+    color: #777484;
+}
+
 @media (max-width: 720px) {
     .sidebar-nav-outlaw,
     .sidebar-nav-outlaw:hover {

@@ -111,6 +111,10 @@ main {
     white-space: nowrap;
 }
 
+.app-notification-menu {
+    position: relative;
+}
+
 .app-notification-button {
     position: relative;
     display: inline-flex;
@@ -173,6 +177,37 @@ main {
     font-size: 0.68rem;
     font-weight: 800;
     line-height: 1rem;
+}
+
+.app-notification-dropdown {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    right: 0;
+    z-index: 50;
+    display: flex;
+    width: min(20rem, calc(100vw - 2rem));
+    flex-direction: column;
+    gap: 0.2rem;
+    border: 1px solid var(--app-border);
+    border-radius: 8px;
+    padding: 0.35rem;
+    background: var(--app-surface);
+    box-shadow: 0 12px 30px var(--app-nav-shadow);
+}
+
+.app-notification-text {
+    margin: 0;
+    border-radius: 6px;
+    padding: 0.65rem 0.75rem;
+    background: transparent;
+    color: var(--app-text);
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.app-notification-text + .app-notification-text {
+    border-top: 1px solid var(--app-border);
 }
 
 #blazor-error-ui {
