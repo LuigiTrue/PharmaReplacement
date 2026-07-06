@@ -45,7 +45,8 @@ public class ReplacementSettingsService : IReplacementSettingsService
     public async Task<ReplacementSettingsItem?> GetPriorityItemAsync(string code)
     {
         var items = await GetConfiguredItemsAsync();
-        return items.FirstOrDefault(i => i.Code == code);
+        return items.FirstOrDefault(i =>
+            string.Equals(i.Code, code.Trim(), StringComparison.OrdinalIgnoreCase));
     }
 
     public async Task UpdateItemSettingsAsync(string code, ItemPriority priority, decimal minimumQuantity)
@@ -54,10 +55,24 @@ public class ReplacementSettingsService : IReplacementSettingsService
             throw new InvalidOperationException("O estoque mínimo não pode ser negativo.");
 
         var minimums = await _minimumStockService.GetAllAsync();
-        var item = minimums.FirstOrDefault(m => m.Code == code);
+        var normalizedCode = code.Trim();
+        var item = minimums.FirstOrDefault(m =>
+            string.Equals(m.Code, normalizedCode, StringComparison.OrdinalIgnoreCase));
 
         if (item is null)
-            throw new InvalidOperationException("Item não encontrado nas configurações de estoque mínimo.");
+        {
+            var product = await _stockService.GetByCodeAsync(normalizedCode);
+            if (product is null)
+                throw new InvalidOperationException("Item não encontrado no estoque.");
+
+            item = new MinimumStock
+            {
+                Code = product.Code,
+                Name = product.Name,
+                MinimumQuantity = 0,
+                itemPriority = ItemPriority.Low
+            };
+        }
 
         await _minimumStockService.SaveAsync(new MinimumStock
         {
@@ -100,24 +115,45 @@ public class ReplacementSettingsService : IReplacementSettingsService
     {
         var minimums = await _minimumStockService.GetAllAsync();
         var products = await _stockService.GetAllAsync();
-        var productsByCode = products
-            .GroupBy(p => p.Code)
-            .ToDictionary(g => g.Key, g => g.First());
 
-        return minimums
-            .Select(minimum =>
+        var minimumsByCode = minimums
+            .GroupBy(m => m.Code, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+        var productsByCode = products
+            .GroupBy(p => p.Code, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+        var result = products
+            .Select(product =>
             {
-                productsByCode.TryGetValue(minimum.Code, out var product);
+                minimumsByCode.TryGetValue(product.Code, out var minimum);
 
                 return new ReplacementSettingsItem
                 {
-                    Code = minimum.Code,
-                    Name = product?.Name ?? minimum.Name,
-                    MinimumQuantity = minimum.MinimumQuantity,
-                    ItemPriority = minimum.itemPriority
+                    Code = product.Code,
+                    Name = product.Name,
+                    MinimumQuantity = minimum?.MinimumQuantity ?? 0,
+                    ItemPriority = minimum?.itemPriority ?? ItemPriority.Low
                 };
             })
             .ToList();
+
+        foreach (var minimum in minimums)
+        {
+            if (productsByCode.ContainsKey(minimum.Code))
+                continue;
+
+            result.Add(new ReplacementSettingsItem
+            {
+                Code = minimum.Code,
+                Name = minimum.Name,
+                MinimumQuantity = minimum.MinimumQuantity,
+                ItemPriority = minimum.itemPriority
+            });
+        }
+
+        return result;
     }
 
     private static string Normalize(string value)
