@@ -1,4 +1,7 @@
-using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using RepyPharma.Domain.Entities;
+using RepyPharma.Infrastructure.Identity;
 using RepyPharma.Models;
 using RepyPharma.Services.Interfaces;
 
@@ -6,103 +9,88 @@ namespace RepyPharma.Services.Implementatios;
 
 public class UserSettingsService : IUserSettingsService
 {
-    private readonly string _usersFilePath;
     private readonly IAuthService _authService;
-    private readonly JsonSerializerOptions _jsonOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-        WriteIndented = true
-    };
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public UserSettingsService(IWebHostEnvironment env, IAuthService authService)
+    public UserSettingsService(
+        IAuthService authService,
+        UserManager<ApplicationUser> userManager)
     {
         _authService = authService;
-        _usersFilePath = Path.Combine(env.ContentRootPath, "storage", "users.json");
+        _userManager = userManager;
     }
 
     public event Action? OnChange;
 
     public async Task<UserProfileSettings?> GetCurrentProfileAsync()
     {
-        var currentUser = _authService.CurrentUser;
-        if (currentUser is null)
-            return null;
-
-        var user = await FindUserAsync(currentUser.Username);
+        var user = await GetCurrentApplicationUserAsync();
         if (user is null)
             return null;
 
         return new UserProfileSettings
         {
-            Username = user.Username,
+            Username = user.UserName ?? string.Empty,
             Name = user.Name,
-            Email = user.Email,
+            Email = user.Email ?? string.Empty,
             AvatarDataUrl = user.AvatarDataUrl,
-            IsAdmin = user.IsAdmin,
+            IsAdmin = await _userManager.IsInRoleAsync(user, AuthRoles.Admin),
             PasswordChangeRequested = user.PasswordChangeRequested
         };
     }
 
     public async Task UpdateCurrentProfileAsync(string name, string avatarDataUrl)
     {
-        var currentUser = _authService.CurrentUser;
-        if (currentUser is null)
-            throw new InvalidOperationException("Usuário não autenticado.");
+        var user = await GetCurrentApplicationUserAsync()
+            ?? throw new InvalidOperationException("Usuário não autenticado.");
 
         if (string.IsNullOrWhiteSpace(name))
             throw new InvalidOperationException("Informe o nome do usuário.");
 
-        var users = await ReadUsersAsync();
-        var user = users.FirstOrDefault(u => IsSameUser(u.Username, currentUser.Username));
-        if (user is null)
-            throw new InvalidOperationException("Usuário não encontrado.");
-
         user.Name = name.Trim();
         user.AvatarDataUrl = avatarDataUrl;
 
-        await WriteUsersAsync(users);
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            throw new InvalidOperationException(GetIdentityErrorMessage("Falha ao atualizar o perfil", result));
+
         await _authService.UpdateCurrentUserProfileAsync(user.Name, user.AvatarDataUrl);
         NotifyStateChanged();
     }
 
     public async Task RequestPasswordChangeAsync()
     {
-        var currentUser = _authService.CurrentUser;
-        if (currentUser is null)
-            throw new InvalidOperationException("Usuário não autenticado.");
-
-        var users = await ReadUsersAsync();
-        var user = users.FirstOrDefault(u => IsSameUser(u.Username, currentUser.Username));
-        if (user is null)
-            throw new InvalidOperationException("Usuário não encontrado.");
+        var user = await GetCurrentApplicationUserAsync()
+            ?? throw new InvalidOperationException("Usuário não autenticado.");
 
         user.PasswordChangeRequested = true;
         user.PasswordChangeRequestedAt = DateTime.UtcNow;
 
-        await WriteUsersAsync(users);
+        var result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            throw new InvalidOperationException(GetIdentityErrorMessage("Falha ao registrar solicitação de senha", result));
+
         NotifyStateChanged();
     }
 
     public async Task<int> GetPendingPasswordRequestCountAsync()
     {
-        var users = await ReadUsersAsync();
-        return users.Count(u => u.PasswordChangeRequested);
+        return await _userManager.Users.CountAsync(user => user.PasswordChangeRequested);
     }
 
     public async Task<List<UserPasswordChangeRequest>> GetPendingPasswordRequestsAsync()
     {
-        var users = await ReadUsersAsync();
-        return users
-            .Where(u => u.PasswordChangeRequested)
-            .OrderBy(u => u.PasswordChangeRequestedAt ?? DateTime.MaxValue)
-            .Select(u => new UserPasswordChangeRequest
+        return await _userManager.Users
+            .Where(user => user.PasswordChangeRequested)
+            .OrderBy(user => user.PasswordChangeRequestedAt ?? DateTime.MaxValue)
+            .Select(user => new UserPasswordChangeRequest
             {
-                Username = u.Username,
-                Name = string.IsNullOrWhiteSpace(u.Name) ? u.Username : u.Name,
-                Email = u.Email,
-                RequestedAt = u.PasswordChangeRequestedAt
+                Username = user.UserName ?? string.Empty,
+                Name = string.IsNullOrWhiteSpace(user.Name) ? user.UserName ?? string.Empty : user.Name,
+                Email = user.Email ?? string.Empty,
+                RequestedAt = user.PasswordChangeRequestedAt
             })
-            .ToList();
+            .ToListAsync();
     }
 
     public async Task ChangeUserPasswordAsync(string username, string newPassword)
@@ -113,48 +101,44 @@ public class UserSettingsService : IUserSettingsService
         if (string.IsNullOrWhiteSpace(username))
             throw new InvalidOperationException("Usuário inválido.");
 
-        if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6)
-            throw new InvalidOperationException("Informe uma senha com pelo menos 6 caracteres.");
+        if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 8)
+            throw new InvalidOperationException("Informe uma senha com pelo menos 8 caracteres.");
 
-        var users = await ReadUsersAsync();
-        var user = users.FirstOrDefault(u => IsSameUser(u.Username, username));
+        var user = await _userManager.FindByNameAsync(username)
+            ?? await _userManager.FindByEmailAsync(username);
+
         if (user is null)
             throw new InvalidOperationException("Usuário não encontrado.");
 
-        user.Password = newPassword;
+        var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+        if (!result.Succeeded)
+            throw new InvalidOperationException(GetIdentityErrorMessage("Falha ao alterar a senha", result));
+
         user.PasswordChangeRequested = false;
         user.PasswordChangeRequestedAt = null;
 
-        await WriteUsersAsync(users);
+        result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+            throw new InvalidOperationException(GetIdentityErrorMessage("Falha ao atualizar solicitação de senha", result));
+
         NotifyStateChanged();
     }
 
-    private async Task<AppUser?> FindUserAsync(string username)
+    private async Task<ApplicationUser?> GetCurrentApplicationUserAsync()
     {
-        var users = await ReadUsersAsync();
-        return users.FirstOrDefault(u => IsSameUser(u.Username, username));
+        var currentUser = _authService.CurrentUser;
+        if (currentUser is null)
+            return null;
+
+        return await _userManager.FindByNameAsync(currentUser.Username)
+            ?? await _userManager.FindByEmailAsync(currentUser.Email);
     }
 
-    private async Task<List<AppUser>> ReadUsersAsync()
+    private static string GetIdentityErrorMessage(string message, IdentityResult result)
     {
-        if (!File.Exists(_usersFilePath))
-            return new List<AppUser>();
-
-        var json = await File.ReadAllTextAsync(_usersFilePath);
-        if (string.IsNullOrWhiteSpace(json))
-            return new List<AppUser>();
-
-        return JsonSerializer.Deserialize<List<AppUser>>(json, _jsonOptions) ?? new List<AppUser>();
+        return $"{message}: {string.Join("; ", result.Errors.Select(error => error.Description))}";
     }
-
-    private async Task WriteUsersAsync(List<AppUser> users)
-    {
-        var json = JsonSerializer.Serialize(users, _jsonOptions);
-        await File.WriteAllTextAsync(_usersFilePath, json);
-    }
-
-    private static bool IsSameUser(string left, string right) =>
-        string.Equals(left, right, StringComparison.OrdinalIgnoreCase);
 
     private void NotifyStateChanged() => OnChange?.Invoke();
 }

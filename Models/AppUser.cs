@@ -1,18 +1,5 @@
 namespace RepyPharma.Models;
 
-public class AppUser
-{
-    public string Username { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-    public bool Active { get; set; } = true;
-    public bool IsAdmin { get; set; }
-    public string AvatarDataUrl { get; set; } = string.Empty;
-    public bool PasswordChangeRequested { get; set; }
-    public DateTime? PasswordChangeRequestedAt { get; set; }
-}
-
 public class AuthUserSession
 {
     public string Username { get; set; } = string.Empty;
@@ -20,6 +7,7 @@ public class AuthUserSession
     public string Name { get; set; } = string.Empty;
     public bool IsAdmin { get; set; }
     public string AvatarDataUrl { get; set; } = string.Empty;
+    public List<string> Roles { get; set; } = new();
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 

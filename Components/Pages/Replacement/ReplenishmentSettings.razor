@@ -1,4 +1,5 @@
 @page "/Replacement/Settings"
+@attribute [Authorize(Roles = "Admin")]
 @inject IReplacementSettingsService SettingsService
 @inject IAuthService AuthService
 @inject NavigationManager Navigation

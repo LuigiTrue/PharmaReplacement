@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RepyPharma.Domain.Entities;
 
 namespace RepyPharma.Data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<ApplicationUser, IdentityRole, string>(options)
 {
     public DbSet<Item> Items => Set<Item>();
     public DbSet<Batch> Batches => Set<Batch>();
@@ -15,6 +17,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ApplicationUser>(entity =>
+        {
+            entity.Property(user => user.Name)
+                .HasMaxLength(255)
+                .IsRequired();
+            entity.Property(user => user.AvatarDataUrl)
+                .HasColumnType("text");
+        });
 
         modelBuilder.Entity<Item>(entity =>
         {

@@ -1,8 +1,6 @@
 @page "/"
 @page "/Login"
 @layout LoginLayout
-@using System.ComponentModel.DataAnnotations
-@inject IAuthService AuthService
 @inject NavigationManager Navigation
 
 <PageTitle>Login</PageTitle>
@@ -24,19 +22,19 @@
                 <p>Entre com suas credenciais para continuar</p>
             </div>
 
-            <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" class="login-form">
-                <DataAnnotationsValidator />
+            <form method="post" action="/auth/login" class="login-form">
+                <input type="hidden" name="returnUrl" value="@GetReturnUrl()" />
+                <input type="hidden" name="rememberMe" value="false" />
 
                 <div class="form-group">
                     <label for="username">Usuário</label>
-                    <InputText id="username" class="form-control" @bind-Value="loginModel.Username" placeholder="Digite seu usuário" />
-                    <ValidationMessage For="@(() => loginModel.Username)" />
+                    <input id="username" name="username" class="form-control" placeholder="Digite seu usuário" required />
                 </div>
 
                 <div class="form-group">
                     <label for="password">Senha</label>
                     <div class="password-field">
-                        <InputText id="password" type="@PasswordInputType" class="form-control password-control" @bind-Value="loginModel.Password" placeholder="••••••••" />
+                        <input id="password" name="password" type="@PasswordInputType" class="form-control password-control" placeholder="••••••••" required minlength="8" />
                         <button type="button"
                                 class="password-toggle"
                                 title="@PasswordToggleTitle"
@@ -45,7 +43,6 @@
                             <i class="bi @PasswordToggleIcon" aria-hidden="true"></i>
                         </button>
                     </div>
-                    <ValidationMessage For="@(() => loginModel.Password)" />
                 </div>
 
                 @if (!string.IsNullOrEmpty(errorMessage))
@@ -64,13 +61,12 @@
                         <span>Entrar</span>
                     }
                 </button>
-            </EditForm>
+            </form>
         </div>
     </div>
 </div>
 
 @code {
-    private LoginModel loginModel = new();
     private bool isLoading = false;
     private bool showPassword = false;
     private string? errorMessage;
@@ -83,26 +79,28 @@
         showPassword = !showPassword;
     }
 
-    private async Task HandleLogin()
+    [SupplyParameterFromQuery(Name = "error")]
+    public string? Error { get; set; }
+
+    [SupplyParameterFromQuery(Name = "returnUrl")]
+    public string? ReturnUrl { get; set; }
+
+    protected override void OnParametersSet()
     {
-        isLoading = true;
-        errorMessage = null;
-
-        var result = await AuthService.LoginAsync(loginModel.Username, loginModel.Password, loginModel.RememberMe);
-
-        isLoading = false;
-
-        if (!result.Succeeded)
+        errorMessage = Error switch
         {
-            errorMessage = result.ErrorMessage;
-            return;
-        }
-
-        Navigation.NavigateTo(GetReturnUrl(), replace: true);
+            "inactive" => "Usuário inativo. Procure o administrador.",
+            "locked" => "Usuário temporariamente bloqueado por tentativas inválidas.",
+            "invalid" => "Usuário ou senha inválidos.",
+            _ => null
+        };
     }
 
     private string GetReturnUrl()
     {
+        if (!string.IsNullOrWhiteSpace(ReturnUrl))
+            return ReturnUrl;
+
         var uri = Navigation.ToAbsoluteUri(Navigation.Uri);
         var query = uri.Query.TrimStart('?');
 
@@ -119,17 +117,5 @@
         }
 
         return "/Home";
-    }
-
-    public class LoginModel
-    {
-        [Required(ErrorMessage = "Informe o usuário")]
-        public string Username { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Informe a senha")]
-        [MinLength(6, ErrorMessage = "A senha deve ter ao menos 6 caracteres")]
-        public string Password { get; set; } = string.Empty;
-
-        public bool RememberMe { get; set; }
     }
 }

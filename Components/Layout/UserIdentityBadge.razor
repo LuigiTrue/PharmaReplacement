@@ -1,5 +1,4 @@
 @inject IAuthService AuthService
-@inject NavigationManager Navigation
 
 <div class="user-identity-menu">
     <button type="button" class="user-identity-badge" title="@UserTitle" @onclick="ToggleMenu" aria-expanded="@_open">
@@ -27,10 +26,12 @@
                 <i class="bi bi-gear-fill" aria-hidden="true"></i>
                 <span>Configurações</span>
             </button>
-            <button type="button" class="user-identity-dropdown-item danger" @onclick="LogoutAsync">
-                <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
-                <span>Logout</span>
-            </button>
+            <form method="post" action="/auth/logout" style="margin: 0;">
+                <button type="submit" class="user-identity-dropdown-item danger">
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                    <span>Logout</span>
+                </button>
+            </form>
         </div>
     }
 </div>
@@ -46,7 +47,9 @@
                 ? User.Username
                 : "Usuário";
 
-    private string RoleLabel => AuthService.IsAdmin ? "Administrador" : "Usuário";
+    private string RoleLabel => AuthService.IsAdmin
+        ? "Administrador"
+        : User?.Roles.FirstOrDefault() ?? "Usuário";
 
     private string UserTitle =>
         !string.IsNullOrWhiteSpace(User?.Email)
@@ -68,11 +71,4 @@
     }
 
     private void ToggleMenu() => _open = !_open;
-
-    private async Task LogoutAsync()
-    {
-        _open = false;
-        await AuthService.LogoutAsync();
-        Navigation.NavigateTo("/Login", replace: true);
-    }
 }

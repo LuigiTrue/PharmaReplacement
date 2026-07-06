@@ -9,6 +9,7 @@ public interface IAuthService
     bool IsAuthenticated { get; }
     bool IsAdmin { get; }
     AuthUserSession? CurrentUser { get; }
+    bool IsInRole(string role);
 
     Task InitializeAsync();
     Task<AuthLoginResult> LoginAsync(string username, string password, bool rememberMe);

@@ -1,4 +1,5 @@
 @using RepyPharma.Components.Pages.Login
+@using System.Reflection
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 @implements IDisposable
@@ -75,7 +76,25 @@ else if (_canRenderProtectedRoute)
             return;
         }
 
+        if (!HasRequiredRoles())
+        {
+            Navigation.NavigateTo("/Home", replace: true);
+            return;
+        }
+
         _canRenderProtectedRoute = true;
+    }
+
+    private bool HasRequiredRoles()
+    {
+        var roles = RouteData.PageType
+            .GetCustomAttributes<AuthorizeAttribute>(inherit: true)
+            .SelectMany(attribute => (attribute.Roles ?? string.Empty)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        return roles.Count == 0 || roles.Any(AuthService.IsInRole);
     }
 
     public void Dispose()
