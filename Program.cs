@@ -2,6 +2,8 @@ using RepyPharma.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using ApexCharts;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.EntityFrameworkCore;
+using RepyPharma.Data;
 using RepyPharma.Services.Implementatios;
 using RepyPharma.Services.Interfaces;
 
@@ -16,6 +18,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddFluentUIComponents();
 builder.Services.AddApexCharts();
+builder.Services.AddDbContextFactory<AppDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
