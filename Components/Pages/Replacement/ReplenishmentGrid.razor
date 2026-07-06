@@ -6,6 +6,8 @@
 @inject IDialogService DialogService
 @inject IJSRuntime JS
 @inject IAuthService AuthService
+@inject ReplenishmentDataState ReplenishmentDataState
+@implements IDisposable
 
 <PageTitle>Reposição</PageTitle>
 
@@ -86,11 +88,30 @@
     private const string Fractionation = "1059";
     private const string Caf = "999";
     private const string Stock = "996";
+
     protected override async Task OnInitializedAsync()
     {
+        ReplenishmentDataState.OnChange += HandleReplenishmentDataChanged;
+        await LoadReportAsync();
+    }
+
+    private async Task LoadReportAsync()
+    {
+        _loading = true;
+        await InvokeAsync(StateHasChanged);
+
         _report = await ReplenishmentService.GenerateReportAsync();
         _summary = await ReplenishmentService.GetDashboardSummaryAsync();
         _loading = false;
+    }
+
+    private void HandleReplenishmentDataChanged()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            await LoadReportAsync();
+            StateHasChanged();
+        });
     }
 
     private async Task OpenPreview()
@@ -122,5 +143,10 @@
             IDialogReference dialog = await DialogService.ShowDialogAsync<PopupComponent>(parameters);
         DialogResult? result = await dialog.Result;
     
+    }
+
+    public void Dispose()
+    {
+        ReplenishmentDataState.OnChange -= HandleReplenishmentDataChanged;
     }
 }

@@ -22,7 +22,8 @@
                         <th scope="col" class="px-3 py-3 text-left font-semibold">Código</th>
                         <th scope="col" class="px-1 py-3 text-left font-semibold">Nome</th>
                         <th scope="col" class="px-4 py-3 text-left font-semibold">Lotes Disponíveis</th>
-                        <th scope="col" class="px-1 py-3 text-left font-semibold">Qtd para repor</th>
+                        <th scope="col" class="px-3 py-3 text-left font-semibold">Estoque Atual</th>
+                        <th scope="col" class="px-5 py-1 text-left font-semibold">Qtd para repor</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white text-slate-700 dark:divide-slate-800 dark:bg-slate-900 dark:text-slate-100">
@@ -75,7 +76,8 @@
                                     </div>
                                 }
                             </td>
-                            <td class="min-w-72 px-1 py-3 align-top">@((int)item.MinimumQuantity) und</td>
+                            <td class="min-w-52 px-3 py-3 align-top">@item.CurrentStock.ToString("0.##") und</td>
+                            <td class="min-w-72 px-5 py-3 align-top">@item.MissingQuantity.ToString("0.##") und</td>
                         </tr>
                     }
                 </tbody>

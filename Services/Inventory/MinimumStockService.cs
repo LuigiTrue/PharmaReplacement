@@ -1,83 +1,163 @@
+using Microsoft.EntityFrameworkCore;
+using RepyPharma.Data;
+using RepyPharma.Domain.Entities;
 using RepyPharma.Models;
-using System.Text.Json;
 using RepyPharma.Services.Interfaces;
+using System.Text.Json;
 
 namespace RepyPharma.Services.Inventory;
 
 public class MinimumStockService : IMinimumStockService
 {
-    private readonly string _filePath;
-    private readonly IStockJsonService _stockService;
+    private const string ManualCalculationMethod = "manual";
 
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
+    private readonly string _legacyFilePath;
+    private readonly ReplenishmentDataState _replenishmentDataState;
+    private readonly IStockJsonService _stockService;
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
-        PropertyNameCaseInsensitive = true,
-        WriteIndented = true
+        PropertyNameCaseInsensitive = true
     };
 
-    public MinimumStockService(IWebHostEnvironment env, IStockJsonService stockService)
+    public MinimumStockService(
+        IDbContextFactory<AppDbContext> dbContextFactory,
+        IWebHostEnvironment env,
+        ReplenishmentDataState replenishmentDataState,
+        IStockJsonService stockService)
     {
-        _filePath = Path.Combine(env.ContentRootPath, "storage", "minimos.json");
+        _dbContextFactory = dbContextFactory;
+        _legacyFilePath = Path.Combine(env.ContentRootPath, "storage", "minimos.json");
+        _replenishmentDataState = replenishmentDataState;
         _stockService = stockService;
     }
 
-    // Retorna todos os mínimos cadastrados
     public async Task<List<MinimumStock>> GetAllAsync()
     {
-        if (!File.Exists(_filePath))
-            return new List<MinimumStock>();
+        await EnsureLegacyMinimumsImportedAsync();
 
-        var json = await File.ReadAllTextAsync(_filePath);
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        if (string.IsNullOrWhiteSpace(json))
-            return new List<MinimumStock>();
-
-        return JsonSerializer.Deserialize<List<MinimumStock>>(json, _jsonOptions)
-               ?? new List<MinimumStock>();
+        return await context.ReplenishmentRules
+            .AsNoTracking()
+            .Where(rule => rule.IsActive)
+            .Include(rule => rule.Item)
+            .OrderBy(rule => rule.Item.Name)
+            .Select(rule => new MinimumStock
+            {
+                Code = rule.Item.Code,
+                Name = rule.Item.Name,
+                MinimumQuantity = rule.MinimumStock ?? 0,
+                itemPriority = rule.ItemPriority
+            })
+            .ToListAsync();
     }
 
-    // Retorna o mínimo de um produto específico
     public async Task<MinimumStock?> GetByCodeAsync(string code)
     {
-        var minimos = await GetAllAsync();
-        return minimos.FirstOrDefault(m => m.Code == code);
+        await EnsureLegacyMinimumsImportedAsync();
+
+        var normalizedCode = code.Trim();
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        return await context.ReplenishmentRules
+            .AsNoTracking()
+            .Where(rule => rule.IsActive && rule.Item.Code == normalizedCode)
+            .Include(rule => rule.Item)
+            .Select(rule => new MinimumStock
+            {
+                Code = rule.Item.Code,
+                Name = rule.Item.Name,
+                MinimumQuantity = rule.MinimumStock ?? 0,
+                itemPriority = rule.ItemPriority
+            })
+            .FirstOrDefaultAsync();
     }
 
-    // Salva ou atualiza o mínimo de um produto
     public async Task SaveAsync(MinimumStock item)
     {
-        var minimos = await GetAllAsync();
-        var existing = minimos.FirstOrDefault(m => m.Code == item.Code);
+        await EnsureLegacyMinimumsImportedAsync();
 
-        if (existing is not null)
+        var normalizedCode = item.Code.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedCode))
+            throw new InvalidOperationException("Informe o código do item.");
+
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        var dbItem = await context.Items
+            .Include(existingItem => existingItem.ReplenishmentRule)
+            .FirstOrDefaultAsync(existingItem => existingItem.Code == normalizedCode);
+
+        if (dbItem is null)
         {
-            existing.MinimumQuantity = item.MinimumQuantity;
+            var stockProduct = await _stockService.GetByCodeAsync(normalizedCode);
+
+            dbItem = new Item
+            {
+                Code = normalizedCode,
+                Name = stockProduct?.Name ?? item.Name.Trim(),
+                Unit = stockProduct?.Unit ?? string.Empty,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await context.Items.AddAsync(dbItem);
+            await context.SaveChangesAsync();
         }
         else
         {
-            // Garante que o nome vem do estoque, não digitado manualmente
-            var product = await _stockService.GetByCodeAsync(item.Code);
-            item.Name = product?.Name ?? item.Name;
-            minimos.Add(item);
+            var stockProduct = await _stockService.GetByCodeAsync(normalizedCode);
+            dbItem.Name = stockProduct?.Name ?? item.Name.Trim();
+            dbItem.Unit = stockProduct?.Unit ?? dbItem.Unit;
+            dbItem.IsActive = true;
+            dbItem.UpdatedAt = DateTime.UtcNow;
         }
 
-        await WriteAsync(minimos);
+        if (dbItem.ReplenishmentRule is null)
+        {
+            dbItem.ReplenishmentRule = new ReplenishmentRule
+            {
+                Item = dbItem,
+                MinimumStock = item.MinimumQuantity,
+                CalculationMethod = ManualCalculationMethod,
+                ItemPriority = item.itemPriority,
+                IsActive = true,
+                UpdatedAt = DateTime.UtcNow
+            };
+        }
+        else
+        {
+            dbItem.ReplenishmentRule.MinimumStock = item.MinimumQuantity;
+            dbItem.ReplenishmentRule.CalculationMethod = ManualCalculationMethod;
+            dbItem.ReplenishmentRule.ItemPriority = item.itemPriority;
+            dbItem.ReplenishmentRule.IsActive = true;
+            dbItem.ReplenishmentRule.UpdatedAt = DateTime.UtcNow;
+        }
+
+        await context.SaveChangesAsync();
+        _replenishmentDataState.NotifyChanged();
     }
 
-    // Remove o mínimo de um produto
     public async Task RemoveAsync(string code)
     {
-        var minimos = await GetAllAsync();
-        var item = minimos.FirstOrDefault(m => m.Code == code);
+        await EnsureLegacyMinimumsImportedAsync();
 
-        if (item is not null)
-        {
-            minimos.Remove(item);
-            await WriteAsync(minimos);
-        }
+        var normalizedCode = code.Trim();
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        var rule = await context.ReplenishmentRules
+            .Include(replenishmentRule => replenishmentRule.Item)
+            .FirstOrDefaultAsync(replenishmentRule => replenishmentRule.Item.Code == normalizedCode);
+
+        if (rule is null)
+            return;
+
+        rule.IsActive = false;
+        rule.UpdatedAt = DateTime.UtcNow;
+        await context.SaveChangesAsync();
+        _replenishmentDataState.NotifyChanged();
     }
 
-    // Retorna apenas produtos que ainda não têm mínimo cadastrado
     public async Task<List<ProductStock>> GetProductsWithoutMinimumAsync()
     {
         var products = await _stockService.GetAllAsync();
@@ -87,9 +167,65 @@ public class MinimumStockService : IMinimumStockService
         return products.Where(p => !codesComMinimo.Contains(p.Code)).ToList();
     }
 
-    private async Task WriteAsync(List<MinimumStock> minimos)
+    private async Task EnsureLegacyMinimumsImportedAsync()
     {
-        var json = JsonSerializer.Serialize(minimos, _jsonOptions);
-        await File.WriteAllTextAsync(_filePath, json);
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        if (await context.ReplenishmentRules.AnyAsync())
+            return;
+
+        if (!File.Exists(_legacyFilePath))
+            return;
+
+        var json = await File.ReadAllTextAsync(_legacyFilePath);
+        if (string.IsNullOrWhiteSpace(json))
+            return;
+
+        var legacyMinimums = JsonSerializer.Deserialize<List<MinimumStock>>(json, _jsonOptions);
+        if (legacyMinimums is null || legacyMinimums.Count == 0)
+            return;
+
+        var now = DateTime.UtcNow;
+        var importedCodes = new HashSet<string>();
+
+        foreach (var minimum in legacyMinimums)
+        {
+            var code = minimum.Code.Trim();
+            if (string.IsNullOrWhiteSpace(code))
+                continue;
+
+            if (!importedCodes.Add(code))
+                continue;
+
+            var item = await context.Items
+                .Include(existingItem => existingItem.ReplenishmentRule)
+                .FirstOrDefaultAsync(existingItem => existingItem.Code == code);
+
+            if (item is null)
+            {
+                item = new Item
+                {
+                    Code = code,
+                    Name = minimum.Name.Trim(),
+                    Unit = string.Empty,
+                    IsActive = false,
+                    CreatedAt = now
+                };
+
+                await context.Items.AddAsync(item);
+            }
+
+            item.ReplenishmentRule = new ReplenishmentRule
+            {
+                Item = item,
+                MinimumStock = minimum.MinimumQuantity,
+                CalculationMethod = ManualCalculationMethod,
+                ItemPriority = minimum.itemPriority,
+                IsActive = true,
+                UpdatedAt = now
+            };
+        }
+
+        await context.SaveChangesAsync();
     }
 }

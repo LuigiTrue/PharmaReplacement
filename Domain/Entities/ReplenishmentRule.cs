@@ -9,6 +9,7 @@ public class ReplenishmentRule
     public int? LeadTimeDays { get; set; }
     public int? TargetCoverageDays { get; set; }
     public string CalculationMethod { get; set; } = string.Empty;
+    public ItemPriority ItemPriority { get; set; } = ItemPriority.Low;
     public bool IsActive { get; set; } = true;
     public DateTime UpdatedAt { get; set; }
 

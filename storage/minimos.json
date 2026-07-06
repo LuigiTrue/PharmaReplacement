@@ -692,8 +692,8 @@
   {
     "Code": "5626",
     "Name": "DIPIRONA SOL INJ 500MG/ML 2ML",
-    "MinimumQuantity": 50.0,
-    "ItemPriority": 3
+    "MinimumQuantity": 10,
+    "ItemPriority": 2
   },
   {
     "Code": "39374",

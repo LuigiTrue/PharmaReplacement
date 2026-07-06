@@ -64,6 +64,7 @@ builder.Services.AddScoped<PdfValidationService>();
 builder.Services.AddScoped<PdfParserService>();
 builder.Services.AddScoped<LayoutState>();
 builder.Services.AddScoped<ThemeState>();
+builder.Services.AddSingleton<ReplenishmentDataState>();
 builder.Services.AddScoped<ReportHtmlService>();
 
 builder.Services.AddFluentUIComponents(options =>

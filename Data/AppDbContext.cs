@@ -130,6 +130,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(rule => rule.CalculationMethod)
                 .HasMaxLength(50)
                 .IsRequired();
+            entity.Property(rule => rule.ItemPriority)
+                .HasConversion<int>();
 
             entity.HasIndex(rule => rule.ItemId)
                 .IsUnique();

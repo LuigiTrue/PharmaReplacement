@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using RepyPharma.Data;
 using RepyPharma.Models;
 using System.Text.Json;
 using RepyPharma.Services.Interfaces;
@@ -6,7 +8,7 @@ namespace RepyPharma.Services.Import;
 
 public class StockJsonService : IStockJsonService
 {
-    private readonly string _filePath;
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
     private readonly string _ignoredFilePath;
 
     private readonly JsonSerializerOptions _jsonOptions = new()
@@ -14,31 +16,105 @@ public class StockJsonService : IStockJsonService
         PropertyNameCaseInsensitive = true
     };
 
-    public StockJsonService(IWebHostEnvironment env)
+    public StockJsonService(IDbContextFactory<AppDbContext> dbContextFactory, IWebHostEnvironment env)
     {
-        _filePath = Path.Combine(env.ContentRootPath, "storage", "estoque.json");
+        _dbContextFactory = dbContextFactory;
         _ignoredFilePath = Path.Combine(env.ContentRootPath, "storage", "ignorados.json");
 
     }
 
     public async Task<List<ProductStock>> GetAllAsync()
     {
-        if (!File.Exists(_filePath))
-            return new List<ProductStock>();
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
 
-        var json = await File.ReadAllTextAsync(_filePath);
+        var items = await context.Items
+            .AsNoTracking()
+            .Where(item => item.IsActive)
+            .Include(item => item.StockBalances)
+                .ThenInclude(balance => balance.Batch)
+            .Include(item => item.StockBalances)
+                .ThenInclude(balance => balance.Location)
+            .OrderBy(item => item.Name)
+            .ToListAsync();
 
-        if (string.IsNullOrWhiteSpace(json))
-            return new List<ProductStock>();
-
-        return JsonSerializer.Deserialize<List<ProductStock>>(json, _jsonOptions)
-               ?? new List<ProductStock>();
+        return items
+            .Select(item => new ProductStock
+            {
+                Code = item.Code,
+                Name = item.Name,
+                Unit = item.Unit,
+                TotalStock = item.StockBalances.Sum(balance => balance.Quantity),
+                Batches = item.StockBalances
+                    .GroupBy(balance => new
+                    {
+                        balance.BatchId,
+                        balance.Batch.BatchNumber,
+                        balance.Batch.Validity
+                    })
+                    .OrderBy(group => group.Key.Validity)
+                    .Select(group => new BatchStock
+                    {
+                        Batch = group.Key.BatchNumber,
+                        Validity = group.Key.Validity,
+                        Locations = group
+                            .OrderBy(balance => balance.Location.Code)
+                            .Select(balance => new StockLocation
+                            {
+                                LocationId = balance.Location.Code,
+                                Quantity = balance.Quantity
+                            })
+                            .ToList()
+                    })
+                    .ToList()
+            })
+            .ToList();
     }
 
     public async Task<ProductStock?> GetByCodeAsync(string code)
     {
-        var products = await GetAllAsync();
-        return products.FirstOrDefault(p => p.Code == code);
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
+
+        var item = await context.Items
+            .AsNoTracking()
+            .Where(item => item.IsActive && item.Code == code)
+            .Include(item => item.StockBalances)
+                .ThenInclude(balance => balance.Batch)
+            .Include(item => item.StockBalances)
+                .ThenInclude(balance => balance.Location)
+            .FirstOrDefaultAsync();
+
+        if (item is null)
+            return null;
+
+        return new ProductStock
+        {
+            Code = item.Code,
+            Name = item.Name,
+            Unit = item.Unit,
+            TotalStock = item.StockBalances.Sum(balance => balance.Quantity),
+            Batches = item.StockBalances
+                .GroupBy(balance => new
+                {
+                    balance.BatchId,
+                    balance.Batch.BatchNumber,
+                    balance.Batch.Validity
+                })
+                .OrderBy(group => group.Key.Validity)
+                .Select(group => new BatchStock
+                {
+                    Batch = group.Key.BatchNumber,
+                    Validity = group.Key.Validity,
+                    Locations = group
+                        .OrderBy(balance => balance.Location.Code)
+                        .Select(balance => new StockLocation
+                        {
+                            LocationId = balance.Location.Code,
+                            Quantity = balance.Quantity
+                        })
+                        .ToList()
+                })
+                .ToList()
+        };
     }
 
     private static readonly Dictionary<string, string> LocationNames = new()
