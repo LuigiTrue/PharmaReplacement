@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RepyPharma.Models;
+using RepyPharma.Domain.Entities;
 
 namespace RepyPharma.Data;
 

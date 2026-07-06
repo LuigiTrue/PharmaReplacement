@@ -1,4 +1,4 @@
-namespace RepyPharma.Models;
+namespace RepyPharma.Domain.Entities;
 
 public class ReplenishmentRule
 {

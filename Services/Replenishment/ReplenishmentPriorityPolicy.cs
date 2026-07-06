@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text;
 using RepyPharma.Models;
 
-namespace RepyPharma.Services.Implementatios;
+namespace RepyPharma.Services.Replenishment;
 
 internal static class ReplenishmentPriorityPolicy
 {

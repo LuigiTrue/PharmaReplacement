@@ -1,5 +1,7 @@
 using System.Text.Json;
 
+namespace RepyPharma.Infrastructure.Json;
+
 public class PdfStorageService
 {
     private readonly string _path;

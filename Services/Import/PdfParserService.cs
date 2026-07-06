@@ -2,6 +2,8 @@ using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 using System.Text.RegularExpressions;
 
+namespace RepyPharma.Services.Import;
+
 public class PdfParserService
 {
     private const double CodeMinX = 15.5;

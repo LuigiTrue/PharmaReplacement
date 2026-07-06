@@ -2,7 +2,7 @@ using RepyPharma.Models;
 using System.Text.Json;
 using RepyPharma.Services.Interfaces;
 
-namespace RepyPharma.Services.Implementatios;
+namespace RepyPharma.Services.Inventory;
 
 public class MinimumStockService : IMinimumStockService
 {

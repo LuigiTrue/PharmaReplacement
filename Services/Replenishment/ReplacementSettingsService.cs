@@ -4,7 +4,7 @@ using System.Text.Json;
 using RepyPharma.Models;
 using RepyPharma.Services.Interfaces;
 
-namespace RepyPharma.Services.Implementatios;
+namespace RepyPharma.Services.Replenishment;
 
 public class ReplacementSettingsService : IReplacementSettingsService
 {

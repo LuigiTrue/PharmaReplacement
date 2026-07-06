@@ -1,5 +1,7 @@
 using System.Text;
 
+namespace RepyPharma.Services.Import;
+
 public class PdfValidationService
 {
     public bool IsValidHospitalStockPdf(string text)
