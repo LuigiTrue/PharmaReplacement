@@ -223,6 +223,7 @@
 
 #replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
 #replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
+#replenishment-tab-fractionation:checked ~ .app-tabs .app-tab[for="replenishment-tab-fractionation"],
 #replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"] {
     background-color: #F5F0FA;
     color: #3320C9;
@@ -237,9 +238,11 @@
 
 .theme-dark #replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
 .theme-dark #replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
+.theme-dark #replenishment-tab-fractionation:checked ~ .app-tabs .app-tab[for="replenishment-tab-fractionation"],
 .theme-dark #replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"],
 .dark #replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
 .dark #replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
+.dark #replenishment-tab-fractionation:checked ~ .app-tabs .app-tab[for="replenishment-tab-fractionation"],
 .dark #replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"] {
     background-color: #6E5FA5;
     color: #F4F1F6;
@@ -260,6 +263,7 @@
 
 #replenishment-tab-table:checked ~ .replenishment-table-panel,
 #replenishment-tab-dashboard:checked ~ .replenishment-dashboard-panel,
+#replenishment-tab-fractionation:checked ~ .replenishment-fractionation-panel,
 #replenishment-tab-settings:checked ~ .replenishment-settings-tab-panel {
     display: block;
 }

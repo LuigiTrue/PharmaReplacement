@@ -6,6 +6,34 @@
     max-width: 100%;
 }
 
+.replacement-section-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.replacement-type-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.replacement-type-filter select {
+    min-width: 11rem;
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 7px;
+    padding: 0.42rem 0.55rem;
+    background: var(--app-surface, #FFFFFF);
+    color: var(--app-text, #221A3D);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
 @media (max-width: 720px) {
     .app-grid-card {
         padding: 0.85rem !important;
@@ -18,5 +46,11 @@
 
     table {
         min-width: 48rem;
+    }
+
+    .replacement-section-tools,
+    .replacement-type-filter,
+    .replacement-type-filter select {
+        width: 100%;
     }
 }

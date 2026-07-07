@@ -1,39 +1,105 @@
 .update-input-file-shell {
-    --update-input-file-height: 18.75rem;
+    --update-input-file-height: 6.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    min-width: 0;
+}
+
+.update-input-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.update-input-heading strong {
+    color: var(--app-text, #221A3D);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.update-input-heading span {
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25;
 }
 
 .update-input-copy {
-    font-size: 0.95rem;
-    line-height: 1.35;
+    color: var(--app-text, #221A3D);
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.25;
 }
 
-.update-input-copy em {
-    font-size: 0.86rem;
+.update-input-copy label {
+    color: var(--app-link, #3320C9);
+    font-weight: 800;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.update-input-status {
+    margin: 0;
+    border-radius: 6px;
+    padding: 0.45rem 0.55rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.update-input-status.success {
+    background: rgba(16, 185, 129, 0.12);
+    color: #047857;
+}
+
+.update-input-status.error {
+    background: rgba(239, 68, 68, 0.12);
+    color: #B91C1C;
+}
+
+.update-input-file-shell.is-dark .update-input-heading strong,
+.update-input-file-shell.is-dark .update-input-copy {
+    color: #F4F1F6;
+}
+
+.update-input-file-shell.is-dark .update-input-heading span {
+    color: #D8D3E4;
+}
+
+.update-input-file-shell.is-dark ::deep .update-input-file fluent-icon,
+.update-input-file-shell.is-dark .update-input-copy label {
+    color: #B9A8FF;
+}
+
+.update-input-file-shell.is-dark .update-input-status.success {
+    background: rgba(52, 211, 153, 0.18);
+    color: #A7F3D0;
+}
+
+.update-input-file-shell.is-dark .update-input-status.error {
+    background: rgba(248, 113, 113, 0.18);
+    color: #FECACA;
 }
 
 @media (max-width: 900px) {
     .update-input-file-shell {
-        --update-input-file-height: min(15rem, 38vh);
+        --update-input-file-height: min(6.5rem, 24vh);
     }
 
     .update-input-copy {
-        font-size: 0.88rem;
-    }
-
-    .update-input-copy em {
-        font-size: 0.8rem;
+        font-size: 0.76rem;
     }
 }
 
 @media (max-width: 720px) {
     .update-input-file-shell {
-        --update-input-file-height: min(13.5rem, 36vh);
+        --update-input-file-height: min(6.25rem, 22vh);
     }
 }
 
 @media (max-width: 430px) {
     .update-input-file-shell {
-        --update-input-file-height: min(12rem, 34vh);
+        --update-input-file-height: min(5.75rem, 20vh);
     }
 
     .update-input-copy {
@@ -41,21 +107,14 @@
         line-height: 1.28;
     }
 
-    .update-input-copy em {
-        font-size: 0.7rem;
-    }
 }
 
 @media (max-width: 360px) {
     .update-input-file-shell {
-        --update-input-file-height: min(10.75rem, 32vh);
+        --update-input-file-height: min(5.25rem, 19vh);
     }
 
     .update-input-copy {
         font-size: 0.72rem;
-    }
-
-    .update-input-copy em {
-        font-size: 0.66rem;
     }
 }

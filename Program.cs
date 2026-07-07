@@ -80,9 +80,11 @@ builder.Services.AddScoped<IMinimumStockService, MinimumStockService>();
 builder.Services.AddScoped<IReplenishmentService, ReplenishmentService>();
 builder.Services.AddScoped<IReplenishmentDashboardService, ReplenishmentDashboardService>();
 builder.Services.AddScoped<IReplacementSettingsService, ReplacementSettingsService>();
+builder.Services.AddScoped<IFractionationSupplyService, FractionationSupplyService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
 builder.Services.AddScoped<IJsonImportService, JsonImportService>();
+builder.Services.AddScoped<IConsumptionAverageReportService, ConsumptionAverageReportService>();
 
 //Repositories
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
@@ -136,6 +138,18 @@ if (app.Environment.IsDevelopment())
     app.MapPost("/dev/import-stock", async (IJsonImportService importService) =>
     {
         var result = await importService.ImportStockAsync("storage/estoque.json");
+        return Results.Ok(result);
+    });
+
+    app.MapPost("/dev/import-consumption-average-report", async (
+        IConsumptionAverageReportService importService,
+        string? filePath) =>
+    {
+        var result = await importService.ImportPdfAsync(
+            string.IsNullOrWhiteSpace(filePath)
+                ? "/home/luigi/Downloads/20260625_relatorio_farmacia_central.pdf"
+                : filePath);
+
         return Results.Ok(result);
     });
 }

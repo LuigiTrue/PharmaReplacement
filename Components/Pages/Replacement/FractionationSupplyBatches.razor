@@ -1,0 +1,49 @@
+@using RepyPharma.Models
+
+@if (!Item.AvailableBatches.Any())
+{
+    <span class="text-sm font-medium text-red-600 dark:text-red-300">Sem estoque disponível</span>
+}
+else
+{
+    <div class="fractionation-batches">
+        @foreach (var batch in Item.AvailableBatches)
+        {
+            var isRecommended = batch.Batch == Item.RecommendedBatch?.Batch;
+            var batchClass = isRecommended
+                ? "font-semibold text-blue-600 dark:text-blue-300"
+                : "text-slate-700 dark:text-slate-100";
+
+            @foreach (var location in batch.Locations.Where(location => location.Quantity > 0))
+            {
+                <div class="fractionation-batch-row">
+                    <span class="whitespace-nowrap text-xs @batchClass">@batch.Batch</span>
+                    <span class="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+                        @(batch.Validity.HasValue ? batch.Validity.Value.ToString("MM/yyyy") : "-")
+                    </span>
+                   <span class="whitespace-nowrap text-xs @batchClass">@GetLocationLabel(location.LocationId)</span>
+                    <span class="whitespace-nowrap text-xs @batchClass">@location.Quantity.ToString("0.##") un.</span>
+                    <span>
+                        @if (isRecommended)
+                        {
+                            <span class="rounded-full bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+                                indicado
+                            </span>
+                        }
+                    </span>
+                </div>
+            }
+        }
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired] public FractionationSupplyItem Item { get; set; } = new();
+
+    private static string GetLocationLabel(string locationId) => locationId switch
+    {
+        "996" => "Almox.",
+        "999" => "CAF",
+        _ => locationId
+    };
+}

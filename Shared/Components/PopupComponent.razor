@@ -14,7 +14,17 @@
 </FluentDialogHeader>
 
  <section class="update-popup-body">
-     <InputFileComponent></InputFileComponent>
+     <InputFileComponent UploadId="stock-file-uploader"
+                         ImportMode="stock"
+                         Title="Importar espelho de estoque"
+                         Description="Arraste aqui ou selecione o arquivo do espelho de estoque."
+                         Hint="Gere o espelho apenas dos estoques 996, 997, 999 e 1059." />
+
+     <InputFileComponent UploadId="consumption-report-uploader"
+                         ImportMode="consumption"
+                         Title="Importar relatório de consumo"
+                         Description="Arraste aqui ou selecione o PDF do relatório de consumo."
+                         Hint="Use o relatório de saída da Farmácia Central para atualizar as médias de consumo." />
 </section>
 
 <FluentDialogFooter>
@@ -34,6 +44,7 @@
 
     private async Task CancelAsync()
     {
-        await Dialog.CancelAsync();
+        if (Dialog is not null)
+            await Dialog.CancelAsync();
     }
 }

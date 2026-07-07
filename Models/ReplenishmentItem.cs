@@ -1,8 +1,11 @@
+using RepyPharma.Domain.Entities;
+
 public class ReplenishmentItem
 {
     public string Code { get; set; } = "";
     public string Name { get; set; } = "";
     public string Unit { get; set; } = "";
+    public ItemType ItemType { get; set; }
     public decimal CurrentStock { get; set; }
     public decimal MinimumQuantity { get; set; }
     public decimal MissingQuantity { get; set; }

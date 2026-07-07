@@ -36,6 +36,7 @@
 <div class="replenishment-tabs-host">
     <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-table" checked />
     <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-dashboard" />
+    <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-fractionation" />
     @if (AuthService.IsAdmin)
     {
         <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-settings" />
@@ -44,6 +45,7 @@
     <div class="app-tabs" role="tablist" aria-label="Secoes do relatorio de reposicao">
         <label class="app-tab" role="tab" for="replenishment-tab-table">Tabela</label>
         <label class="app-tab" role="tab" for="replenishment-tab-dashboard">Dashboard</label>
+        <label class="app-tab" role="tab" for="replenishment-tab-fractionation">Fracionamento</label>
         @if (AuthService.IsAdmin)
         {
             <label class="app-tab" role="tab" for="replenishment-tab-settings">Configurações</label>
@@ -71,6 +73,10 @@
 
     <div class="replenishment-tab-panel replenishment-dashboard-panel" role="tabpanel">
        <Dashboard></Dashboard>
+    </div>
+
+    <div class="replenishment-tab-panel replenishment-fractionation-panel" role="tabpanel">
+        <FractionationSupplyPanel />
     </div>
 
     @if (AuthService.IsAdmin)
@@ -133,7 +139,7 @@
             PrimaryAction = "Yes",
             PrimaryActionEnabled = false,
             SecondaryAction = "No",
-            Width = "clamp(18rem, 86vw, 30rem)",
+            Width = "clamp(22rem, 92vw, 46rem)",
             TrapFocus = _trapFocus,
             Modal = _modal,
             PreventScroll = true 

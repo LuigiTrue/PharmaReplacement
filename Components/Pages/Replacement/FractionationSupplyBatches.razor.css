@@ -1,0 +1,18 @@
+.fractionation-batches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.fractionation-batch-row {
+    display: grid;
+    grid-template-columns: 120px 70px 62px 76px 70px;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+@media (max-width: 720px) {
+    .fractionation-batch-row {
+        grid-template-columns: 110px 64px 56px 70px 66px;
+    }
+}

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RepyPharma.Data;
+using RepyPharma.Domain;
 using RepyPharma.Domain.Entities;
 
 namespace RepyPharma.Infrastructure.Json;
@@ -47,6 +48,7 @@ public class PdfStorageService(
                     Code = code,
                     Name = produto.Name.Trim(),
                     Unit = produto.Unit.Trim(),
+                    ItemType = ItemTypeClassifier.Classify(produto.Name),
                     IsActive = true,
                     CreatedAt = now
                 };
@@ -59,6 +61,7 @@ public class PdfStorageService(
             {
                 item.Name = produto.Name.Trim();
                 item.Unit = produto.Unit.Trim();
+                item.ItemType = ItemTypeClassifier.Classify(produto.Name);
                 item.IsActive = true;
                 item.UpdatedAt = now;
             }
