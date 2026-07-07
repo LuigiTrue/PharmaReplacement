@@ -3,13 +3,26 @@
 <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
     <div class="mb-3 flex items-center justify-between gap-3">
         <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">@Title</span>
-        <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold shadow-sm @(Items.Any() ? "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" : "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-slate-800 dark:text-blue-300")">
-            <span class="h-2 w-2 rounded-full @(Items.Any() ? "bg-slate-500 dark:bg-slate-300" : "bg-blue-500 dark:bg-blue-300")"></span>
-            <span>@Items.Count itens</span>
+        <div class="replacement-section-tools">
+            <label class="replacement-type-filter">
+                <span>Tipo</span>
+                <select value="@GetSelectedItemTypeValue()" @onchange="OnItemTypeChanged">
+                    <option value="">Todos</option>
+                    @foreach (var itemType in _itemTypes)
+                    {
+                        <option value="@((int)itemType)">@ItemTypeLabels.GetLabel(itemType)</option>
+                    }
+                </select>
+            </label>
+
+            <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold shadow-sm @(FilteredItems.Any() ? "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" : "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-slate-800 dark:text-blue-300")">
+                <span class="h-2 w-2 rounded-full @(FilteredItems.Any() ? "bg-slate-500 dark:bg-slate-300" : "bg-blue-500 dark:bg-blue-300")"></span>
+                <span>@FilteredItems.Count itens</span>
+            </div>
         </div>
     </div>
 
-    @if (!Items.Any())
+    @if (!FilteredItems.Any())
     {
         <p class="text-sm text-slate-500 dark:text-slate-400">Nenhum item nesta etapa.</p>
     }
@@ -21,17 +34,19 @@
                     <tr>
                         <th scope="col" class="px-3 py-3 text-left font-semibold">Código</th>
                         <th scope="col" class="px-1 py-3 text-left font-semibold">Nome</th>
+                        <th scope="col" class="px-3 py-3 text-left font-semibold">Tipo</th>
                         <th scope="col" class="px-4 py-3 text-left font-semibold">Lotes Disponíveis</th>
                         <th scope="col" class="px-3 py-3 text-left font-semibold">Estoque Atual</th>
                         <th scope="col" class="px-5 py-1 text-left font-semibold">Qtd para repor</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 bg-white text-slate-700 dark:divide-slate-800 dark:bg-slate-900 dark:text-slate-100">
-                    @foreach (var item in Items)
+                    @foreach (var item in FilteredItems)
                     {
                         <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/70">
                             <td class="whitespace-nowrap px-3 py-3 align-top font-medium text-slate-900 dark:text-slate-100">@item.Code</td>
                             <td class="min-w-72 px-1 py-3 align-top">@item.Name</td>
+                            <td class="whitespace-nowrap px-3 py-3 align-top">@ItemTypeLabels.GetLabel(item.ItemType)</td>
                             <td class="min-w-[420px] px-4 py-3 align-top">
                                 @if (!item.AvailableBatches.Any())
                                 {
@@ -87,7 +102,30 @@
 </section>
 
 @code {
+    private readonly ItemType[] _itemTypes = Enum.GetValues<ItemType>();
+    private ItemType? _selectedItemType;
+
     [Parameter, EditorRequired] public string Title { get; set; } = "";
     [Parameter, EditorRequired] public List<ReplenishmentItem> Items { get; set; } = new();
     [Parameter, EditorRequired] public string LocationId { get; set; } = "";
+
+    private List<ReplenishmentItem> FilteredItems => _selectedItemType is null
+        ? Items
+        : Items.Where(item => item.ItemType == _selectedItemType).ToList();
+
+    private string GetSelectedItemTypeValue() => _selectedItemType.HasValue
+        ? ((int)_selectedItemType.Value).ToString()
+        : "";
+
+    private void OnItemTypeChanged(ChangeEventArgs args)
+    {
+        if (int.TryParse(args.Value?.ToString(), out var rawValue) &&
+            Enum.IsDefined(typeof(ItemType), rawValue))
+        {
+            _selectedItemType = (ItemType)rawValue;
+            return;
+        }
+
+        _selectedItemType = null;
+    }
 }

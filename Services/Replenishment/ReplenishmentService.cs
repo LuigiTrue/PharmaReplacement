@@ -57,6 +57,7 @@ public class ReplenishmentService : IReplenishmentService
                 Code = product.Code,
                 Name = product.Name,
                 Unit = product.Unit,
+                ItemType = product.ItemType,
                 CurrentStock = stockAt997, // ✅ Exibe o estoque da farmácia, não o total
                 MinimumQuantity = minimum.MinimumQuantity,
                 MissingQuantity = Math.Max(0, minimum.MinimumQuantity - stockAt997),
@@ -102,6 +103,7 @@ public class ReplenishmentService : IReplenishmentService
                 Code = product.Code,
                 Name = product.Name,
                 Unit = product.Unit,
+                ItemType = product.ItemType,
                 CurrentStock = stockAt997,
                 MinimumQuantity = minimum.MinimumQuantity,
                 MissingQuantity = Math.Max(0, minimum.MinimumQuantity - stockAt997),

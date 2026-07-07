@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using RepyPharma.Data;
+using RepyPharma.Domain;
 using RepyPharma.Domain.Entities;
 using RepyPharma.Services.Import.Dtos;
 using RepyPharma.Services.Import.Interfaces;
@@ -246,6 +247,7 @@ public class JsonImportService(
                 Code = stockItem.Code.Trim(),
                 Name = stockItem.Name.Trim(),
                 Unit = stockItem.Unit.Trim(),
+                ItemType = ItemTypeClassifier.Classify(stockItem.Name),
                 IsActive = true,
                 CreatedAt = ToUtc(DateTime.UtcNow)
             };
@@ -259,6 +261,7 @@ public class JsonImportService(
         {
             item.Name = stockItem.Name.Trim();
             item.Unit = stockItem.Unit.Trim();
+            item.ItemType = ItemTypeClassifier.Classify(stockItem.Name);
             item.UpdatedAt = ToUtc(DateTime.UtcNow);
             result.ItemsUpdated++;
         }

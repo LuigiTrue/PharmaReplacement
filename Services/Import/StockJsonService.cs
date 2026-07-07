@@ -43,6 +43,7 @@ public class StockJsonService : IStockJsonService
                 Code = item.Code,
                 Name = item.Name,
                 Unit = item.Unit,
+                ItemType = item.ItemType,
                 TotalStock = item.StockBalances.Sum(balance => balance.Quantity),
                 Batches = item.StockBalances
                     .GroupBy(balance => new
@@ -91,6 +92,7 @@ public class StockJsonService : IStockJsonService
             Code = item.Code,
             Name = item.Name,
             Unit = item.Unit,
+            ItemType = item.ItemType,
             TotalStock = item.StockBalances.Sum(balance => balance.Quantity),
             Batches = item.StockBalances
                 .GroupBy(balance => new

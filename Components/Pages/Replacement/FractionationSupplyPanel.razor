@@ -1,0 +1,299 @@
+@inject IFractionationSupplyService FractionationSupplyService
+
+<section class="app-grid-card fractionation-supply-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div class="fractionation-supply-header">
+        <div>
+            <h4 class="fractionation-supply-title">Abastecimento do Fracionamento</h4>
+            <p class="fractionation-supply-description">Reposição calculada pela saída média da Farmácia Central.</p>
+        </div>
+
+        <div class="fractionation-controls">
+            <div class="coverage-menu">
+                <button type="button"
+                        class="coverage-badge"
+                        title="Dias de cobertura"
+                        aria-expanded="@_coverageMenuOpen"
+                        @onclick="ToggleCoverageMenu">
+                    <span class="coverage-avatar" aria-hidden="true">
+                        <i class="bi bi-calendar-range-fill"></i>
+                    </span>
+                    <span class="coverage-details">
+                        <strong>@_coverageDays dias</strong>
+                        <small>Dias de cobertura</small>
+                    </span>
+                    <i class="bi bi-caret-down-fill coverage-caret" aria-hidden="true"></i>
+                </button>
+
+                @if (_coverageMenuOpen)
+                {
+                    <button type="button"
+                            class="filter-menu-backdrop"
+                            aria-label="Fechar cobertura"
+                            @onclick="CloseCoverageMenu"></button>
+
+                    <div class="coverage-dropdown">
+                        <div class="filter-dropdown-section">
+                            @foreach (var option in _coverageOptions)
+                            {
+                                <button type="button"
+                                        class="coverage-dropdown-item @(option == _coverageDays ? "selected" : null)"
+                                        @onclick="() => SetCoverageDaysAsync(option)">
+                                    <i class="bi bi-calendar-check" aria-hidden="true"></i>
+                                    <span>@option dias</span>
+                                </button>
+                            }
+
+                            <label class="coverage-custom-field">
+                                <span>Personalizado</span>
+                                <input type="number"
+                                       min="1"
+                                       max="30"
+                                       step="1"
+                                       value="@_coverageDays"
+                                       @onchange="SetCustomCoverageDaysAsync" />
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (_loading)
+{
+    <p>Carregando abastecimento do fracionamento...</p>
+}
+else if (_data is not null)
+{
+    <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+        <div class="mb-3 flex items-center justify-between gap-3">
+            <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">Reposição por saída média semanal</span>
+            <div class="fractionation-table-actions">
+                <div class="type-filter-menu">
+                    <button type="button"
+                            class="fractionation-filter-action"
+                            title="Filtrar por tipo de item"
+                            aria-expanded="@_typeMenuOpen"
+                            @onclick="ToggleTypeMenu">
+                        <i class="bi bi-funnel-fill"></i>
+                        <span>@SelectedItemTypeLabel</span>
+                        <i class="bi bi-caret-down-fill fractionation-filter-caret" aria-hidden="true"></i>
+                    </button>
+
+                    @if (_typeMenuOpen)
+                    {
+                        <button type="button"
+                                class="filter-menu-backdrop"
+                                aria-label="Fechar filtros"
+                                @onclick="CloseTypeMenu"></button>
+
+                        <div class="coverage-dropdown type-filter-dropdown">
+                            <div class="filter-dropdown-section">
+                                <button type="button"
+                                        class="coverage-dropdown-item @(_selectedItemType is null ? "selected" : null)"
+                                        @onclick="() => SetItemType(null)">
+                                    <i class="bi bi-grid-3x3-gap-fill" aria-hidden="true"></i>
+                                    <span>Todos</span>
+                                </button>
+
+                                @foreach (var itemType in _itemTypes)
+                                {
+                                    <button type="button"
+                                            class="coverage-dropdown-item @(_selectedItemType == itemType ? "selected" : null)"
+                                            @onclick="() => SetItemType(itemType)">
+                                        <i class="bi bi-tag-fill" aria-hidden="true"></i>
+                                        <span>@ItemTypeLabels.GetLabel(itemType)</span>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                    <span class="h-2 w-2 rounded-full bg-slate-500 dark:bg-slate-300"></span>
+                    <span>@FilteredReplenishmentItems.Count itens</span>
+                </div>
+            </div>
+        </div>
+
+        @if (!FilteredReplenishmentItems.Any())
+        {
+            <p class="text-sm text-slate-500 dark:text-slate-400">Nenhum item precisa de abastecimento para a cobertura configurada.</p>
+        }
+        else
+        {
+            <div class="app-grid fractionation-table-wrap overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
+                <table class="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-700">
+                    <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                        <tr>
+                            <th scope="col" class="px-3 py-3 text-left font-semibold">Código</th>
+                            <th scope="col" class="px-2 py-3 text-left font-semibold">Nome</th>
+                            <th scope="col" class="px-3 py-3 text-left font-semibold">Média semanal</th>
+                            <th scope="col" class="px-3 py-3 text-left font-semibold">Necessário</th>
+                            <th scope="col" class="px-3 py-3 text-left font-semibold">Fracionamento</th>
+                            <th scope="col" class="px-4 py-3 text-left font-semibold">Lotes disponíveis</th>
+                            <th scope="col" class="px-4 py-3 text-left font-semibold">Qtd para repor</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 bg-white text-slate-700 dark:divide-slate-800 dark:bg-slate-900 dark:text-slate-100">
+                        @foreach (var item in FilteredReplenishmentItems)
+                        {
+                            <tr class="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/70">
+                                <td class="whitespace-nowrap px-3 py-3 align-top font-medium text-slate-900 dark:text-slate-100">@item.Code</td>
+                                <td class="min-w-72 px-2 py-3 align-top">@item.Name</td>
+                                @*<td class="whitespace-nowrap px-3 py-3 align-top">@ItemTypeLabels.GetLabel(item.ItemType)</td>*@
+                                <td class="whitespace-nowrap px-3 py-3 align-top">@item.WeeklyAverageOutput.ToString("0.#") und</td>
+                                <td class="whitespace-nowrap px-3 py-3 align-top">@item.RequiredQuantity.ToString("0.##") und</td>
+                                <td class="whitespace-nowrap px-3 py-3 align-top">@item.CurrentFractionationStock.ToString("0.##") und</td>
+                                <td class="min-w-[390px] px-4 py-3 align-top">
+                                    <FractionationSupplyBatches Item="item" />
+                                </td>
+                                <td class="whitespace-nowrap px-4 py-3 align-top font-semibold text-slate-900 dark:text-slate-100">@item.SuggestedQuantity.ToString("0.##") und</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </section>
+
+    <section class="app-grid-card fractionation-shortage-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+        <div class="mb-3 flex items-center justify-between gap-3">
+            <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">Sem saída média e abaixo de 50% do mínimo</span>
+            <div class="inline-flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-amber-700 shadow-sm dark:border-amber-900 dark:bg-slate-800 dark:text-amber-300">
+                <span class="h-2 w-2 rounded-full bg-amber-500 dark:bg-amber-300"></span>
+                <span>@FilteredMinimumShortageItems.Count itens</span>
+            </div>
+        </div>
+
+        @if (!FilteredMinimumShortageItems.Any())
+        {
+            <p class="text-sm text-slate-500 dark:text-slate-400">Nenhum item sem saída média está abaixo do limite crítico.</p>
+        }
+        else
+        {
+            <div class="fractionation-shortage-grid">
+                @foreach (var item in FilteredMinimumShortageItems)
+                {
+                    <article class="fractionation-shortage-item">
+                        <div>
+                            <strong>@item.Name</strong>
+                            <span>@item.Code</span>
+                        </div>
+                        <dl>
+                            <div>
+                                <dt>Farmácia</dt>
+                                <dd>@item.CurrentPharmacyStock.ToString("0.##")</dd>
+                            </div>
+                            <div>
+                                <dt>Mínimo</dt>
+                                <dd>@item.MinimumQuantity.ToString("0.##")</dd>
+                            </div>
+                            <div>
+                                <dt>Sugerido</dt>
+                                <dd>@item.SuggestedQuantity.ToString("0.##")</dd>
+                            </div>
+                        </dl>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+}
+
+@code {
+    private readonly int[] _coverageOptions = [2, 3, 4, 5, 7];
+    private readonly ItemType[] _itemTypes = Enum.GetValues<ItemType>();
+    private FractionationSupplyData? _data;
+    private bool _loading = true;
+    private bool _coverageMenuOpen;
+    private bool _typeMenuOpen;
+    private int _coverageDays = 3;
+    private ItemType? _selectedItemType;
+    private string? _error;
+
+    private List<FractionationSupplyItem> FilteredReplenishmentItems => FilterItems(_data?.ReplenishmentItems);
+
+    private List<FractionationSupplyItem> FilteredMinimumShortageItems => FilterItems(_data?.MinimumShortageItems);
+
+    private string SelectedItemTypeLabel => _selectedItemType.HasValue
+        ? ItemTypeLabels.GetLabel(_selectedItemType.Value)
+        : "Todos";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        try
+        {
+            _loading = true;
+            _data = await FractionationSupplyService.GetSupplyDataAsync(_coverageDays);
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void ToggleCoverageMenu()
+    {
+        _coverageMenuOpen = !_coverageMenuOpen;
+        _typeMenuOpen = false;
+    }
+
+    private void CloseCoverageMenu()
+    {
+        _coverageMenuOpen = false;
+    }
+
+    private void ToggleTypeMenu()
+    {
+        _typeMenuOpen = !_typeMenuOpen;
+        _coverageMenuOpen = false;
+    }
+
+    private void CloseTypeMenu()
+    {
+        _typeMenuOpen = false;
+    }
+
+    private async Task SetCoverageDaysAsync(int days)
+    {
+        _coverageDays = days;
+        _coverageMenuOpen = false;
+        await LoadDataAsync();
+    }
+
+    private async Task SetCustomCoverageDaysAsync(ChangeEventArgs args)
+    {
+        if (!int.TryParse(args.Value?.ToString(), out var days))
+            return;
+
+        await SetCoverageDaysAsync(Math.Clamp(days, 1, 30));
+    }
+
+    private List<FractionationSupplyItem> FilterItems(List<FractionationSupplyItem>? items)
+    {
+        if (items is null)
+            return new List<FractionationSupplyItem>();
+
+        return _selectedItemType is null
+            ? items
+            : items.Where(item => item.ItemType == _selectedItemType).ToList();
+    }
+
+    private void SetItemType(ItemType? itemType)
+    {
+        _selectedItemType = itemType;
+        _typeMenuOpen = false;
+    }
+}

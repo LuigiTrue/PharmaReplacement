@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RepyPharma.Data;
+using RepyPharma.Domain;
 using RepyPharma.Domain.Entities;
 using RepyPharma.Models;
 using RepyPharma.Services.Interfaces;
@@ -97,6 +98,7 @@ public class MinimumStockService : IMinimumStockService
                 Code = normalizedCode,
                 Name = stockProduct?.Name ?? item.Name.Trim(),
                 Unit = stockProduct?.Unit ?? string.Empty,
+                ItemType = ItemTypeClassifier.Classify(stockProduct?.Name ?? item.Name),
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             };
@@ -109,6 +111,7 @@ public class MinimumStockService : IMinimumStockService
             var stockProduct = await _stockService.GetByCodeAsync(normalizedCode);
             dbItem.Name = stockProduct?.Name ?? item.Name.Trim();
             dbItem.Unit = stockProduct?.Unit ?? dbItem.Unit;
+            dbItem.ItemType = ItemTypeClassifier.Classify(dbItem.Name);
             dbItem.IsActive = true;
             dbItem.UpdatedAt = DateTime.UtcNow;
         }
@@ -208,6 +211,7 @@ public class MinimumStockService : IMinimumStockService
                     Code = code,
                     Name = minimum.Name.Trim(),
                     Unit = string.Empty,
+                    ItemType = ItemTypeClassifier.Classify(minimum.Name),
                     IsActive = false,
                     CreatedAt = now
                 };

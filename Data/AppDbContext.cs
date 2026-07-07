@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<StockBalance> StockBalances => Set<StockBalance>();
     public DbSet<DailyConsumption> DailyConsumptions => Set<DailyConsumption>();
+    public DbSet<ItemConsumptionAverage> ItemConsumptionAverages => Set<ItemConsumptionAverage>();
     public DbSet<ReplenishmentRule> ReplenishmentRules => Set<ReplenishmentRule>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +42,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             entity.Property(item => item.Unit)
                 .HasMaxLength(100)
                 .IsRequired();
+            entity.Property(item => item.ItemType)
+                .HasConversion<int>();
 
             entity.HasIndex(item => item.Code)
                 .IsUnique();
@@ -59,6 +62,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithOne(consumption => consumption.Item)
                 .HasForeignKey(consumption => consumption.ItemId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(item => item.ConsumptionAverages)
+                .WithOne(average => average.Item)
+                .HasForeignKey(average => average.ItemId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             entity.HasOne(item => item.ReplenishmentRule)
                 .WithOne(rule => rule.Item)
@@ -127,6 +135,44 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             entity.Property(consumption => consumption.Source)
                 .HasMaxLength(100)
                 .IsRequired();
+        });
+
+        modelBuilder.Entity<ItemConsumptionAverage>(entity =>
+        {
+            entity.ToTable("item_consumption_averages");
+            entity.HasKey(average => average.Id);
+
+            entity.Property(average => average.ItemCode)
+                .HasMaxLength(50)
+                .IsRequired();
+            entity.Property(average => average.ItemName)
+                .HasMaxLength(255)
+                .IsRequired();
+            entity.Property(average => average.AveragePeriodKind)
+                .HasMaxLength(20)
+                .IsRequired();
+            entity.Property(average => average.SourceFileName)
+                .HasMaxLength(255)
+                .IsRequired();
+            entity.Property(average => average.MonthlyAverageOutput)
+                .HasPrecision(18, 3);
+            entity.Property(average => average.WeeklyAverageOutput)
+                .HasPrecision(18, 3);
+            entity.Property(average => average.CurrentAverageOutput)
+                .HasPrecision(18, 3);
+            entity.Property(average => average.TotalOutput)
+                .HasPrecision(18, 3);
+            entity.Property(average => average.StockBalance)
+                .HasPrecision(18, 3);
+            entity.Property(average => average.ProjectedCoverageDays)
+                .HasPrecision(18, 3);
+
+            entity.HasIndex(average => new
+            {
+                average.ItemCode,
+                average.ReportStartDate,
+                average.ReportEndDate
+            }).IsUnique();
         });
 
         modelBuilder.Entity<ReplenishmentRule>(entity =>
