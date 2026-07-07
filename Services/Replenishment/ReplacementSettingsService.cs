@@ -1,5 +1,8 @@
 using System.Globalization;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using RepyPharma.Data;
+using RepyPharma.Domain.Entities;
 using RepyPharma.Models;
 using RepyPharma.Services.Interfaces;
 
@@ -11,13 +14,16 @@ public class ReplacementSettingsService : IReplacementSettingsService
 
     private readonly IMinimumStockService _minimumStockService;
     private readonly IStockJsonService _stockService;
+    private readonly IDbContextFactory<AppDbContext> _dbContextFactory;
 
     public ReplacementSettingsService(
         IMinimumStockService minimumStockService,
-        IStockJsonService stockService)
+        IStockJsonService stockService,
+        IDbContextFactory<AppDbContext> dbContextFactory)
     {
         _minimumStockService = minimumStockService;
         _stockService = stockService;
+        _dbContextFactory = dbContextFactory;
     }
 
     public async Task<List<ReplacementSettingsItem>> SearchPriorityItemsAsync(string searchText)
@@ -49,7 +55,7 @@ public class ReplacementSettingsService : IReplacementSettingsService
             string.Equals(i.Code, code.Trim(), StringComparison.OrdinalIgnoreCase));
     }
 
-    public async Task UpdateItemSettingsAsync(string code, ItemPriority priority, decimal minimumQuantity)
+    public async Task UpdateItemSettingsAsync(string code, ItemPriority priority, decimal minimumQuantity, ItemType itemType)
     {
         if (minimumQuantity < 0)
             throw new InvalidOperationException("O estoque mínimo não pode ser negativo.");
@@ -81,6 +87,8 @@ public class ReplacementSettingsService : IReplacementSettingsService
             MinimumQuantity = minimumQuantity,
             itemPriority = priority
         });
+
+        await UpdateItemTypeAsync(normalizedCode, itemType);
     }
 
     public async Task AddMinimumStockItemAsync(string code, string name, ItemPriority priority, decimal minimumQuantity)
@@ -134,7 +142,8 @@ public class ReplacementSettingsService : IReplacementSettingsService
                     Code = product.Code,
                     Name = product.Name,
                     MinimumQuantity = minimum?.MinimumQuantity ?? 0,
-                    ItemPriority = minimum?.itemPriority ?? ItemPriority.Low
+                    ItemPriority = minimum?.itemPriority ?? ItemPriority.Low,
+                    ItemType = product.ItemType
                 };
             })
             .ToList();
@@ -149,11 +158,25 @@ public class ReplacementSettingsService : IReplacementSettingsService
                 Code = minimum.Code,
                 Name = minimum.Name,
                 MinimumQuantity = minimum.MinimumQuantity,
-                ItemPriority = minimum.itemPriority
+                ItemPriority = minimum.itemPriority,
+                ItemType = ItemType.CommonMedication
             });
         }
 
         return result;
+    }
+
+    private async Task UpdateItemTypeAsync(string code, ItemType itemType)
+    {
+        await using var context = await _dbContextFactory.CreateDbContextAsync();
+        var item = await context.Items.FirstOrDefaultAsync(existingItem => existingItem.Code == code);
+
+        if (item is null)
+            return;
+
+        item.ItemType = itemType;
+        item.UpdatedAt = DateTime.UtcNow;
+        await context.SaveChangesAsync();
     }
 
     private static string Normalize(string value)

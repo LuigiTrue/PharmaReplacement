@@ -15,10 +15,11 @@
         </div>
 
         <div class="replacement-settings-layout">
-            <nav class="replacement-settings-tree" role="tree" aria-label="Configurações">
+            <nav class="replacement-settings-tree" role="tablist" aria-label="Configurações">
                 <button type="button"
-                        role="treeitem"
+                        role="tab"
                         aria-selected="@(_activeSection == SettingsSection.Replenishment)"
+                        aria-expanded="@(_activeSection == SettingsSection.Replenishment)"
                         class="replacement-settings-tree-item @GetTreeItemClass(SettingsSection.Replenishment)"
                         @onclick="() => SelectSection(SettingsSection.Replenishment)">
                     <span class="replacement-settings-tree-indicator"></span>
@@ -26,8 +27,9 @@
                 </button>
 
                 <button type="button"
-                        role="treeitem"
+                        role="tab"
                         aria-selected="@(_activeSection == SettingsSection.Users)"
+                        aria-expanded="@(_activeSection == SettingsSection.Users)"
                         class="replacement-settings-tree-item @GetTreeItemClass(SettingsSection.Users)"
                         @onclick="() => SelectSection(SettingsSection.Users)">
                     <span class="replacement-settings-tree-indicator"></span>
@@ -35,8 +37,9 @@
                 </button>
 
                 <button type="button"
-                        role="treeitem"
+                        role="tab"
                         aria-selected="@(_activeSection == SettingsSection.ItemInclusion)"
+                        aria-expanded="@(_activeSection == SettingsSection.ItemInclusion)"
                         class="replacement-settings-tree-item @GetTreeItemClass(SettingsSection.ItemInclusion)"
                         @onclick="() => SelectSection(SettingsSection.ItemInclusion)">
                     <span class="replacement-settings-tree-indicator"></span>
@@ -44,10 +47,12 @@
                 </button>
             </nav>
 
-            <div class="replacement-settings-content">
-                @switch (_activeSection)
-                {
-                    case SettingsSection.Replenishment:
+            @if (_activeSection is not null)
+            {
+                <div class="replacement-settings-content">
+                    @switch (_activeSection)
+                    {
+                        case SettingsSection.Replenishment:
                         <div class="replacement-settings-panel">
                             <div>
                                 <h5 class="replacement-settings-panel-title">Configurações de Reposição</h5>
@@ -73,6 +78,18 @@
                                         @foreach (var priority in _priorities)
                                         {
                                             <option value="@priority">@GetPriorityLabel(priority)</option>
+                                        }
+                                    </select>
+                                </label>
+
+                                <label class="replacement-settings-field">
+                                    <span>Tipo do item</span>
+                                    <select class="replacement-settings-input"
+                                            @bind="_selectedItemType"
+                                            disabled="@(_selectedItem is null)">
+                                        @foreach (var itemType in _itemTypes)
+                                        {
+                                            <option value="@itemType">@ItemTypeLabels.GetLabel(itemType)</option>
                                         }
                                     </select>
                                 </label>
@@ -120,7 +137,7 @@
                                                 @onclick="() => SelectItem(item)">
                                             <span class="replacement-settings-result-main">
                                                 <strong>@item.Name</strong>
-                                                <small>@item.Code • mínimo @item.MinimumQuantity.ToString("0.##")</small>
+                                                <small>@item.Code • @ItemTypeLabels.GetLabel(item.ItemType) • mínimo @item.MinimumQuantity.ToString("0.##")</small>
                                             </span>
                                             <span class="replacement-settings-chip">@GetPriorityLabel(item.ItemPriority)</span>
                                         </button>
@@ -130,7 +147,7 @@
                         </div>
                         break;
 
-                    case SettingsSection.Users:
+                        case SettingsSection.Users:
                         <div class="replacement-settings-panel">
                             <div>
                                 <h5 class="replacement-settings-panel-title">Usuários</h5>
@@ -144,7 +161,7 @@
                         </div>
                         break;
 
-                    case SettingsSection.ItemInclusion:
+                        case SettingsSection.ItemInclusion:
                         <div class="replacement-settings-panel">
                             <div>
                                 <h5 class="replacement-settings-panel-title">Inclusão de Itens</h5>
@@ -204,8 +221,9 @@
                             }
                         </div>
                         break;
-                }
-            </div>
+                    }
+                </div>
+            }
         </div>
     </section>
 }
@@ -226,15 +244,18 @@ else
         ItemPriority.Low
     ];
 
+    private readonly ItemType[] _itemTypes = Enum.GetValues<ItemType>();
+
     private string _searchText = "";
     private string? _message;
     private bool _loading = true;
     private bool _saving;
     private ItemPriority _selectedPriority = ItemPriority.Low;
+    private ItemType _selectedItemType = ItemType.CommonMedication;
     private decimal _selectedMinimumQuantity;
     private ReplacementSettingsItem? _selectedItem;
     private List<ReplacementSettingsItem> _searchResults = new();
-    private SettingsSection _activeSection = SettingsSection.Replenishment;
+    private SettingsSection? _activeSection;
     private string _newItemCode = "";
     private string _newItemName = "";
     private ItemPriority _newItemPriority = ItemPriority.Low;
@@ -275,13 +296,14 @@ else
     {
         _selectedItem = item;
         _selectedPriority = item.ItemPriority;
+        _selectedItemType = item.ItemType;
         _selectedMinimumQuantity = item.MinimumQuantity;
         _message = null;
     }
 
     private void SelectSection(SettingsSection section)
     {
-        _activeSection = section;
+        _activeSection = _activeSection == section ? null : section;
         _message = null;
     }
 
@@ -293,13 +315,14 @@ else
         _saving = true;
         try
         {
-            await SettingsService.UpdateItemSettingsAsync(_selectedItem.Code, _selectedPriority, _selectedMinimumQuantity);
+            await SettingsService.UpdateItemSettingsAsync(_selectedItem.Code, _selectedPriority, _selectedMinimumQuantity, _selectedItemType);
 
             var updatedItem = await SettingsService.GetPriorityItemAsync(_selectedItem.Code);
             _selectedItem = updatedItem;
             if (updatedItem is not null)
             {
                 _selectedPriority = updatedItem.ItemPriority;
+                _selectedItemType = updatedItem.ItemType;
                 _selectedMinimumQuantity = updatedItem.MinimumQuantity;
             }
 
@@ -307,7 +330,7 @@ else
 
             _message = updatedItem is null
                 ? "Configurações atualizadas."
-                : $"Configurações de {updatedItem.Name} atualizadas: prioridade {GetPriorityLabel(updatedItem.ItemPriority)} e mínimo {updatedItem.MinimumQuantity:0.##}.";
+                : $"Configurações de {updatedItem.Name} atualizadas: prioridade {GetPriorityLabel(updatedItem.ItemPriority)}, tipo {ItemTypeLabels.GetLabel(updatedItem.ItemType)} e mínimo {updatedItem.MinimumQuantity:0.##}.";
         }
         catch (InvalidOperationException ex)
         {

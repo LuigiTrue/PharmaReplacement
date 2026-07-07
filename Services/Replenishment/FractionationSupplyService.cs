@@ -21,7 +21,10 @@ public class FractionationSupplyService(IDbContextFactory<AppDbContext> dbContex
 
         var items = await context.Items
             .AsNoTracking()
-            .Where(item => item.IsActive)
+            .Where(item =>
+                item.IsActive &&
+                item.ItemType != ItemType.Psychotropic &&
+                item.ItemType != ItemType.Sedative)
             .Include(item => item.ReplenishmentRule)
             .Include(item => item.StockBalances)
                 .ThenInclude(balance => balance.Batch)

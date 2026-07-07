@@ -1,5 +1,6 @@
 using RepyPharma.Models;
 using RepyPharma.Services.Interfaces;
+using RepyPharma.Domain.Entities;
 
 namespace RepyPharma.Services.Replenishment;
 
@@ -36,6 +37,9 @@ public class ReplenishmentService : IReplenishmentService
 
         foreach (var product in products)
         {
+            if (ShouldHideFromReplenishment(product.ItemType))
+                continue;
+
             if (!minimumMap.TryGetValue(product.Code, out var minimum))
                 continue;
             if (ignoredCodes.Contains(product.Code))
@@ -89,6 +93,9 @@ public class ReplenishmentService : IReplenishmentService
 
         foreach (var product in products)
         {
+            if (ShouldHideFromReplenishment(product.ItemType))
+                continue;
+
             if (!minimumMap.TryGetValue(product.Code, out var minimum))
                 continue;
             if (ignoredCodes.Contains(product.Code))
@@ -183,6 +190,11 @@ public class ReplenishmentService : IReplenishmentService
             .Where(b => IsAvailableForReplenishment(b))
             .OrderBy(b => b.Validity ?? DateTime.MaxValue)
             .ToList();
+    }
+
+    private static bool ShouldHideFromReplenishment(ItemType itemType)
+    {
+        return itemType is ItemType.Psychotropic or ItemType.Sedative;
     }
 
     public async Task<ReplenishmentReport> GenerateReportAsync()

@@ -14,15 +14,15 @@
 }
 
 .replacement-settings-layout {
-    display: grid;
-    grid-template-columns: minmax(13rem, 16rem) minmax(0, 1fr);
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
     gap: 1rem;
-    align-items: start;
 }
 
 .replacement-settings-tree {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.35rem;
     border: 1px solid var(--app-border, #E5DFF0);
     border-radius: 8px;
@@ -33,6 +33,7 @@
 .replacement-settings-tree-item {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.6rem;
     width: 100%;
     border: 1px solid transparent;
@@ -43,8 +44,10 @@
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 700;
-    text-align: left;
+    line-height: 1;
+    text-align: center;
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
 }
 
 .replacement-settings-tree-item:hover,
@@ -55,21 +58,29 @@
 }
 
 .replacement-settings-tree-indicator {
-    width: 0.45rem;
-    height: 0.45rem;
+    width: 0.4rem;
+    height: 0.4rem;
     flex: 0 0 auto;
     border-right: 2px solid currentColor;
     border-bottom: 2px solid currentColor;
-    transform: rotate(-45deg);
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
 }
 
 .replacement-settings-tree-item.selected .replacement-settings-tree-indicator {
-    transform: rotate(45deg);
+    transform: rotate(225deg);
 }
 
 .replacement-settings-content,
 .replacement-settings-panel {
     min-width: 0;
+}
+
+.replacement-settings-content {
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--app-surface, #FFFFFF);
 }
 
 .replacement-settings-panel {
@@ -100,7 +111,7 @@
 
 .replacement-settings-form {
     display: grid;
-    grid-template-columns: minmax(min(16rem, 100%), 1fr) minmax(11rem, 14rem) minmax(9rem, 12rem) auto;
+    grid-template-columns: minmax(min(16rem, 100%), 1fr) minmax(10rem, 12rem) minmax(12rem, 15rem) minmax(9rem, 11rem) auto;
     gap: 0.85rem;
     align-items: end;
 }
@@ -274,18 +285,12 @@
 }
 
 @media (max-width: 820px) {
-    .replacement-settings-layout {
-        grid-template-columns: 1fr;
-    }
-
     .replacement-settings-tree {
-        flex-direction: row;
+        grid-template-columns: repeat(3, minmax(10rem, 1fr));
         overflow-x: auto;
     }
 
     .replacement-settings-tree-item {
-        flex: 0 0 auto;
-        width: auto;
         white-space: nowrap;
     }
 
