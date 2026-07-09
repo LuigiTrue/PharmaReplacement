@@ -20,13 +20,33 @@ public partial class ConsumptionAverageReportService(
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory = dbContextFactory;
     private readonly ILogger<ConsumptionAverageReportService> _logger = logger;
 
+    public PdfImportValidationResult ValidateConsumptionReportPdf(string filePath)
+    {
+        if (!File.Exists(filePath))
+            return PdfImportValidationResult.Invalid("Arquivo de relatório não encontrado.");
+
+        try
+        {
+            var parsedReport = ParseReport(filePath);
+            if (parsedReport.Items.Count == 0)
+                return PdfImportValidationResult.Invalid("O arquivo não é um relatório de consumo válido.");
+
+            return PdfImportValidationResult.Valid("Relatório de consumo válido.");
+        }
+        catch
+        {
+            return PdfImportValidationResult.Invalid("O arquivo não é um relatório de consumo válido.");
+        }
+    }
+
     public async Task<ConsumptionAverageImportResult> ImportPdfAsync(string filePath)
     {
         var result = new ConsumptionAverageImportResult();
 
-        if (!File.Exists(filePath))
+        var validation = ValidateConsumptionReportPdf(filePath);
+        if (!validation.IsValid)
         {
-            result.AddError($"Arquivo de relatório não encontrado: {filePath}");
+            result.AddError(validation.Message);
             return result;
         }
 

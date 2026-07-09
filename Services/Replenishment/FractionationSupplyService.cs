@@ -32,8 +32,6 @@ public class FractionationSupplyService(IDbContextFactory<AppDbContext> dbContex
                 .ThenInclude(balance => balance.Location)
             .ToListAsync();
 
-        var itemsByCode = items.ToDictionary(item => item.Code, StringComparer.OrdinalIgnoreCase);
-
         var latestAverages = (await context.ItemConsumptionAverages
                 .AsNoTracking()
                 .OrderByDescending(average => average.ReportEndDate)
@@ -63,24 +61,23 @@ public class FractionationSupplyService(IDbContextFactory<AppDbContext> dbContex
             if (weeklyAverage > 0)
             {
                 var suggestedQuantity = Math.Max(0, requiredQuantity - fractionationStock);
-                if (suggestedQuantity <= 0)
-                    continue;
 
-                replenishmentItems.Add(BuildSupplyItem(
-                    item,
-                    average,
-                    weeklyAverage,
-                    dailyAverage,
-                    requiredQuantity,
-                    fractionationStock,
-                    pharmacyStock,
-                    minimumQuantity,
-                    suggestedQuantity));
-
-                continue;
+                if (suggestedQuantity > 0)
+                {
+                    replenishmentItems.Add(BuildSupplyItem(
+                        item,
+                        average,
+                        weeklyAverage,
+                        dailyAverage,
+                        requiredQuantity,
+                        fractionationStock,
+                        pharmacyStock,
+                        minimumQuantity,
+                        suggestedQuantity));
+                }
             }
 
-            if (minimumQuantity <= 0 || pharmacyStock > minimumQuantity * 0.5m)
+            if (minimumQuantity <= 0 || pharmacyStock >= minimumQuantity * 0.5m)
                 continue;
 
             minimumShortageItems.Add(BuildSupplyItem(
@@ -146,16 +143,9 @@ public class FractionationSupplyService(IDbContextFactory<AppDbContext> dbContex
 
     private static decimal GetWeeklyAverageOutput(ItemConsumptionAverage average)
     {
-        if (average.WeeklyAverageOutput.HasValue)
-            return Math.Max(0, average.WeeklyAverageOutput.Value);
-
-        if (average.MonthlyAverageOutput.HasValue && average.CoverageDays > 0)
-            return Math.Max(0, average.MonthlyAverageOutput.Value / average.CoverageDays * 7);
-
-        if (average.CurrentAverageOutput.HasValue && average.CoverageDays > 0)
-            return Math.Max(0, average.CurrentAverageOutput.Value / average.CoverageDays * 7);
-
-        return 0;
+        return average.WeeklyAverageOutput.HasValue
+            ? Math.Floor(Math.Max(0, average.WeeklyAverageOutput.Value))
+            : 0;
     }
 
     private static decimal GetStockAtLocation(Item item, string locationId)

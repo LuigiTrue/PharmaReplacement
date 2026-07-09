@@ -222,6 +222,7 @@
 }
 
 #replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
+#replenishment-tab-daily:checked ~ .app-tabs .app-tab[for="replenishment-tab-daily"],
 #replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
 #replenishment-tab-fractionation:checked ~ .app-tabs .app-tab[for="replenishment-tab-fractionation"],
 #replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"] {
@@ -237,10 +238,12 @@
 }
 
 .theme-dark #replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
+.theme-dark #replenishment-tab-daily:checked ~ .app-tabs .app-tab[for="replenishment-tab-daily"],
 .theme-dark #replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
 .theme-dark #replenishment-tab-fractionation:checked ~ .app-tabs .app-tab[for="replenishment-tab-fractionation"],
 .theme-dark #replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"],
 .dark #replenishment-tab-table:checked ~ .app-tabs .app-tab[for="replenishment-tab-table"],
+.dark #replenishment-tab-daily:checked ~ .app-tabs .app-tab[for="replenishment-tab-daily"],
 .dark #replenishment-tab-dashboard:checked ~ .app-tabs .app-tab[for="replenishment-tab-dashboard"],
 .dark #replenishment-tab-fractionation:checked ~ .app-tabs .app-tab[for="replenishment-tab-fractionation"],
 .dark #replenishment-tab-settings:checked ~ .app-tabs .app-tab[for="replenishment-tab-settings"] {
@@ -262,6 +265,7 @@
 }
 
 #replenishment-tab-table:checked ~ .replenishment-table-panel,
+#replenishment-tab-daily:checked ~ .replenishment-daily-panel,
 #replenishment-tab-dashboard:checked ~ .replenishment-dashboard-panel,
 #replenishment-tab-fractionation:checked ~ .replenishment-fractionation-panel,
 #replenishment-tab-settings:checked ~ .replenishment-settings-tab-panel {
@@ -281,6 +285,12 @@
     min-width: 12rem;
 }
 
+.replenishment-table-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
 .replenishment-settings-panel {
     display: flex;
     align-items: center;
@@ -298,6 +308,27 @@
 
 .replenishment-settings-description {
     margin: 0;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.9rem;
+}
+
+.daily-replenishment-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.daily-replenishment-title {
+    margin: 0;
+    color: var(--app-text, #221A3D);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.daily-replenishment-description {
+    margin: 0.3rem 0 0;
     color: var(--app-text-muted, #5F5A78);
     font-size: 0.9rem;
 }
@@ -325,6 +356,10 @@
     .replenishment-dashboard-summary .metric-card {
         width: 100%;
     }
+
+    .replenishment-table-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 
@@ -346,5 +381,9 @@
     .replenishment-grid-action {
         width: 100%;
         flex-basis: 100%;
+    }
+
+    .replenishment-table-metrics {
+        grid-template-columns: 1fr;
     }
 }

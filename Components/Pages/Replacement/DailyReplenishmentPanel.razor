@@ -1,0 +1,152 @@
+@inject IDailyReplenishmentService DailyReplenishmentService
+
+<section class="app-grid-card daily-replenishment-header mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div class="daily-replenishment-heading">
+        <div>
+            <h4 class="daily-replenishment-title">Reposição diária</h4>
+            <p class="daily-replenishment-description">Lista inspirada na planilha de abastecimento, calculada por média semanal, saldo atual e dias de reposição.</p>
+        </div>
+
+        <div class="daily-replenishment-controls">
+            <div class="daily-coverage-menu">
+                <button type="button"
+                        class="daily-coverage-badge"
+                        title="Dias de reposição"
+                        aria-expanded="@_coverageMenuOpen"
+                        @onclick="ToggleCoverageMenu">
+                    <span class="daily-coverage-avatar" aria-hidden="true">
+                        <i class="bi bi-calendar-range-fill"></i>
+                    </span>
+                    <span class="daily-coverage-details">
+                        <strong>@_coverageDays dias</strong>
+                        <small>Dias de reposição</small>
+                    </span>
+                    <i class="bi bi-caret-down-fill daily-coverage-caret" aria-hidden="true"></i>
+                </button>
+
+                @if (_coverageMenuOpen)
+                {
+                    <button type="button"
+                            class="daily-filter-menu-backdrop"
+                            aria-label="Fechar cobertura"
+                            @onclick="CloseCoverageMenu"></button>
+
+                    <div class="daily-coverage-dropdown">
+                        <div class="daily-filter-dropdown-section">
+                            @foreach (var option in _coverageOptions)
+                            {
+                                <button type="button"
+                                        class="daily-coverage-dropdown-item @(option == _coverageDays ? "selected" : null)"
+                                        @onclick="() => SetCoverageDaysAsync(option)">
+                                    <i class="bi bi-calendar-check" aria-hidden="true"></i>
+                                    <span>@option dias</span>
+                                </button>
+                            }
+
+                            <label class="daily-coverage-custom-field">
+                                <span>Personalizado</span>
+                                <input type="number"
+                                       min="1"
+                                       max="30"
+                                       step="1"
+                                       value="@_coverageDays"
+                                       @onchange="SetCustomCoverageDaysAsync" />
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (_loading)
+{
+    <p>Carregando reposição diária...</p>
+}
+else if (_data is not null)
+{
+    <section class="daily-replenishment-metrics mb-4">
+        <article class="metric-card border-slate-200 dark:border-slate-500">
+            <p class="metric-label">Itens para solicitar</p>
+            <p class="metric-value danger">@_data.TotalRequestItems</p>
+        </article>
+        <article class="metric-card border-slate-200 dark:border-slate-500">
+            <p class="metric-label">Itens zerados</p>
+            <p class="metric-value warning">@_data.ZeroStockItems.Count</p>
+        </article>
+        <article class="metric-card border-slate-200 dark:border-slate-500">
+            <p class="metric-label">Materiais</p>
+            <p class="metric-value info">@_data.Materials.Count</p>
+        </article>
+        <article class="metric-card border-slate-200 dark:border-slate-500">
+            <p class="metric-label">Medicamentos</p>
+            <p class="metric-value success">@_data.Medications.Count</p>
+        </article>
+    </section>
+
+    @if (_data.LastAverageImportedAt.HasValue)
+    {
+        <p class="daily-replenishment-updated">Última média importada: @_data.LastAverageImportedAt.Value.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</p>
+    }
+
+    <DailyReplenishmentSection Title="Material hospitalar"
+                               EmptyText="Nenhum material precisa de solicitação para os dias configurados."
+                               Items="_data.Materials"
+                               BadgeTone="default" />
+
+    <DailyReplenishmentSection Title="Medicamentos"
+                               EmptyText="Nenhum medicamento precisa de solicitação para os dias configurados."
+                               Items="_data.Medications"
+                               BadgeTone="default" />
+
+    <DailyReplenishmentSection Title="Itens zerados"
+                               EmptyText="Nenhum item está zerado na Farmácia Central."
+                               Items="_data.ZeroStockItems"
+                               BadgeTone="warning" />
+}
+
+@code {
+    private readonly int[] _coverageOptions = [2, 3, 4, 5, 7];
+    private DailyReplenishmentData? _data;
+    private bool _loading = true;
+    private bool _coverageMenuOpen;
+    private int _coverageDays = 4;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _loading = true;
+        _data = await DailyReplenishmentService.GetDailyReplenishmentAsync(_coverageDays);
+        _loading = false;
+    }
+
+    private void ToggleCoverageMenu()
+    {
+        _coverageMenuOpen = !_coverageMenuOpen;
+    }
+
+    private void CloseCoverageMenu()
+    {
+        _coverageMenuOpen = false;
+    }
+
+    private async Task SetCoverageDaysAsync(int days)
+    {
+        _coverageDays = Math.Clamp(days, 1, 30);
+        _coverageMenuOpen = false;
+        await LoadDataAsync();
+    }
+
+    private async Task SetCustomCoverageDaysAsync(ChangeEventArgs args)
+    {
+        if (!int.TryParse(args.Value?.ToString(), out var days))
+            return;
+
+        await SetCoverageDaysAsync(days);
+    }
+}

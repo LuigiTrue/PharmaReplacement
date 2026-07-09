@@ -79,6 +79,7 @@ builder.Services.AddScoped<IStockJsonService, StockJsonService>();
 builder.Services.AddScoped<IMinimumStockService, MinimumStockService>();
 builder.Services.AddScoped<IReplenishmentService, ReplenishmentService>();
 builder.Services.AddScoped<IReplenishmentDashboardService, ReplenishmentDashboardService>();
+builder.Services.AddScoped<IDailyReplenishmentService, DailyReplenishmentService>();
 builder.Services.AddScoped<IReplacementSettingsService, ReplacementSettingsService>();
 builder.Services.AddScoped<IFractionationSupplyService, FractionationSupplyService>();
 builder.Services.AddScoped<IAuthService, AuthService>();

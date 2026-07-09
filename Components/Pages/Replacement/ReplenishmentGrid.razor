@@ -4,6 +4,7 @@
 @inject ReportHtmlService ReportHtmlService
 @using Microsoft.FluentUI.AspNetCore.Components
 @using Microsoft.FluentUI.AspNetCore.Components.DesignTokens
+@using RepyPharma.Domain.Entities
 @inject IDialogService DialogService
 @inject IJSRuntime JS
 @inject IAuthService AuthService
@@ -24,10 +25,12 @@
                         <i class="bi bi-upload"></i>
                         <span>Atualizar Dados</span>
                     </button>
+                    @*
                     <button @onclick="OpenPreview" class="button-top replenishment-grid-action">
                         <i class="bi bi-file-earmark-pdf-fill"></i>
                         <span>Imprimir</span>
                     </button>
+                    *@
                 </div>
             </div>
     </section>
@@ -35,6 +38,7 @@
 
 <div class="replenishment-tabs-host">
     <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-table" checked />
+    <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-daily" />
     <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-dashboard" />
     <input class="replenishment-tab-input" type="radio" name="replenishment-tabs" id="replenishment-tab-fractionation" />
     @if (AuthService.IsAdmin)
@@ -43,14 +47,24 @@
     }
 
     <div class="app-tabs" role="tablist" aria-label="Secoes do relatorio de reposicao">
-        <label class="app-tab" role="tab" for="replenishment-tab-table">Tabela</label>
+        <label class="app-tab" role="tab" for="replenishment-tab-table">Diária</label>
+        <label class="app-tab" role="tab" for="replenishment-tab-daily">Consumo </label>
         <label class="app-tab" role="tab" for="replenishment-tab-dashboard">Dashboard</label>
         <label class="app-tab" role="tab" for="replenishment-tab-fractionation">Fracionamento</label>
-        @if (AuthService.IsAdmin)
+     @if (AuthService.IsAdmin)
         {
             <label class="app-tab" role="tab" for="replenishment-tab-settings">Configurações</label>
         }
     </div>
+
+
+
+
+
+
+
+
+   
 
     <div class="replenishment-tab-panel replenishment-table-panel" role="tabpanel">
         @if (_loading)
@@ -63,12 +77,50 @@
         }
         else
         {
+  <section class="app-grid-card daily-replenishment-header mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <div class="daily-replenishment-heading">
+        <div>
+            <h4 class="daily-replenishment-title">Reposição diária</h4>
+            <p class="daily-replenishment-description">Seção destinada à reposição diária.</p>
+        </div>
+
+        <div class="daily-replenishment-controls">
+            <div class="daily-coverage-menu">
+               
+            </div>
+        </div>
+    </div>
+</section>
+
+            <section class="replenishment-table-metrics mb-4">
+                <article class="metric-card border-slate-200 dark:border-slate-500">
+                    <p class="metric-label">Itens para repor</p>
+                    <p class="metric-value danger">@TableItems.Count</p>
+                </article>
+                <article class="metric-card border-slate-200 dark:border-slate-500">
+                    <p class="metric-label">Sem fonte</p>
+                    <p class="metric-value warning">@_report.NoSourceAvailable.Count</p>
+                </article>
+                <article class="metric-card border-slate-200 dark:border-slate-500">
+                    <p class="metric-label">Materiais</p>
+                    <p class="metric-value info">@TableMaterialCount</p>
+                </article>
+                <article class="metric-card border-slate-200 dark:border-slate-500">
+                    <p class="metric-label">Medicamentos</p>
+                    <p class="metric-value success">@TableMedicationCount</p>
+                </article>
+            </section>
+
             <ReplacementSection Title="1ª Etapa — Fracionamento" Items="_report.FromFractionation" LocationId="@Fractionation" />
 
             <ReplacementSection Title="2ª Etapa — CAF" Items="_report.FromCafOnly" LocationId="@Caf" />
 
             <ReplacementSection Title="3ª Etapa — Almoxarifado" Items="_report.FromStockOnly" LocationId="@Stock" />
         }
+    </div>
+
+    <div class="replenishment-tab-panel replenishment-daily-panel" role="tabpanel">
+        <DailyReplenishmentPanel />
     </div>
 
     <div class="replenishment-tab-panel replenishment-dashboard-panel" role="tabpanel">
@@ -95,6 +147,17 @@
     private const string Fractionation = "1059";
     private const string Caf = "999";
     private const string Stock = "996";
+
+    private List<ReplenishmentItem> TableItems => _report is null
+        ? new()
+        : _report.FromFractionation
+            .Concat(_report.FromCafOnly)
+            .Concat(_report.FromStockOnly)
+            .Concat(_report.NoSourceAvailable)
+            .ToList();
+
+    private int TableMaterialCount => TableItems.Count(item => item.ItemType == ItemType.Material);
+    private int TableMedicationCount => TableItems.Count - TableMaterialCount;
 
     protected override async Task OnInitializedAsync()
     {

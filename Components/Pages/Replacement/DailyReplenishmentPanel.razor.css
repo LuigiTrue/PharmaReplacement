@@ -1,0 +1,226 @@
+.daily-replenishment-header {
+    min-width: 0;
+}
+
+.daily-replenishment-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.daily-replenishment-title {
+    margin: 0;
+    color: var(--app-text, #221A3D);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.daily-replenishment-description {
+    margin: 0.3rem 0 0;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.9rem;
+}
+
+.daily-replenishment-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.daily-coverage-menu {
+    position: relative;
+    flex: 0 0 12.5rem;
+    width: 12.5rem;
+}
+
+.daily-coverage-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 8px;
+    padding: 0.35rem 0.65rem 0.35rem 0.4rem;
+    background: var(--app-surface-muted, #F5F0FA);
+    color: var(--app-text, #221A3D);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.daily-coverage-badge:hover {
+    border-color: var(--app-link, #3320C9);
+    background: var(--app-nav-hover-bg, #F5F0FA);
+    transform: translateY(-1px);
+}
+
+.daily-coverage-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--app-link, #3320C9);
+    color: #FFFFFF;
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.daily-coverage-details {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.daily-coverage-details strong,
+.daily-coverage-details small {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.daily-coverage-details strong {
+    color: var(--app-text, #221A3D);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.daily-coverage-details small {
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.daily-coverage-caret {
+    flex: 0 0 auto;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.68rem;
+}
+
+.daily-filter-menu-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: default;
+}
+
+.daily-coverage-dropdown {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    right: 0;
+    z-index: 50;
+    display: flex;
+    min-width: 14rem;
+    flex-direction: column;
+    gap: 0.35rem;
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 8px;
+    padding: 0.35rem;
+    background: var(--app-surface, #FFFFFF);
+    box-shadow: 0 12px 30px var(--app-nav-shadow, rgba(42, 27, 158, 0.16));
+}
+
+.daily-filter-dropdown-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.daily-coverage-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    border: 0;
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    background: transparent;
+    color: var(--app-text, #221A3D);
+    cursor: pointer;
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-align: left;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.daily-coverage-dropdown-item:hover,
+.daily-coverage-dropdown-item.selected {
+    background: var(--app-surface-muted, #F5F0FA);
+    color: var(--app-link, #3320C9);
+}
+
+.daily-coverage-custom-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.45rem 0.45rem 0.35rem;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.daily-coverage-custom-field input {
+    width: 100%;
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 6px;
+    padding: 0.45rem 0.55rem;
+    background: var(--app-surface, #FFFFFF);
+    color: var(--app-text, #221A3D);
+}
+
+.daily-replenishment-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.daily-replenishment-updated {
+    margin: -0.25rem 0 1rem;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .daily-replenishment-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .daily-replenishment-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .daily-replenishment-controls,
+    .daily-coverage-menu,
+    .daily-coverage-badge {
+        width: 100%;
+    }
+
+    .daily-coverage-menu {
+        flex-basis: 100%;
+    }
+
+    .daily-coverage-dropdown {
+        left: 0;
+        right: auto;
+        min-width: 100%;
+    }
+
+    .daily-replenishment-metrics {
+        grid-template-columns: 1fr;
+    }
+}

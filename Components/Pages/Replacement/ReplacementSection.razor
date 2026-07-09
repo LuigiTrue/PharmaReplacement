@@ -1,8 +1,22 @@
 @using RepyPharma.Models
+@using System.Net
+@using System.Text
+@inject IJSRuntime JS
 
 <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
     <div class="mb-3 flex items-center justify-between gap-3">
-        <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">@Title</span>
+        <div class="replacement-section-title-row">
+            <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">@Title</span>
+            <button type="button"
+                    class="replacement-section-toggle @(_expanded ? "expanded" : "collapsed")"
+                    title="@(_expanded ? "Recolher" : "Expandir")"
+                    aria-expanded="@_expanded"
+                    @onclick="ToggleExpanded">
+                <i @key="_expanded"
+                   class="bi @(_expanded ? "bi-chevron-compact-up" : "bi-chevron-compact-down")"
+                   aria-hidden="true"></i>
+            </button>
+        </div>
         <div class="replacement-section-tools">
             <label class="replacement-type-filter">
                 <span>Tipo</span>
@@ -15,6 +29,16 @@
                 </select>
             </label>
 
+            @*
+            <button type="button"
+                    class="replacement-section-print-action"
+                    disabled="@(!FilteredItems.Any())"
+                    @onclick="PrintAsync">
+                <i class="bi bi-printer-fill" aria-hidden="true"></i>
+                <span>Imprimir</span>
+            </button>
+            *@
+
             <div class="inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold shadow-sm @(FilteredItems.Any() ? "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200" : "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-slate-800 dark:text-blue-300")">
                 <span class="h-2 w-2 rounded-full @(FilteredItems.Any() ? "bg-slate-500 dark:bg-slate-300" : "bg-blue-500 dark:bg-blue-300")"></span>
                 <span>@FilteredItems.Count itens</span>
@@ -22,11 +46,11 @@
         </div>
     </div>
 
-    @if (!FilteredItems.Any())
+    @if (_expanded && !FilteredItems.Any())
     {
         <p class="text-sm text-slate-500 dark:text-slate-400">Nenhum item nesta etapa.</p>
     }
-    else
+    else if (_expanded)
     {
         <div class="app-grid overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-700">
             <table class="min-w-full divide-y divide-slate-200 text-sm dark:divide-slate-700">
@@ -104,6 +128,7 @@
 @code {
     private readonly ItemType[] _itemTypes = Enum.GetValues<ItemType>();
     private ItemType? _selectedItemType;
+    private bool _expanded = true;
 
     [Parameter, EditorRequired] public string Title { get; set; } = "";
     [Parameter, EditorRequired] public List<ReplenishmentItem> Items { get; set; } = new();
@@ -128,4 +153,59 @@
 
         _selectedItemType = null;
     }
+
+    private void ToggleExpanded()
+    {
+        _expanded = !_expanded;
+    }
+
+    private async Task PrintAsync()
+    {
+        if (!FilteredItems.Any())
+            return;
+
+        await JS.InvokeVoidAsync("openPrintPreview", BuildPrintHtml());
+    }
+
+    private string BuildPrintHtml()
+    {
+        var html = new StringBuilder();
+        html.Append("<!doctype html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>Relatório de Reposição</title>\n<style>\nbody{font-family:Arial,sans-serif;margin:24px;color:#1f2937}\nh1{font-size:20px;margin:0 0 4px}\np{margin:0 0 16px;color:#4b5563}\ntable{width:100%;border-collapse:collapse;font-size:12px}\nth,td{border:1px solid #d1d5db;padding:8px;text-align:left;vertical-align:top}\nth{background:#f3f4f6;font-weight:700}\n</style>\n</head>\n<body>\n");
+        html.Append("<h1>").Append(Escape(Title)).Append("</h1>");
+        html.Append("<p>").Append(FilteredItems.Count).Append(" itens</p>");
+        html.Append("<table>\n<thead>\n<tr>\n<th>Código</th>\n<th>Nome</th>\n<th>Tipo</th>\n<th>Lotes disponíveis</th>\n<th>Estoque atual</th>\n<th>Qtd para repor</th>\n</tr>\n</thead>\n<tbody>\n");
+
+        foreach (var item in FilteredItems)
+        {
+            html.Append("<tr>");
+            html.Append("<td>").Append(Escape(item.Code)).Append("</td>");
+            html.Append("<td>").Append(Escape(item.Name)).Append("</td>");
+            html.Append("<td>").Append(Escape(ItemTypeLabels.GetLabel(item.ItemType))).Append("</td>");
+            html.Append("<td>").Append(Escape(FormatAvailableBatches(item))).Append("</td>");
+            html.Append("<td>").Append(Escape(item.CurrentStock.ToString("0.##"))).Append(" und</td>");
+            html.Append("<td>").Append(Escape(item.MissingQuantity.ToString("0.##"))).Append(" und</td>");
+            html.Append("</tr>");
+        }
+
+        html.Append("</tbody>\n</table>\n</body>\n</html>");
+        return html.ToString();
+    }
+
+    private string FormatAvailableBatches(ReplenishmentItem item)
+    {
+        var batches = item.AvailableBatches
+            .SelectMany(batch => batch.Locations
+                .Where(location => location.LocationId == LocationId && location.Quantity > 0)
+                .Select(location =>
+                {
+                    var validity = batch.Validity.HasValue ? batch.Validity.Value.ToString("MM/yyyy") : "-";
+                    var suffix = batch.Batch == item.RecommendedBatch?.Batch ? " (indicado)" : "";
+                    return $"{batch.Batch} | {validity} | {location.Quantity:0.##} un.{suffix}";
+                }))
+            .ToList();
+
+        return batches.Count == 0 ? "Sem estoque disponível" : string.Join("; ", batches);
+    }
+
+    private static string Escape(string? value) => WebUtility.HtmlEncode(value ?? "");
 }

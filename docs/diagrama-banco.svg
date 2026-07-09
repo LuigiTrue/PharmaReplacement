@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1320" height="860" viewBox="0 0 1320 860" role="img" aria-labelledby="title desc">
+  <title id="title">Diagrama de relacionamento das entidades do RepyPharma</title>
+  <desc id="desc">Diagrama ER simplificado mostrando chaves primarias, estrangeiras e relacionamentos principais das entidades do dominio e tabelas Identity.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .entity { fill: #ffffff; stroke: #334155; stroke-width: 1.4; rx: 8; }
+      .identity { fill: #fff7ed; stroke: #9a3412; stroke-width: 1.4; rx: 8; }
+      .title { fill: #0f172a; font: 700 15px Arial, sans-serif; }
+      .sub { fill: #475569; font: 12px Arial, sans-serif; }
+      .field { fill: #1e293b; font: 12px Arial, sans-serif; }
+      .key { fill: #0f766e; font: 700 12px Arial, sans-serif; }
+      .fk { fill: #7c3aed; font: 700 12px Arial, sans-serif; }
+      .line { stroke: #475569; stroke-width: 1.7; fill: none; marker-end: url(#arrow); }
+      .line-soft { stroke: #64748b; stroke-width: 1.5; fill: none; stroke-dasharray: 5 4; marker-end: url(#arrow-soft); }
+      .label { fill: #334155; font: 12px Arial, sans-serif; }
+      .note { fill: #64748b; font: 12px Arial, sans-serif; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-soft" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L8,3 z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1320" height="860"/>
+  <text class="title" x="40" y="38">RepyPharma - Relacionamento das entidades por PK/FK</text>
+  <text class="note" x="40" y="60">Setas apontam da tabela dependente para a tabela referenciada. Relacionamentos Identity foram simplificados para leitura.</text>
+
+  <g id="items">
+    <rect class="entity" x="450" y="90" width="250" height="210"/>
+    <text class="title" x="470" y="118">items</text>
+    <text class="key" x="470" y="145">PK Id</text>
+    <text class="field" x="470" y="167">Code UNIQUE</text>
+    <text class="field" x="470" y="189">Name</text>
+    <text class="field" x="470" y="211">Unit</text>
+    <text class="field" x="470" y="233">ItemType</text>
+    <text class="field" x="470" y="255">IsActive</text>
+    <text class="field" x="470" y="277">CreatedAt / UpdatedAt</text>
+  </g>
+
+  <g id="batches">
+    <rect class="entity" x="90" y="360" width="250" height="170"/>
+    <text class="title" x="110" y="388">batches</text>
+    <text class="key" x="110" y="415">PK Id</text>
+    <text class="fk" x="110" y="437">FK ItemId -> items.Id</text>
+    <text class="field" x="110" y="459">BatchNumber</text>
+    <text class="field" x="110" y="481">Validity</text>
+    <text class="field" x="110" y="503">UNIQUE(ItemId, BatchNumber)</text>
+  </g>
+
+  <g id="locations">
+    <rect class="entity" x="450" y="600" width="250" height="150"/>
+    <text class="title" x="470" y="628">locations</text>
+    <text class="key" x="470" y="655">PK Id</text>
+    <text class="field" x="470" y="677">Code UNIQUE</text>
+    <text class="field" x="470" y="699">Name</text>
+    <text class="field" x="470" y="721">IsActive</text>
+  </g>
+
+  <g id="stock_balances">
+    <rect class="entity" x="450" y="360" width="300" height="185"/>
+    <text class="title" x="470" y="388">stock_balances</text>
+    <text class="key" x="470" y="415">PK Id</text>
+    <text class="fk" x="470" y="437">FK ItemId -> items.Id</text>
+    <text class="fk" x="470" y="459">FK BatchId -> batches.Id</text>
+    <text class="fk" x="470" y="481">FK LocationId -> locations.Id</text>
+    <text class="field" x="470" y="503">Quantity</text>
+    <text class="field" x="470" y="525">UNIQUE(ItemId, BatchId, LocationId)</text>
+  </g>
+
+  <g id="daily_consumptions">
+    <rect class="entity" x="810" y="95" width="270" height="165"/>
+    <text class="title" x="830" y="123">daily_consumptions</text>
+    <text class="key" x="830" y="150">PK Id</text>
+    <text class="fk" x="830" y="172">FK ItemId -> items.Id</text>
+    <text class="field" x="830" y="194">ConsumptionDate</text>
+    <text class="field" x="830" y="216">Quantity</text>
+    <text class="field" x="830" y="238">Source / CreatedAt</text>
+  </g>
+
+  <g id="item_consumption_averages">
+    <rect class="entity" x="810" y="305" width="360" height="235"/>
+    <text class="title" x="830" y="333">item_consumption_averages</text>
+    <text class="key" x="830" y="360">PK Id</text>
+    <text class="fk" x="830" y="382">FK ItemId -> items.Id nullable</text>
+    <text class="field" x="830" y="404">ItemCode / ItemName</text>
+    <text class="field" x="830" y="426">ReportStartDate / ReportEndDate</text>
+    <text class="field" x="830" y="448">AveragePeriodKind / CoverageDays</text>
+    <text class="field" x="830" y="470">Monthly / Weekly / Current Average</text>
+    <text class="field" x="830" y="492">TotalOutput / StockBalance</text>
+    <text class="field" x="830" y="514">UNIQUE(ItemCode, ReportStartDate, ReportEndDate)</text>
+  </g>
+
+  <g id="replenishment_rules">
+    <rect class="entity" x="90" y="95" width="290" height="190"/>
+    <text class="title" x="110" y="123">replenishment_rules</text>
+    <text class="key" x="110" y="150">PK Id</text>
+    <text class="fk" x="110" y="172">FK ItemId -> items.Id UNIQUE</text>
+    <text class="field" x="110" y="194">MinimumStock / SafetyStock</text>
+    <text class="field" x="110" y="216">LeadTimeDays / TargetCoverageDays</text>
+    <text class="field" x="110" y="238">CalculationMethod</text>
+    <text class="field" x="110" y="260">ItemPriority / IsActive / UpdatedAt</text>
+  </g>
+
+  <g id="identity">
+    <rect class="identity" x="90" y="625" width="250" height="145"/>
+    <text class="title" x="110" y="653">AspNetUsers</text>
+    <text class="key" x="110" y="680">PK Id string</text>
+    <text class="field" x="110" y="702">IdentityUser columns</text>
+    <text class="field" x="110" y="724">Name / AvatarDataUrl</text>
+    <text class="field" x="110" y="746">IsActive / PasswordChangeRequested</text>
+
+    <rect class="identity" x="810" y="625" width="250" height="145"/>
+    <text class="title" x="830" y="653">AspNetRoles</text>
+    <text class="key" x="830" y="680">PK Id string</text>
+    <text class="field" x="830" y="702">Name / NormalizedName</text>
+    <text class="field" x="830" y="724">ConcurrencyStamp</text>
+
+    <rect class="identity" x="1090" y="625" width="190" height="145"/>
+    <text class="title" x="1110" y="653">AspNetUserRoles</text>
+    <text class="key" x="1110" y="680">PK UserId + RoleId</text>
+    <text class="fk" x="1110" y="702">FK UserId</text>
+    <text class="fk" x="1110" y="724">FK RoleId</text>
+  </g>
+
+  <path class="line" d="M380 180 C410 180 420 180 450 180"/>
+  <text class="label" x="392" y="170">1:1 regra por item</text>
+
+  <path class="line" d="M340 420 C390 390 410 360 450 260"/>
+  <text class="label" x="330" y="380">N:1</text>
+
+  <path class="line" d="M600 360 C590 340 585 320 580 300"/>
+  <text class="label" x="604" y="338">N:1</text>
+
+  <path class="line" d="M450 455 C405 455 375 455 340 455"/>
+  <text class="label" x="365" y="445">N:1 lote</text>
+
+  <path class="line" d="M600 545 C590 570 585 585 580 600"/>
+  <text class="label" x="610" y="585">N:1 local</text>
+
+  <path class="line" d="M810 170 C760 160 730 155 700 155"/>
+  <text class="label" x="732" y="145">N:1</text>
+
+  <path class="line-soft" d="M810 382 C755 350 725 300 700 245"/>
+  <text class="label" x="718" y="315">N:0..1</text>
+
+  <path class="line-soft" d="M1090 700 C1070 700 1070 700 1060 700"/>
+  <path class="line-soft" d="M1090 715 C1035 630 405 630 340 700"/>
+</svg>

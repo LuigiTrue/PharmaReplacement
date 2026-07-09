@@ -2,7 +2,6 @@
 @using Icons = Microsoft.FluentUI.AspNetCore.Components.Icons
 @using RepyPharma.Services.Import.Interfaces
 @inject PdfParserService Parser
-@inject PdfValidationService Validator
 @inject PdfStorageService Storage
 @inject IConsumptionAverageReportService ConsumptionAverageReportService
 @inject ReplenishmentDataState ReplenishmentDataState
@@ -16,14 +15,16 @@
 
     <FluentInputFile Id="@UploadId" Class="update-input-file" Mode="InputFileMode.SaveToTemporaryFolder" Multiple="false" MaximumFileCount="1"
                      MaximumFileSize="@(10*1024*1024)" Accept=".pdf" @bind-ProgressPercent="@ProgressPercent"
-                     OnCompleted="@OnCompletedAsync" Style="height: var(--update-input-file-height, 18.75rem);">
+                     OnCompleted="@OnCompletedAsync" Style="height: 30vh; display: grid; padding: 30px">
         <ChildContent>
+            <div class="label-content">
             <label for="@UploadId">
                 <FluentIcon Value="@(new @Icons.Regular.Size32.ArrowUpload())" />
             </label>
 
             <div class="update-input-copy">
                 @Description <label for="@UploadId">Selecionar arquivo</label><span style="color: red;">*</span>.
+            </div>
             </div>
         </ChildContent>
     </FluentInputFile>
@@ -73,10 +74,13 @@
 
     private async Task ImportStockMirrorAsync(string filePath)
     {
-        var text = Parser.ExtractText(filePath);
-
-        if (!Validator.IsValidHospitalStockPdf(text))
-            throw new Exception("Este arquivo não é um relatório de estoque válido.");
+        var validation = Parser.ValidateStockMirrorPdf(filePath);
+        if (!validation.IsValid)
+        {
+            _statusIsError = true;
+            _statusMessage = validation.Message;
+            return;
+        }
 
         var produtos = Parser.ParseProducts(filePath);
 
@@ -86,8 +90,15 @@
 
     private async Task ImportConsumptionReportAsync(string filePath)
     {
+        var validation = ConsumptionAverageReportService.ValidateConsumptionReportPdf(filePath);
+        if (!validation.IsValid)
+        {
+            _statusIsError = true;
+            _statusMessage = validation.Message;
+            return;
+        }
+
         var result = await ConsumptionAverageReportService.ImportPdfAsync(filePath);
-        ReplenishmentDataState.NotifyChanged();
 
         if (result.Errors > 0)
         {
@@ -96,6 +107,7 @@
             return;
         }
 
+        ReplenishmentDataState.NotifyChanged();
         _statusMessage = $"Relatório de consumo importado. {result.CreatedRecords} novos, {result.UpdatedRecords} atualizados.";
     }
 }

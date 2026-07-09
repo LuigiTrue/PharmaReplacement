@@ -25,6 +25,38 @@ public class PdfParserService
 
     private const double MaxLineContinuationGap = 15.0;
 
+    public PdfImportValidationResult ValidateStockMirrorPdf(string filePath)
+    {
+        if (!File.Exists(filePath))
+            return PdfImportValidationResult.Invalid("Arquivo não encontrado.");
+
+        string text;
+        try
+        {
+            text = ExtractText(filePath);
+        }
+        catch
+        {
+            return PdfImportValidationResult.Invalid("O arquivo não pôde ser lido como PDF.");
+        }
+
+        if (!IsValidHospitalStockPdf(text))
+            return PdfImportValidationResult.Invalid("O arquivo não é um espelho de estoque válido.");
+
+        try
+        {
+            var products = ParseProducts(filePath);
+            if (products.Count == 0)
+                return PdfImportValidationResult.Invalid("O espelho de estoque não possui itens válidos para importação.");
+        }
+        catch
+        {
+            return PdfImportValidationResult.Invalid("O espelho de estoque não possui uma estrutura válida para leitura.");
+        }
+
+        return PdfImportValidationResult.Valid("Espelho de estoque válido.");
+    }
+
     public string ExtractText(string filePath)
     {
         using var document = PdfDocument.Open(filePath);
@@ -84,6 +116,20 @@ public class PdfParserService
         }
 
         return products;
+    }
+
+    private bool IsValidHospitalStockPdf(string text)
+    {
+        if (!text.Contains("SOULMV - Sistema de Gerenciamento de Estoque"))
+            return false;
+
+        if (!text.Contains("Relatório de Conferência dos Lotes"))
+            return false;
+
+        if (!text.Contains("Produto"))
+            return false;
+
+        return true;
     }
 
     private List<KeyValuePair<double, string>> GetProductLines(List<Word> allWords)

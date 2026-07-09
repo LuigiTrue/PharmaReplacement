@@ -53,94 +53,110 @@
                     @switch (_activeSection)
                     {
                         case SettingsSection.Replenishment:
-                        <div class="replacement-settings-panel">
-                            <div>
-                                <h5 class="replacement-settings-panel-title">Configurações de Reposição</h5>
-                                <p class="replacement-settings-description">Altere a prioridade e o estoque mínimo dos itens monitorados pelo abastecimento.</p>
-                            </div>
-
-                            <div class="replacement-settings-form">
-                                <label class="replacement-settings-field">
-                                    <span>Pesquisar item</span>
-                                    <input class="replacement-settings-input"
-                                           type="search"
-                                           placeholder="Digite o código ou nome do item"
-                                           @bind="_searchText"
-                                           @bind:event="oninput"
-                                           @bind:after="SearchItemsAsync" />
-                                </label>
-
-                                <label class="replacement-settings-field">
-                                    <span>Prioridade</span>
-                                    <select class="replacement-settings-input"
-                                            @bind="_selectedPriority"
-                                            disabled="@(_selectedItem is null)">
-                                        @foreach (var priority in _priorities)
-                                        {
-                                            <option value="@priority">@GetPriorityLabel(priority)</option>
-                                        }
-                                    </select>
-                                </label>
-
-                                <label class="replacement-settings-field">
-                                    <span>Tipo do item</span>
-                                    <select class="replacement-settings-input"
-                                            @bind="_selectedItemType"
-                                            disabled="@(_selectedItem is null)">
-                                        @foreach (var itemType in _itemTypes)
-                                        {
-                                            <option value="@itemType">@ItemTypeLabels.GetLabel(itemType)</option>
-                                        }
-                                    </select>
-                                </label>
-
-                                <label class="replacement-settings-field">
-                                    <span>Estoque mínimo</span>
-                                    <input class="replacement-settings-input"
-                                           type="number"
-                                           min="0"
-                                           step="0.01"
-                                           @bind="_selectedMinimumQuantity"
-                                           disabled="@(_selectedItem is null)" />
-                                </label>
-
+                        <div class="replacement-settings-panel replacement-settings-collapsible-card">
+                            <div class="replacement-settings-panel-heading">
+                                <div>
+                                    <h5 class="replacement-settings-panel-title">Configurações de Reposição</h5>
+                                    <p class="replacement-settings-description">Altere a prioridade e o estoque mínimo dos itens monitorados pelo abastecimento.</p>
+                                </div>
                                 <button type="button"
-                                        class="replacement-settings-save"
-                                        disabled="@(!CanSave)"
-                                        @onclick="SaveSettingsAsync">
-                                    Salvar configurações
+                                        class="replacement-settings-toggle @(_settingsPanelExpanded ? "expanded" : "collapsed")"
+                                        title="@(_settingsPanelExpanded ? "Recolher" : "Expandir")"
+                                        aria-expanded="@_settingsPanelExpanded"
+                                        @onclick="ToggleSettingsPanel">
+                                    <i @key="_settingsPanelExpanded"
+                                       class="bi @(_settingsPanelExpanded ? "bi-chevron-compact-up" : "bi-chevron-compact-down")"
+                                       aria-hidden="true"></i>
                                 </button>
                             </div>
 
-                            @if (!string.IsNullOrWhiteSpace(_message))
+                            @if (_settingsPanelExpanded)
                             {
-                                <p class="replacement-settings-message">@_message</p>
-                            }
+                                <div class="replacement-settings-panel-body">
+                                    <div class="replacement-settings-form">
+                                        <label class="replacement-settings-field">
+                                            <span>Pesquisar item</span>
+                                            <input class="replacement-settings-input"
+                                                   type="search"
+                                                   placeholder="Digite o código ou nome do item"
+                                                   @bind="_searchText"
+                                                   @bind:event="oninput"
+                                                   @bind:after="SearchItemsAsync" />
+                                        </label>
 
-                            @if (_loading)
-                            {
-                                <p class="replacement-settings-description">Carregando itens...</p>
-                            }
-                            else if (_searchResults.Count == 0)
-                            {
-                                <p class="replacement-settings-description">Nenhum item encontrado.</p>
-                            }
-                            else
-                            {
-                                <div class="replacement-settings-results">
-                                    @foreach (var item in _searchResults)
-                                    {
-                                        var selected = _selectedItem?.Code == item.Code;
+                                        <label class="replacement-settings-field">
+                                            <span>Prioridade</span>
+                                            <select class="replacement-settings-input"
+                                                    @bind="_selectedPriority"
+                                                    disabled="@(_selectedItem is null)">
+                                                @foreach (var priority in _priorities)
+                                                {
+                                                    <option value="@priority">@GetPriorityLabel(priority)</option>
+                                                }
+                                            </select>
+                                        </label>
+
+                                        <label class="replacement-settings-field">
+                                            <span>Tipo do item</span>
+                                            <select class="replacement-settings-input"
+                                                    @bind="_selectedItemType"
+                                                    disabled="@(_selectedItem is null)">
+                                                @foreach (var itemType in _itemTypes)
+                                                {
+                                                    <option value="@itemType">@ItemTypeLabels.GetLabel(itemType)</option>
+                                                }
+                                            </select>
+                                        </label>
+
+                                        <label class="replacement-settings-field">
+                                            <span>Estoque mínimo</span>
+                                            <input class="replacement-settings-input"
+                                                   type="number"
+                                                   min="0"
+                                                   step="0.01"
+                                                   @bind="_selectedMinimumQuantity"
+                                                   disabled="@(_selectedItem is null)" />
+                                        </label>
 
                                         <button type="button"
-                                                class="replacement-settings-result @(selected ? "selected" : null)"
-                                                @onclick="() => SelectItem(item)">
-                                            <span class="replacement-settings-result-main">
-                                                <strong>@item.Name</strong>
-                                                <small>@item.Code • @ItemTypeLabels.GetLabel(item.ItemType) • mínimo @item.MinimumQuantity.ToString("0.##")</small>
-                                            </span>
-                                            <span class="replacement-settings-chip">@GetPriorityLabel(item.ItemPriority)</span>
+                                                class="replacement-settings-save"
+                                                disabled="@(!CanSave)"
+                                                @onclick="SaveSettingsAsync">
+                                            Salvar configurações
                                         </button>
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(_message))
+                                    {
+                                        <p class="replacement-settings-message">@_message</p>
+                                    }
+
+                                    @if (_loading)
+                                    {
+                                        <p class="replacement-settings-description">Carregando itens...</p>
+                                    }
+                                    else if (_searchResults.Count == 0)
+                                    {
+                                        <p class="replacement-settings-description">Nenhum item encontrado.</p>
+                                    }
+                                    else
+                                    {
+                                        <div class="replacement-settings-results">
+                                            @foreach (var item in _searchResults)
+                                            {
+                                                var selected = _selectedItem?.Code == item.Code;
+
+                                                <button type="button"
+                                                        class="replacement-settings-result @(selected ? "selected" : null)"
+                                                        @onclick="() => SelectItem(item)">
+                                                    <span class="replacement-settings-result-main">
+                                                        <strong>@item.Name</strong>
+                                                        <small>@item.Code • @ItemTypeLabels.GetLabel(item.ItemType) • mínimo @item.MinimumQuantity.ToString("0.##")</small>
+                                                    </span>
+                                                    <span class="replacement-settings-chip">@GetPriorityLabel(item.ItemPriority)</span>
+                                                </button>
+                                            }
+                                        </div>
                                     }
                                 </div>
                             }
@@ -148,76 +164,108 @@
                         break;
 
                         case SettingsSection.Users:
-                        <div class="replacement-settings-panel">
-                            <div>
-                                <h5 class="replacement-settings-panel-title">Usuários</h5>
-                                <p class="replacement-settings-description">Área reservada para administração de usuários do sistema.</p>
+                        <div class="replacement-settings-panel replacement-settings-collapsible-card">
+                            <div class="replacement-settings-panel-heading">
+                                <div>
+                                    <h5 class="replacement-settings-panel-title">Usuários</h5>
+                                    <p class="replacement-settings-description">Área reservada para administração de usuários do sistema.</p>
+                                </div>
+                                <button type="button"
+                                        class="replacement-settings-toggle @(_settingsPanelExpanded ? "expanded" : "collapsed")"
+                                        title="@(_settingsPanelExpanded ? "Recolher" : "Expandir")"
+                                        aria-expanded="@_settingsPanelExpanded"
+                                        @onclick="ToggleSettingsPanel">
+                                    <i @key="_settingsPanelExpanded"
+                                       class="bi @(_settingsPanelExpanded ? "bi-chevron-compact-up" : "bi-chevron-compact-down")"
+                                       aria-hidden="true"></i>
+                                </button>
                             </div>
 
-                            <div class="replacement-settings-empty">
-                                <strong>Configuração em preparação</strong>
-                                <span>Esta seção já está disponível na TreeView para receber os controles de usuários.</span>
-                            </div>
+                            @if (_settingsPanelExpanded)
+                            {
+                                <div class="replacement-settings-panel-body">
+                                    <div class="replacement-settings-empty">
+                                        <strong>Configuração em preparação</strong>
+                                        <span>Esta seção já está disponível na TreeView para receber os controles de usuários.</span>
+                                    </div>
+                                </div>
+                            }
                         </div>
                         break;
 
                         case SettingsSection.ItemInclusion:
-                        <div class="replacement-settings-panel">
-                            <div>
-                                <h5 class="replacement-settings-panel-title">Inclusão de Itens</h5>
-                                <p class="replacement-settings-description">Cadastre itens ainda não monitorados, definindo código, estoque mínimo e importância.</p>
-                            </div>
-
-                            <div class="replacement-settings-inclusion-form">
-                                <label class="replacement-settings-field">
-                                    <span>Código</span>
-                                    <input class="replacement-settings-input"
-                                           type="text"
-                                           placeholder="Código do item"
-                                           @bind="_newItemCode"
-                                           @bind:event="oninput" />
-                                </label>
-
-                                <label class="replacement-settings-field">
-                                    <span>Nome do item</span>
-                                    <input class="replacement-settings-input"
-                                           type="text"
-                                           placeholder="Nome do item"
-                                           @bind="_newItemName"
-                                           @bind:event="oninput" />
-                                </label>
-
-                                <label class="replacement-settings-field">
-                                    <span>Estoque mínimo</span>
-                                    <input class="replacement-settings-input"
-                                           type="number"
-                                           min="0"
-                                           step="0.01"
-                                           @bind="_newItemMinimumQuantity" />
-                                </label>
-
-                                <label class="replacement-settings-field">
-                                    <span>Importância</span>
-                                    <select class="replacement-settings-input"
-                                            @bind="_newItemPriority">
-                                        @foreach (var priority in _priorities)
-                                        {
-                                            <option value="@priority">@GetPriorityLabel(priority)</option>
-                                        }
-                                    </select>
-                                </label>
-
+                        <div class="replacement-settings-panel replacement-settings-collapsible-card">
+                            <div class="replacement-settings-panel-heading">
+                                <div>
+                                    <h5 class="replacement-settings-panel-title">Inclusão de Itens</h5>
+                                    <p class="replacement-settings-description">Cadastre itens ainda não monitorados, definindo código, estoque mínimo e importância.</p>
+                                </div>
                                 <button type="button"
-                                        class="replacement-settings-save"
-                                        disabled="@(!CanAddItem)"
-                                        @onclick="AddItemAsync">
-                                    Incluir item
+                                        class="replacement-settings-toggle @(_settingsPanelExpanded ? "expanded" : "collapsed")"
+                                        title="@(_settingsPanelExpanded ? "Recolher" : "Expandir")"
+                                        aria-expanded="@_settingsPanelExpanded"
+                                        @onclick="ToggleSettingsPanel">
+                                    <i @key="_settingsPanelExpanded"
+                                       class="bi @(_settingsPanelExpanded ? "bi-chevron-compact-up" : "bi-chevron-compact-down")"
+                                       aria-hidden="true"></i>
                                 </button>
                             </div>
 
-                            @if (!string.IsNullOrWhiteSpace(_message))
+                            @if (_settingsPanelExpanded)
                             {
-                                <p class="replacement-settings-message">@_message</p>
+                                <div class="replacement-settings-panel-body">
+                                    <div class="replacement-settings-inclusion-form">
+                                        <label class="replacement-settings-field">
+                                            <span>Código</span>
+                                            <input class="replacement-settings-input"
+                                                   type="text"
+                                                   placeholder="Código do item"
+                                                   @bind="_newItemCode"
+                                                   @bind:event="oninput" />
+                                        </label>
+
+                                        <label class="replacement-settings-field">
+                                            <span>Nome do item</span>
+                                            <input class="replacement-settings-input"
+                                                   type="text"
+                                                   placeholder="Nome do item"
+                                                   @bind="_newItemName"
+                                                   @bind:event="oninput" />
+                                        </label>
+
+                                        <label class="replacement-settings-field">
+                                            <span>Estoque mínimo</span>
+                                            <input class="replacement-settings-input"
+                                                   type="number"
+                                                   min="0"
+                                                   step="0.01"
+                                                   @bind="_newItemMinimumQuantity" />
+                                        </label>
+
+                                        <label class="replacement-settings-field">
+                                            <span>Importância</span>
+                                            <select class="replacement-settings-input"
+                                                    @bind="_newItemPriority">
+                                                @foreach (var priority in _priorities)
+                                                {
+                                                    <option value="@priority">@GetPriorityLabel(priority)</option>
+                                                }
+                                            </select>
+                                        </label>
+
+                                        <button type="button"
+                                                class="replacement-settings-save"
+                                                disabled="@(!CanAddItem)"
+                                                @onclick="AddItemAsync">
+                                            Incluir item
+                                        </button>
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(_message))
+                                    {
+                                        <p class="replacement-settings-message">@_message</p>
+                                    }
+                                </div>
                             }
                         </div>
                         break;
@@ -256,6 +304,7 @@ else
     private ReplacementSettingsItem? _selectedItem;
     private List<ReplacementSettingsItem> _searchResults = new();
     private SettingsSection? _activeSection;
+    private bool _settingsPanelExpanded = true;
     private string _newItemCode = "";
     private string _newItemName = "";
     private ItemPriority _newItemPriority = ItemPriority.Low;
@@ -303,8 +352,15 @@ else
 
     private void SelectSection(SettingsSection section)
     {
-        _activeSection = _activeSection == section ? null : section;
+        SettingsSection? nextSection = _activeSection == section ? null : section;
+        _activeSection = nextSection;
+        _settingsPanelExpanded = nextSection is not null;
         _message = null;
+    }
+
+    private void ToggleSettingsPanel()
+    {
+        _settingsPanelExpanded = !_settingsPanelExpanded;
     }
 
     private async Task SaveSettingsAsync()
