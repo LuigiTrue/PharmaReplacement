@@ -26,6 +26,7 @@ public class ReplenishmentDashboardItem
     public decimal CoveredQuantity { get; set; }
     public decimal MissingQuantity { get; set; }
     public decimal CompletionPercentage { get; set; }
+    public ItemPriority ItemPriority { get; set; }
     public int SupplyPriorityRank { get; set; }
     public string SupplyPriorityGroup { get; set; } = "";
     public bool IsBelowMinimum => MissingQuantity > 0;

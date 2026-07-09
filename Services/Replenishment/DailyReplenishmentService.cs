@@ -20,8 +20,7 @@ public class DailyReplenishmentService(IDbContextFactory<AppDbContext> dbContext
             .AsNoTracking()
             .Where(item =>
                 item.IsActive &&
-                item.ItemType != ItemType.Psychotropic &&
-                item.ItemType != ItemType.Sedative)
+                item.ItemType != ItemType.Controlled)
             .Include(item => item.StockBalances)
                 .ThenInclude(balance => balance.Location)
             .ToListAsync();

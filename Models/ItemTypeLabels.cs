@@ -9,8 +9,7 @@ public static class ItemTypeLabels
         ItemType.CommonMedication => "Medicamento comum",
         ItemType.Antibiotic => "Antibiótico",
         ItemType.HighAlertMedication => "MAV",
-        ItemType.Psychotropic => "Psicotrópico",
-        ItemType.Sedative => "Sedativo",
+        ItemType.Controlled => "Controlados",
         ItemType.Material => "Material",
         _ => itemType.ToString()
     };

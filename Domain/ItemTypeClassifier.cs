@@ -24,18 +24,13 @@ public static class ItemTypeClassifier
         "NORADRENALINA", "NOREPINEFRINA", "POTASSIO", "SULFATO DE MAGNESIO"
     };
 
-    private static readonly string[] PsychotropicTerms =
+    private static readonly string[] ControlledTerms =
     {
         "AMITRIPTILINA", "BIPERIDENO", "CARBAMAZEPINA", "CLONAZEPAM", "CLORPROMAZINA",
         "DIAZEPAM", "FENITOINA", "FENOBARBITAL", "FLUOXETINA", "HALOPERIDOL",
         "LEVOMEPROMAZINA", "LITIO", "OLANZAPINA", "QUETIAPINA", "RISPERIDONA",
-        "SERTRALINA", "VALPROATO"
-    };
-
-    private static readonly string[] SedativeTerms =
-    {
-        "CETAMINA", "DEXMEDETOMIDINA", "ESCETAMINA", "ETOMIDATO", "KETAMINA",
-        "MIDAZOLAM", "PROPOFOL", "SEVOFLURANO"
+        "SERTRALINA", "VALPROATO", "CETAMINA", "DEXMEDETOMIDINA", "ESCETAMINA",
+        "ETOMIDATO", "KETAMINA", "MIDAZOLAM", "PROPOFOL", "SEVOFLURANO"
     };
 
     private static readonly string[] AntibioticTerms =
@@ -55,11 +50,8 @@ public static class ItemTypeClassifier
         if (ContainsAny(normalizedName, HighAlertMedicationTerms))
             return ItemType.HighAlertMedication;
 
-        if (ContainsAny(normalizedName, PsychotropicTerms))
-            return ItemType.Psychotropic;
-
-        if (ContainsAny(normalizedName, SedativeTerms))
-            return ItemType.Sedative;
+        if (ContainsAny(normalizedName, ControlledTerms))
+            return ItemType.Controlled;
 
         if (ContainsAny(normalizedName, AntibioticTerms))
             return ItemType.Antibiotic;

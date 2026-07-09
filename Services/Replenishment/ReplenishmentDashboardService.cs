@@ -48,6 +48,7 @@ public class ReplenishmentDashboardService : IReplenishmentDashboardService
                 ? 100
                 : coveredQuantity / minimum.MinimumQuantity * 100;
             var itemName = product?.Name ?? minimum.Name;
+            var effectiveItemPriority = ReplenishmentPriorityPolicy.GetEffectiveItemPriority(minimum, itemName);
 
             items.Add(new ReplenishmentDashboardItem
             {
@@ -58,8 +59,9 @@ public class ReplenishmentDashboardService : IReplenishmentDashboardService
                 CoveredQuantity = coveredQuantity,
                 MissingQuantity = missingQuantity,
                 CompletionPercentage = Math.Round(completionPercentage, 1),
-                SupplyPriorityRank = ReplenishmentPriorityPolicy.GetSupplyRank(itemName, minimum.itemPriority),
-                SupplyPriorityGroup = ReplenishmentPriorityPolicy.GetSupplyGroupLabel(itemName, minimum.itemPriority)
+                ItemPriority = effectiveItemPriority,
+                SupplyPriorityRank = ReplenishmentPriorityPolicy.GetSupplyRank(itemName, effectiveItemPriority),
+                SupplyPriorityGroup = ReplenishmentPriorityPolicy.GetSupplyGroupLabel(itemName, effectiveItemPriority)
             });
         }
 
@@ -68,9 +70,7 @@ public class ReplenishmentDashboardService : IReplenishmentDashboardService
         var missingTotal = items.Sum(i => i.MissingQuantity);
         var completedItems = items.Count(i => !i.IsBelowMinimum);
         var belowMinimumItems = items.Count(i => i.IsBelowMinimum);
-        var completionPercentageTotal = items.Count == 0
-            ? 0
-            : (decimal)completedItems / items.Count * 100;
+        var completionPercentageTotal = CalculateWeightedCompletionPercentage(items);
 
         var orderedItems = items
             .OrderByDescending(i => i.IsBelowMinimum)
@@ -102,6 +102,30 @@ public class ReplenishmentDashboardService : IReplenishmentDashboardService
         {
             new() { Label = "Itens no mínimo ou acima", Value = completedItems },
             new() { Label = "Itens abaixo do mínimo", Value = belowMinimumItems }
+        };
+    }
+
+    private static decimal CalculateWeightedCompletionPercentage(List<ReplenishmentDashboardItem> items)
+    {
+        if (items.Count == 0)
+            return 0;
+
+        var totalWeight = items.Sum(GetPriorityWeight);
+        if (totalWeight == 0)
+            return 0;
+
+        var weightedCompletion = items.Sum(item => item.CompletionPercentage * GetPriorityWeight(item));
+        return weightedCompletion / totalWeight;
+    }
+
+    private static decimal GetPriorityWeight(ReplenishmentDashboardItem item)
+    {
+        return item.ItemPriority switch
+        {
+            ItemPriority.UltraHigh => 4m,
+            ItemPriority.High => 3m,
+            ItemPriority.Moderate => 2m,
+            _ => 1m
         };
     }
 

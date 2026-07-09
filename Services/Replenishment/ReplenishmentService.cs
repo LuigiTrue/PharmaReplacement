@@ -194,7 +194,7 @@ public class ReplenishmentService : IReplenishmentService
 
     private static bool ShouldHideFromReplenishment(ItemType itemType)
     {
-        return itemType is ItemType.Psychotropic or ItemType.Sedative;
+        return itemType is ItemType.Controlled;
     }
 
     public async Task<ReplenishmentReport> GenerateReportAsync()

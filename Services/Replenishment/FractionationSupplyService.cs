@@ -23,8 +23,7 @@ public class FractionationSupplyService(IDbContextFactory<AppDbContext> dbContex
             .AsNoTracking()
             .Where(item =>
                 item.IsActive &&
-                item.ItemType != ItemType.Psychotropic &&
-                item.ItemType != ItemType.Sedative)
+                item.ItemType != ItemType.Controlled)
             .Include(item => item.ReplenishmentRule)
             .Include(item => item.StockBalances)
                 .ThenInclude(balance => balance.Batch)
