@@ -35,7 +35,7 @@ public static class DatabaseConnectionString
 
     private static string Normalize(string rawConnectionString)
     {
-        var connectionString = rawConnectionString.Trim();
+        var connectionString = ExtractConnectionStringValue(rawConnectionString);
 
         if (!Uri.TryCreate(connectionString, UriKind.Absolute, out var uri) ||
             (uri.Scheme != "postgres" && uri.Scheme != "postgresql"))
@@ -57,9 +57,41 @@ public static class DatabaseConnectionString
         return builder.ConnectionString;
     }
 
+    private static string ExtractConnectionStringValue(string rawConnectionString)
+    {
+        var connectionString = rawConnectionString.Trim().Trim('"', '\'');
+
+        if (connectionString.StartsWith("export ", StringComparison.OrdinalIgnoreCase))
+            connectionString = connectionString["export ".Length..].TrimStart();
+
+        var assignmentIndex = connectionString.IndexOf('=');
+        if (assignmentIndex <= 0)
+            return connectionString;
+
+        var value = connectionString[(assignmentIndex + 1)..].Trim().Trim('"', '\'');
+        if (value.StartsWith("postgres://", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("postgresql://", StringComparison.OrdinalIgnoreCase) ||
+            value.Contains("Host=", StringComparison.OrdinalIgnoreCase))
+        {
+            return value;
+        }
+
+        return connectionString;
+    }
+
     private static void ValidateHost(string connectionString, string sourceKey)
     {
-        var builder = new NpgsqlConnectionStringBuilder(connectionString);
+        NpgsqlConnectionStringBuilder builder;
+        try
+        {
+            builder = new NpgsqlConnectionStringBuilder(connectionString);
+        }
+        catch (ArgumentException exception)
+        {
+            throw new InvalidOperationException(
+                $"A connection string em {sourceKey} está inválida. No Render, configure o nome da variável como AIVEN_DATABASE_URL e o valor como postgres://usuario:senha@host:porta/banco?sslmode=require, sem incluir 'AIVEN_DATABASE_URL=' no valor.",
+                exception);
+        }
 
         if (string.IsNullOrWhiteSpace(builder.Host))
         {
