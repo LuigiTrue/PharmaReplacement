@@ -31,7 +31,7 @@ builder.Services.AddApexCharts();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(DatabaseConnectionString.GetRequired(builder.Configuration));
 });
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
