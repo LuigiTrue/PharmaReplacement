@@ -14,6 +14,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<DailyConsumption> DailyConsumptions => Set<DailyConsumption>();
     public DbSet<ItemConsumptionAverage> ItemConsumptionAverages => Set<ItemConsumptionAverage>();
     public DbSet<ReplenishmentRule> ReplenishmentRules => Set<ReplenishmentRule>();
+    public DbSet<ReportImport> ReportImports => Set<ReportImport>();
+    public DbSet<ReportItem> ReportItems => Set<ReportItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -72,6 +74,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithOne(rule => rule.Item)
                 .HasForeignKey<ReplenishmentRule>(rule => rule.ItemId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(item => item.ReportItems)
+                .WithOne(reportItem => reportItem.Item)
+                .HasForeignKey(reportItem => reportItem.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Batch>(entity =>
@@ -110,6 +117,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             entity.HasMany(location => location.StockBalances)
                 .WithOne(balance => balance.Location)
                 .HasForeignKey(balance => balance.LocationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasMany(location => location.ReportImports)
+                .WithOne(reportImport => reportImport.Location)
+                .HasForeignKey(reportImport => reportImport.LocationId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -192,6 +204,69 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
             entity.HasIndex(rule => rule.ItemId)
                 .IsUnique();
+        });
+
+        modelBuilder.Entity<ReportImport>(entity =>
+        {
+            entity.ToTable("report_imports", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_report_imports_reference_month",
+                    "\"ReferenceMonth\" BETWEEN 1 AND 12");
+                table.HasCheckConstraint(
+                    "CK_report_imports_reference_year",
+                    "\"ReferenceYear\" >= 2000");
+            });
+            entity.HasKey(reportImport => reportImport.Id);
+
+            entity.Property(reportImport => reportImport.Status)
+                .HasConversion<int>();
+            entity.Property(reportImport => reportImport.SourceFileName)
+                .HasMaxLength(255);
+            entity.Property(reportImport => reportImport.FileHash)
+                .HasMaxLength(64);
+            entity.Property(reportImport => reportImport.ErrorMessage)
+                .HasColumnType("text");
+
+            entity.HasIndex(reportImport => new
+            {
+                reportImport.LocationId,
+                reportImport.ReferenceYear,
+                reportImport.ReferenceMonth
+            }).IsUnique();
+
+            entity.HasMany(reportImport => reportImport.Items)
+                .WithOne(reportItem => reportItem.ReportImport)
+                .HasForeignKey(reportItem => reportItem.ReportImportId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<ReportItem>(entity =>
+        {
+            entity.ToTable("report_items", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_report_items_total_output",
+                    "\"TotalOutput\" >= 0");
+                table.HasCheckConstraint(
+                    "CK_report_items_movement_days",
+                    "\"MovementDays\" IS NULL OR \"MovementDays\" BETWEEN 0 AND 31");
+            });
+            entity.HasKey(reportItem => reportItem.Id);
+
+            entity.Property(reportItem => reportItem.TotalOutput)
+                .HasPrecision(18, 3)
+                .HasDefaultValue(0m);
+            entity.Property(reportItem => reportItem.AverageDailyOutput)
+                .HasPrecision(18, 6);
+            entity.Property(reportItem => reportItem.TotalCost)
+                .HasPrecision(18, 4);
+            entity.Property(reportItem => reportItem.AverageUnitCost)
+                .HasPrecision(18, 6);
+
+            entity.HasIndex(reportItem => new { reportItem.ReportImportId, reportItem.ItemId })
+                .IsUnique();
+            entity.HasIndex(reportItem => reportItem.ItemId);
         });
     }
 }

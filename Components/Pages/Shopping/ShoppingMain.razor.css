@@ -4,6 +4,10 @@
     gap: 0.35rem;
 }
 
+.shopping-shell {
+    min-width: 0;
+}
+
 .shopping-title {
     margin: 0 0 0.35rem;
     color: var(--app-text, #221A3D);
@@ -15,4 +19,86 @@
     margin: 0;
     color: var(--app-text-muted, #5F5A78);
     font-size: 0.9rem;
+}
+
+.shopping-tabs-host .app-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    max-width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.35rem;
+    overflow-x: auto;
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 8px;
+    background: var(--app-surface, #FFFFFF);
+    box-shadow: 0 0 10px var(--app-nav-shadow, rgba(42, 27, 158, 0.16));
+}
+
+.shopping-tabs-host .app-tab {
+    min-width: 9rem;
+    border: 0;
+    border-radius: 6px;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    background: transparent;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+}
+
+.shopping-tabs-host .app-tab:hover,
+#shopping-tab-grid:checked ~ .app-tabs .app-tab[for="shopping-tab-grid"],
+#shopping-tab-dashboard:checked ~ .app-tabs .app-tab[for="shopping-tab-dashboard"],
+#shopping-tab-configuration:checked ~ .app-tabs .app-tab[for="shopping-tab-configuration"] {
+    background-color: #F5F0FA;
+    color: #3320C9;
+    box-shadow: inset 0 0 0 1px var(--app-border, #E5DFF0);
+}
+
+.shopping-tab-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.shopping-tab-panel {
+    display: none;
+}
+
+#shopping-tab-grid:checked ~ .shopping-grid-panel,
+#shopping-tab-dashboard:checked ~ .shopping-dashboard-panel,
+#shopping-tab-configuration:checked ~ .shopping-configuration-panel {
+    display: block;
+}
+
+.theme-dark .shopping-tabs-host .app-tab:hover,
+.dark .shopping-tabs-host .app-tab:hover,
+.theme-dark #shopping-tab-grid:checked ~ .app-tabs .app-tab[for="shopping-tab-grid"],
+.theme-dark #shopping-tab-dashboard:checked ~ .app-tabs .app-tab[for="shopping-tab-dashboard"],
+.theme-dark #shopping-tab-configuration:checked ~ .app-tabs .app-tab[for="shopping-tab-configuration"],
+.dark #shopping-tab-grid:checked ~ .app-tabs .app-tab[for="shopping-tab-grid"],
+.dark #shopping-tab-dashboard:checked ~ .app-tabs .app-tab[for="shopping-tab-dashboard"],
+.dark #shopping-tab-configuration:checked ~ .app-tabs .app-tab[for="shopping-tab-configuration"] {
+    background-color: #6E5FA5;
+    color: #F4F1F6;
+    box-shadow: none;
+}
+
+@media (max-width: 640px) {
+    .shopping-tabs-host .app-tabs {
+        display: flex;
+        width: 100%;
+    }
+
+    .shopping-tabs-host .app-tab {
+        min-width: 7.5rem;
+        flex: 1 0 auto;
+    }
 }

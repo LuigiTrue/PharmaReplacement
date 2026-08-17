@@ -1,0 +1,125 @@
+.shopping-configuration-layout {
+    display: grid;
+    gap: 1rem;
+}
+
+.shopping-configuration-heading h4,
+.shopping-configuration-panel-heading h5 {
+    margin: 0;
+    color: var(--app-text, #221A3D);
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.shopping-configuration-heading p,
+.shopping-configuration-panel-heading p {
+    margin: 0.3rem 0 0;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.9rem;
+}
+
+.shopping-configuration-form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.shopping-configuration-field {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--app-text-muted, #5F5A78);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.shopping-configuration-field input {
+    width: 100%;
+    min-height: 2.6rem;
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 8px;
+    padding: 0.55rem 0.75rem;
+    background: var(--app-surface, #FFFFFF);
+    color: var(--app-text, #221A3D);
+    font: inherit;
+}
+
+.shopping-configuration-panel {
+    border: 1px solid var(--app-border, #E5DFF0);
+    border-radius: 8px;
+    padding: 1rem;
+    background: var(--app-surface, #FFFFFF);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.shopping-configuration-panel-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.shopping-configuration-count {
+    color: #3320C9;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.shopping-configuration-locations {
+    display: grid;
+    gap: 0.35rem;
+    margin-top: 1rem;
+}
+
+.shopping-configuration-locations div {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.6rem;
+    border-bottom: 1px solid var(--app-border, #E5DFF0);
+    padding: 0.85rem 0;
+}
+
+.shopping-configuration-locations div:last-child {
+    border-bottom: 0;
+}
+
+.shopping-configuration-locations i {
+    color: #1BAEDB;
+}
+
+.shopping-configuration-locations span {
+    color: var(--app-text, #221A3D);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.shopping-configuration-locations small {
+    color: #16825D;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.theme-dark .shopping-configuration-field input,
+.theme-dark .shopping-configuration-panel,
+.dark .shopping-configuration-field input,
+.dark .shopping-configuration-panel {
+    border-color: rgba(237, 233, 254, 0.18);
+    background: var(--app-surface, #1B1724);
+}
+
+.theme-dark .shopping-configuration-locations div,
+.dark .shopping-configuration-locations div {
+    border-color: rgba(237, 233, 254, 0.12);
+}
+
+.theme-dark .shopping-configuration-count,
+.dark .shopping-configuration-count {
+    color: #AFA2E0;
+}
+
+@media (max-width: 760px) {
+    .shopping-configuration-form {
+        grid-template-columns: 1fr;
+    }
+}
