@@ -49,8 +49,8 @@
                         <th scope="col" class="px-2 py-3 text-left font-semibold">Descrição</th>
                         <th scope="col" class="px-3 py-3 text-left font-semibold">Unidade</th>
                         <th scope="col" class="px-3 py-3 text-left font-semibold">Média</th>
-                        <th scope="col" class="px-3 py-3 text-left font-semibold">Saldo</th>
-                        <th scope="col" class="px-3 py-3 text-left font-semibold">Projeç.</th>
+                        <th scope="col" class="px-3 py-3 text-left font-semibold">Saldo Farmácia</th>
+                        <th scope="col" class="px-3 py-3 text-left font-semibold">Saldo Fracionamento</th>
                         <th scope="col" class="px-4 py-3 text-left font-semibold">Solicitar</th>
                     </tr>
                 </thead>
@@ -63,7 +63,7 @@
                             <td class="whitespace-nowrap px-3 py-3 align-top">@item.Unit</td>
                             <td class="whitespace-nowrap px-3 py-3 align-top">@item.AverageOutput.ToString("0")</td>
                             <td class="whitespace-nowrap px-3 py-3 align-top">@item.CurrentStock.ToString("0.##")</td>
-                            <td class="whitespace-nowrap px-3 py-3 align-top">@FormatProjection(item)</td>
+                            <td class="whitespace-nowrap px-3 py-3 align-top">@item.ProjectionDays.ToString("0.##")</td>
                             <td class="whitespace-nowrap px-4 py-3 align-top font-semibold text-slate-900 dark:text-slate-100">@item.SuggestedQuantity.ToString("0")</td>
                         </tr>
                     }
@@ -88,13 +88,6 @@
         ? "bg-amber-500 dark:bg-amber-300"
         : "bg-slate-500 dark:bg-slate-300";
 
-    private static string FormatProjection(DailyReplenishmentItem item)
-    {
-        return item.AverageOutput <= 0
-            ? "0"
-            : item.ProjectionDays.ToString("0.#");
-    }
-
     private void ToggleExpanded()
     {
         _expanded = !_expanded;
@@ -114,7 +107,7 @@
         html.Append("<!doctype html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<title>Reposição diária</title>\n<style>\nbody{font-family:Arial,sans-serif;margin:24px;color:#1f2937}\nh1{font-size:20px;margin:0 0 4px}\np{margin:0 0 16px;color:#4b5563}\ntable{width:100%;border-collapse:collapse;font-size:12px}\nth,td{border:1px solid #d1d5db;padding:8px;text-align:left}\nth{background:#f3f4f6;font-weight:700}\n</style>\n</head>\n<body>\n");
         html.Append("<h1>").Append(Escape(Title)).Append("</h1>");
         html.Append("<p>").Append(Items.Count).Append(" itens</p>");
-        html.Append("<table>\n<thead>\n<tr>\n<th>Código</th>\n<th>Descrição</th>\n<th>Unidade</th>\n<th>Média</th>\n<th>Saldo</th>\n<th>Projeção</th>\n<th>Solicitar</th>\n</tr>\n</thead>\n<tbody>\n");
+        html.Append("<table>\n<thead>\n<tr>\n<th>Código</th>\n<th>Descrição</th>\n<th>Unidade</th>\n<th>Média</th>\n<th>Saldo Farmácia</th>\n<th>Saldo Fracionamento</th>\n<th>Solicitar</th>\n</tr>\n</thead>\n<tbody>\n");
 
         foreach (var item in Items)
         {
@@ -124,7 +117,7 @@
             html.Append("<td>").Append(Escape(item.Unit)).Append("</td>");
             html.Append("<td>").Append(Escape(item.AverageOutput.ToString("0"))).Append("</td>");
             html.Append("<td>").Append(Escape(item.CurrentStock.ToString("0.##"))).Append("</td>");
-            html.Append("<td>").Append(Escape(FormatProjection(item))).Append("</td>");
+            html.Append("<td>").Append(Escape(item.ProjectionDays.ToString("0.##"))).Append("</td>");
             html.Append("<td>").Append(Escape(item.SuggestedQuantity.ToString("0"))).Append("</td>");
             html.Append("</tr>");
         }

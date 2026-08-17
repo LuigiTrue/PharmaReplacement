@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using RepyPharma.Data;
@@ -16,6 +17,7 @@ public partial class ConsumptionAverageReportService(
     private const string MonthlyPeriodKind = "monthly";
     private const string WeeklyPeriodKind = "weekly";
     private const string CurrentPeriodKind = "current";
+    private const double ColumnAlignmentTolerance = 8.0;
 
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory = dbContextFactory;
     private readonly ILogger<ConsumptionAverageReportService> _logger = logger;
@@ -170,26 +172,26 @@ public partial class ConsumptionAverageReportService(
         foreach (var page in document.GetPages())
         {
             var lines = ExtractLines(page);
-            var readingAverageSection = false;
+            AverageColumnPositions? averageColumns = null;
 
             foreach (var line in lines)
             {
                 if (reportStartDate is null || reportEndDate is null)
-                    TryReadReportPeriod(line, out reportStartDate, out reportEndDate);
+                    TryReadReportPeriod(line.Text, out reportStartDate, out reportEndDate);
 
                 if (reportGeneratedAt is null)
-                    reportGeneratedAt = TryReadReportGeneratedAt(line);
+                    reportGeneratedAt = TryReadReportGeneratedAt(line.Text);
 
-                if (IsAverageSectionHeader(line))
+                if (TryIdentifyAverageColumns(line.Words, out var identifiedColumns))
                 {
-                    readingAverageSection = true;
+                    averageColumns = identifiedColumns;
                     continue;
                 }
 
-                if (!readingAverageSection)
+                if (averageColumns is null)
                     continue;
 
-                var parsedItem = TryParseAverageLine(line);
+                var parsedItem = TryParseAverageLine(line.Words, averageColumns);
                 if (parsedItem is not null)
                     items.Add(parsedItem);
             }
@@ -218,60 +220,152 @@ public partial class ConsumptionAverageReportService(
         };
     }
 
-    private static List<string> ExtractLines(Page page)
+    private static List<PdfLine> ExtractLines(Page page)
     {
         return page.GetWords()
             .GroupBy(word => Math.Round(word.BoundingBox.Bottom, 0))
             .OrderByDescending(group => group.Key)
-            .Select(group => string.Join(
-                " ",
-                group
+            .Select(group =>
+            {
+                var words = group
                     .OrderBy(word => word.BoundingBox.Left)
-                    .Select(word => word.Text)))
-            .Where(line => !string.IsNullOrWhiteSpace(line))
+                    .ToList();
+
+                return new PdfLine
+                {
+                    Words = words,
+                    Text = string.Join(" ", words.Select(word => word.Text))
+                };
+            })
+            .Where(line => !string.IsNullOrWhiteSpace(line.Text))
             .ToList();
     }
 
-    private static bool IsAverageSectionHeader(string line)
+    private static bool TryIdentifyAverageColumns(
+        IReadOnlyList<Word> words,
+        out AverageColumnPositions positions)
     {
-        return line.Contains("Produto", StringComparison.OrdinalIgnoreCase) &&
-               line.Contains("Total", StringComparison.OrdinalIgnoreCase) &&
-               line.Contains("Média", StringComparison.OrdinalIgnoreCase);
+        positions = null!;
+
+        var productHeader = FindHeaderWord(words, "PRODUTO");
+        var totalHeader = FindHeaderWord(words, "TOTAL");
+        var averageHeader = FindHeaderWord(words, "MEDIA");
+        var balanceHeader = FindHeaderWord(words, "SALDO");
+        var projectionHeader = words.FirstOrDefault(word =>
+            NormalizeHeader(word.Text).StartsWith("PROJEC", StringComparison.Ordinal));
+
+        if (productHeader is null ||
+            totalHeader is null ||
+            averageHeader is null ||
+            balanceHeader is null ||
+            projectionHeader is null)
+        {
+            return false;
+        }
+
+        var totalRight = totalHeader.BoundingBox.Right;
+        var firstDailyColumnRight = words
+            .Where(word =>
+                word.BoundingBox.Right < totalRight &&
+                CodeRegex().IsMatch(word.Text))
+            .Select(word => word.BoundingBox.Right)
+            .DefaultIfEmpty(totalRight)
+            .Min();
+
+        positions = new AverageColumnPositions
+        {
+            FirstDailyColumnRight = firstDailyColumnRight,
+            TotalOutputRight = totalRight,
+            AverageOutputRight = averageHeader.BoundingBox.Right,
+            StockBalanceRight = balanceHeader.BoundingBox.Right,
+            ProjectedCoverageRight = projectionHeader.BoundingBox.Right
+        };
+
+        return true;
     }
 
-    private static ConsumptionAverageReportItem? TryParseAverageLine(string line)
+    private static Word? FindHeaderWord(IReadOnlyList<Word> words, string header)
     {
-        var parts = WhiteSpaceRegex().Split(line.Trim());
-        if (parts.Length < 8 || !CodeRegex().IsMatch(parts[0]))
-            return null;
+        return words.FirstOrDefault(word =>
+            string.Equals(
+                NormalizeHeader(word.Text),
+                header,
+                StringComparison.Ordinal));
+    }
 
-        var values = parts[^6..];
-        if (!values.All(IsDecimal))
-            return null;
+    private static string NormalizeHeader(string value)
+    {
+        return string.Concat(
+            value
+                .Normalize(NormalizationForm.FormD)
+                .Where(character =>
+                    CharUnicodeInfo.GetUnicodeCategory(character) !=
+                    UnicodeCategory.NonSpacingMark &&
+                    char.IsLetter(character)))
+            .ToUpperInvariant();
+    }
 
-        var code = parts[0];
-        var itemName = ExtractItemName(line, code, values[0]);
+    private static ConsumptionAverageReportItem? TryParseAverageLine(
+        IReadOnlyList<Word> words,
+        AverageColumnPositions positions)
+    {
+        var codeWord = words
+            .Where(word =>
+                word.BoundingBox.Right < positions.FirstDailyColumnRight &&
+                CodeRegex().IsMatch(word.Text))
+            .OrderBy(word => word.BoundingBox.Left)
+            .FirstOrDefault();
+
+        if (codeWord is null ||
+            !TryExtractDecimalAtColumn(words, positions.TotalOutputRight, out var totalOutput) ||
+            !TryExtractDecimalAtColumn(words, positions.AverageOutputRight, out var averageOutput) ||
+            !TryExtractDecimalAtColumn(words, positions.StockBalanceRight, out var stockBalance) ||
+            !TryExtractDecimalAtColumn(words, positions.ProjectedCoverageRight, out var projectedCoverage))
+        {
+            return null;
+        }
+
+        var itemName = string.Join(
+            " ",
+            words
+                .Where(word =>
+                    word.BoundingBox.Left > codeWord.BoundingBox.Left &&
+                    word.BoundingBox.Right <
+                    positions.FirstDailyColumnRight - ColumnAlignmentTolerance)
+                .OrderBy(word => word.BoundingBox.Left)
+                .Select(word => word.Text));
 
         return new ConsumptionAverageReportItem
         {
-            Code = code,
+            Code = codeWord.Text,
             Name = itemName,
-            TotalOutput = ParseDecimal(values[2]),
-            AverageOutput = ParseDecimal(values[3]),
-            StockBalance = ParseDecimal(values[4]),
-            ProjectedCoverageDays = ParseDecimal(values[5])
+            TotalOutput = totalOutput,
+            AverageOutput = averageOutput,
+            StockBalance = stockBalance,
+            ProjectedCoverageDays = projectedCoverage
         };
     }
 
-    private static string ExtractItemName(string line, string code, string firstValue)
+    private static bool TryExtractDecimalAtColumn(
+        IReadOnlyList<Word> words,
+        double columnRight,
+        out decimal value)
     {
-        var codeIndex = line.IndexOf(code, StringComparison.Ordinal);
-        var valueIndex = line.LastIndexOf(firstValue, StringComparison.Ordinal);
+        value = 0;
 
-        if (codeIndex < 0 || valueIndex <= codeIndex)
-            return string.Empty;
+        var valueWord = words
+            .Where(word =>
+                IsDecimal(word.Text) &&
+                Math.Abs(word.BoundingBox.Right - columnRight) <=
+                ColumnAlignmentTolerance)
+            .OrderBy(word => Math.Abs(word.BoundingBox.Right - columnRight))
+            .FirstOrDefault();
 
-        return line[(codeIndex + code.Length)..valueIndex].Trim();
+        if (valueWord is null)
+            return false;
+
+        value = ParseDecimal(valueWord.Text);
+        return true;
     }
 
     private static void TryReadReportPeriod(string line, out DateTime? startDate, out DateTime? endDate)
@@ -347,9 +441,6 @@ public partial class ConsumptionAverageReportService(
     [GeneratedRegex(@"^-?\d+(?:,\d+)?$")]
     private static partial Regex DecimalRegex();
 
-    [GeneratedRegex(@"\s+")]
-    private static partial Regex WhiteSpaceRegex();
-
     [GeneratedRegex(@"Per[ií]odo\s+de\s+(?<start>\d{2}/\d{2}/\d{4})\s+at[eé]\s+(?<end>\d{2}/\d{2}/\d{4})", RegexOptions.IgnoreCase)]
     private static partial Regex ReportPeriodRegex();
 
@@ -374,5 +465,20 @@ public partial class ConsumptionAverageReportService(
         public decimal AverageOutput { get; init; }
         public decimal StockBalance { get; init; }
         public decimal ProjectedCoverageDays { get; init; }
+    }
+
+    private sealed class PdfLine
+    {
+        public IReadOnlyList<Word> Words { get; init; } = Array.Empty<Word>();
+        public string Text { get; init; } = string.Empty;
+    }
+
+    private sealed class AverageColumnPositions
+    {
+        public double FirstDailyColumnRight { get; init; }
+        public double TotalOutputRight { get; init; }
+        public double AverageOutputRight { get; init; }
+        public double StockBalanceRight { get; init; }
+        public double ProjectedCoverageRight { get; init; }
     }
 }

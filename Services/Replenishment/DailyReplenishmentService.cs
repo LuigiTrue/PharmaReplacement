@@ -9,6 +9,7 @@ namespace RepyPharma.Services.Replenishment;
 public class DailyReplenishmentService(IDbContextFactory<AppDbContext> dbContextFactory) : IDailyReplenishmentService
 {
     private const string PharmacyCentralLocationId = "997";
+    private const string FractionationLocationId = "1059";
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory = dbContextFactory;
 
     public async Task<DailyReplenishmentData> GetDailyReplenishmentAsync(int coverageDays)
@@ -54,31 +55,34 @@ public class DailyReplenishmentService(IDbContextFactory<AppDbContext> dbContext
                 ? 0
                 : Math.Floor(Math.Max(0, average.MonthlyAverageOutput.Value));
 
-            var currentStock = GetReportStockBalance(average, item);
-            var projectionDays = GetReportProjectionDays(average, currentStock, averageOutput);
+            var pharmacyStock = Math.Max(0, GetStockAtLocation(item, PharmacyCentralLocationId));
+            var fractionationStock = Math.Max(0, GetStockAtLocation(item, FractionationLocationId));
+            var suggestedQuantity = CalculateSuggestedQuantity(
+                averageOutput,
+                normalizedCoverageDays,
+                fractionationStock);
 
-            if (currentStock <= 0)
+            if (pharmacyStock <= 0)
             {
                 data.ZeroStockItems.Add(BuildItem(
                     item,
                     averageOutput,
-                    currentStock,
-                    projectionDays,
-                    Math.Max(0, averageOutput * normalizedCoverageDays)));
+                    pharmacyStock,
+                    fractionationStock,
+                    suggestedQuantity));
             }
 
             if (averageOutput <= 0)
                 continue;
 
-            var suggestedQuantity = CalculateSuggestedQuantity(averageOutput, normalizedCoverageDays, currentStock);
             if (suggestedQuantity <= 0)
                 continue;
 
             var replenishmentItem = BuildItem(
                 item,
                 averageOutput,
-                currentStock,
-                projectionDays,
+                pharmacyStock,
+                fractionationStock,
                 suggestedQuantity);
 
             if (replenishmentItem.IsMaterial)
@@ -100,8 +104,8 @@ public class DailyReplenishmentService(IDbContextFactory<AppDbContext> dbContext
     private static DailyReplenishmentItem BuildItem(
         Item item,
         decimal averageOutput,
-        decimal currentStock,
-        decimal projectionDays,
+        decimal pharmacyStock,
+        decimal fractionationStock,
         decimal suggestedQuantity)
     {
         return new DailyReplenishmentItem
@@ -111,8 +115,8 @@ public class DailyReplenishmentService(IDbContextFactory<AppDbContext> dbContext
             Unit = item.Unit,
             ItemType = item.ItemType,
             AverageOutput = averageOutput,
-            CurrentStock = currentStock,
-            ProjectionDays = projectionDays,
+            CurrentStock = pharmacyStock,
+            ProjectionDays = fractionationStock,
             SuggestedQuantity = Math.Floor(suggestedQuantity)
         };
     }
@@ -126,33 +130,12 @@ public class DailyReplenishmentService(IDbContextFactory<AppDbContext> dbContext
             .ToList();
     }
 
-    private static decimal GetReportStockBalance(ItemConsumptionAverage? average, Item item)
-    {
-        if (average?.StockBalance.HasValue == true)
-            return Math.Max(0, average.StockBalance.Value);
-
-        return GetStockAtLocation(item, PharmacyCentralLocationId);
-    }
-
-    private static decimal GetReportProjectionDays(
-        ItemConsumptionAverage? average,
-        decimal currentStock,
-        decimal averageOutput)
-    {
-        if (average?.ProjectedCoverageDays.HasValue == true)
-            return Math.Max(0, average.ProjectedCoverageDays.Value);
-
-        return averageOutput <= 0
-            ? 0
-            : currentStock / averageOutput;
-    }
-
     private static decimal CalculateSuggestedQuantity(
         decimal averageOutput,
         int coverageDays,
-        decimal currentStock)
+        decimal fractionationStock)
     {
-        return Math.Max(0, averageOutput * coverageDays - currentStock);
+        return Math.Max(0, averageOutput * coverageDays - fractionationStock);
     }
 
     private static decimal GetStockAtLocation(Item item, string locationId)
