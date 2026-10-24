@@ -1,0 +1,263 @@
+@page "/Estoque/ChegadaDeProdutos"
+@attribute [Authorize(Roles = "Admin,Farmacia,Almoxarifado")]
+@using System.Globalization
+
+<PageTitle>Chegada de produtos | RepyPharma</PageTitle>
+
+<div class="arrivals-shell">
+    <header class="arrivals-heading">
+        <div>
+            <p class="eyebrow">CONTROLE DE ESTOQUE</p>
+            <h1>Chegada de produtos</h1>
+            <p>Da chegada da nota fiscal à preparação dos documentos para pagamento.</p>
+        </div>
+        <button class="action primary" type="button" @onclick="NewInvoice"><i class="bi bi-plus-lg" aria-hidden="true"></i> Registrar chegada</button>
+    </header>
+
+    <div class="preview-notice" role="note"><i class="bi bi-info-circle" aria-hidden="true"></i><span><strong>Prévia interativa · dados fictícios.</strong> Os registros e alterações desta tela são temporários e serão perdidos ao sair ou atualizar a página.</span></div>
+    @if (!string.IsNullOrEmpty(_notice))
+    {
+        <p class="feedback" role="status">@_notice</p>
+    }
+
+    <section class="metrics" aria-label="Resumo dos registros da prévia">
+        <article class="metric"><span><i class="bi bi-inbox" aria-hidden="true"></i> Em acompanhamento</span><strong>@_invoices.Count</strong><small>Notas registradas nesta prévia</small></article>
+        <article class="metric"><span><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Com pendências</span><strong>@_invoices.Count(x => x.HasIssue)</strong><small>Precisam de uma ação de regularização</small></article>
+        <article class="metric"><span><i class="bi bi-file-earmark-minus" aria-hidden="true"></i> Sem cotação</span><strong>@_invoices.Count(x => x.MissingQuotation)</strong><small>Não inclui fornecimento por contrato</small></article>
+        <article class="metric"><span><i class="bi bi-folder-check" aria-hidden="true"></i> Documentação preparada</span><strong>@_invoices.Count(x => x.IsPrepared)</strong><small>Preparação não confirma pagamento</small></article>
+    </section>
+
+    @if (_draft is not null)
+    {
+        <section class="panel editor" aria-labelledby="entry-title">
+            <div class="section-heading"><div><p class="eyebrow">@(_editingId is null ? "NOVA CHEGADA" : "ATUALIZAR REGISTRO")</p><h2 id="entry-title">Identificação da nota fiscal</h2></div><button type="button" class="action" @onclick="CancelEdit">Cancelar</button></div>
+            <form @onsubmit="SaveDraft" @onsubmit:preventDefault>
+                <div class="form-grid">
+                    <label class="wide">Fornecedor <span class="required">*</span><input @ref="_supplierInput" @bind="_draft.Supplier" required maxlength="160" autocomplete="organization" placeholder="Razão social ou nome do fornecedor" /></label>
+                    <label>CNPJ <input @bind="_draft.Cnpj" maxlength="18" placeholder="00.000.000/0000-00" /></label>
+                    <label>Número da NF <span class="required">*</span><input @bind="_draft.Number" required maxlength="9" inputmode="numeric" pattern="[0-9]{1,9}" placeholder="Ex.: 12345" /></label>
+                    <label>Série <span class="required">*</span><input @bind="_draft.Series" required maxlength="3" inputmode="numeric" pattern="[0-9]{1,3}" /></label>
+                    <label>Recebimento da NF <span class="required">*</span><input type="date" @bind="_draft.Received" required /></label>
+                    <label>Valor da NF (R$)<input type="number" @bind="_draft.Amount" step="0.01" min="0" placeholder="0,00" /></label>
+                    <label>Vencimento<input type="date" @bind="_draft.Due" /></label>
+                    <label>Origem do fornecimento<select @bind="_draft.Origin"><option>Compra por cotação</option><option>Contrato</option><option>A identificar</option></select></label>
+                    <label>Gestão de contrato<input @bind="_draft.ManagementContract" maxlength="40" /></label>
+                    <label>ID do processo<input @bind="_draft.ProcessId" maxlength="50" /></label>
+                    <label>Cotação<input @bind="_draft.Quotation" maxlength="50" placeholder="Pode ser informada depois" /></label>
+                    <label>Ordem de compra<input @bind="_draft.PurchaseOrder" maxlength="50" /></label>
+                    <label>Situação da OC<select @bind="_draft.OrderStatus"><option>A conferir</option><option>Não localizada</option><option>Aguardando autorização</option><option>Autorizada</option><option>Não se aplica — contrato</option></select></label>
+                    <label>Destino<select @bind="_draft.Destination"><option>Almoxarifado</option><option>Farmácia Central</option><option>Farmácia Centro Cirúrgico</option><option>CAF</option><option>Fracionamento</option></select></label>
+                    <label>Recebimento dos produtos<select @bind="_draft.Delivery"><option>A conferir</option><option>Aguardando entrega</option><option>Recebimento parcial</option><option>Recebido</option></select></label>
+                    <label>Responsável pelo acompanhamento<input @bind="_draft.Owner" maxlength="100" placeholder="Nome do responsável" /></label>
+                    <label>Retornar em<input type="date" @bind="_draft.FollowUp" /></label>
+                    <label class="wide">Pendência identificada<input @bind="_draft.Issue" maxlength="250" placeholder="Ex.: valor da OC diverge da NF" /></label>
+                    <label class="wide">Próxima ação<input @bind="_draft.NextAction" maxlength="250" placeholder="Ex.: solicitar correção da OC e acompanhar resposta" /></label>
+                    <label class="full">Observações<textarea @bind="_draft.Notes" maxlength="2000" rows="3" placeholder="Descreva o que falta, o que já foi solicitado e informações do recebimento."></textarea></label>
+                </div>
+                <p class="form-hint">É possível registrar a chegada sem cotação. Fornecimentos por contrato são tratados separadamente. O ID tem preferência na identificação do processo.</p>
+                @if (!string.IsNullOrEmpty(_error)) { <p class="form-error" role="alert">@_error</p> }
+                <div class="form-footer"><small>* Campos obrigatórios</small><button class="action primary" type="submit">@(_editingId is null ? "Adicionar à prévia" : "Aplicar alterações na prévia")</button></div>
+            </form>
+        </section>
+    }
+
+    <section class="panel" aria-labelledby="invoices-title">
+        <div class="section-heading"><div><h2 id="invoices-title">Notas fiscais em acompanhamento</h2><p>Identifique o que chegou, o que está pendente e qual é o próximo passo.</p></div><span class="count">@FilteredInvoices.Count de @_invoices.Count notas</span></div>
+        <div class="filters">
+            <label class="search-field"><span class="sr-only">Buscar nota, fornecedor, ID, OC ou cotação</span><i class="bi bi-search" aria-hidden="true"></i><input type="search" @bind="_search" @bind:event="oninput" placeholder="Buscar NF, fornecedor, ID, OC ou cotação" /></label>
+            <label class="origin-filter"><span>Origem</span><select @bind="_origin"><option value="">Todas as origens</option><option>Compra por cotação</option><option>Contrato</option><option>A identificar</option></select></label>
+        </div>
+        <div class="filter-chips" role="group" aria-label="Filtrar situação das notas">
+            @foreach (var filter in Filters)
+            {
+                <button type="button" class="filter-chip @(_filter == filter ? "selected" : "")" aria-pressed="@(_filter == filter)" @onclick="() => _filter = filter">@filter</button>
+            }
+        </div>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Tabela de notas fiscais">
+            <table>
+                <caption class="sr-only">Notas fiscais fictícias para avaliação do acompanhamento de chegada</caption>
+                <thead><tr><th scope="col">Nota / recebimento</th><th scope="col">Fornecedor / destino</th><th scope="col">Referência</th><th scope="col">Situação</th><th scope="col">Documentos</th><th scope="col">Próxima ação</th><th scope="col"><span class="sr-only">Ações</span></th></tr></thead>
+                <tbody>
+                    @foreach (var invoice in FilteredInvoices)
+                    {
+                        <tr @key="invoice.Id" class="@(_selected?.Id == invoice.Id ? "active-row" : "")">
+                            <th scope="row"><strong>NF @invoice.Number</strong><small>Série @invoice.Series · @invoice.Received.ToString("dd/MM/yyyy")</small><small>@Money(invoice.Amount)</small></th>
+                            <td><strong>@invoice.Supplier</strong><small>@invoice.Destination</small></td>
+                            <td><strong>@invoice.Reference</strong><small>@invoice.Origin</small></td>
+                            <td><span class="status @invoice.Tone">@invoice.Status</span><small>@invoice.Delivery</small></td>
+                            <td><span class="document-count">@invoice.Documents.Count(x => x.Done)/@invoice.Documents.Count</span><small>Etapas de preparação</small></td>
+                            <td class="next-action">@invoice.NextAction<small>@(string.IsNullOrWhiteSpace(invoice.Owner) ? "Responsável não definido" : invoice.Owner)</small></td>
+                            <td><button class="action compact" type="button" aria-label="@($"Ver detalhes da NF {invoice.Number} de {invoice.Supplier}")" aria-expanded="@(_selected?.Id == invoice.Id)" aria-controls="invoice-details" @onclick="() => SelectInvoice(invoice)">Detalhes <i class="bi bi-arrow-right" aria-hidden="true"></i></button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @if (FilteredInvoices.Count == 0)
+            {
+                <div class="empty-state"><i class="bi bi-search" aria-hidden="true"></i><h3>Nenhuma nota encontrada</h3><p>Tente outro número ou fornecedor, ou remova os filtros.</p><button class="action" type="button" @onclick="ClearFilters">Limpar filtros</button></div>
+            }
+        </div>
+        <footer class="table-footer"><span>Uma nota, suas referências e todas as pendências no mesmo lugar.</span><span>Prévia sem gravação no banco</span></footer>
+    </section>
+
+    @if (_selected is not null)
+    {
+        <section id="invoice-details" class="panel invoice-details" aria-labelledby="detail-title" tabindex="-1" @ref="_detailsElement">
+            <div class="section-heading"><div><p class="eyebrow">DETALHES DO ACOMPANHAMENTO</p><h2 id="detail-title">NF @_selected.Number · @_selected.Supplier</h2><p>@_selected.Reference · Gestão de contrato @_selected.ManagementContract</p></div><div class="heading-actions"><button type="button" class="action" @onclick="EditSelected"><i class="bi bi-pencil" aria-hidden="true"></i> Editar</button><button type="button" class="action" @onclick="() => _selected = null">Fechar</button></div></div>
+            <div class="detail-columns">
+                <div>
+                    <h3>Recebimento e regularização</h3>
+                    <dl class="detail-facts"><div><dt>Produtos</dt><dd>@_selected.Delivery</dd></div><div><dt>Ordem de compra</dt><dd>@(string.IsNullOrWhiteSpace(_selected.PurchaseOrder) ? "Não informada" : _selected.PurchaseOrder) · @_selected.OrderStatus</dd></div><div><dt>Cotação</dt><dd>@(_selected.Origin == "Contrato" ? "Fornecimento por contrato" : string.IsNullOrWhiteSpace(_selected.Quotation) ? "Não informada" : _selected.Quotation)</dd></div><div><dt>Vencimento da NF</dt><dd>@DateLabel(_selected.Due)</dd></div><div><dt>Retorno previsto</dt><dd>@DateLabel(_selected.FollowUp)</dd></div></dl>
+                    @if (_selected.HasIssue)
+                    {
+                        <div class="issue-box"><strong><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Pendência em aberto</strong><p>@(string.IsNullOrWhiteSpace(_selected.Issue) ? "Localizar a cotação e regularizar a documentação da compra." : _selected.Issue)</p><small>A preparação dos documentos não encerra esta pendência.</small></div>
+                    }
+                    <div class="next-step"><span class="eyebrow">PRÓXIMA AÇÃO</span><p>@_selected.NextAction</p><small>@(string.IsNullOrWhiteSpace(_selected.Owner) ? "Defina um responsável ao editar o registro." : $"Responsável: {_selected.Owner}")</small></div>
+                    @if (!string.IsNullOrWhiteSpace(_selected.Notes)) { <p class="record-notes">@_selected.Notes</p> }
+                </div>
+                <div>
+                    <h3>Preparação dos documentos <span class="count">@_selected.Documents.Count(x => x.Done)/@_selected.Documents.Count</span></h3>
+                    <p class="checklist-intro">Marque após conferir cada etapa. Este checklist não anexa arquivos nem confirma assinaturas.</p>
+                    <div class="document-checklist">
+                        @foreach (var document in _selected.Documents)
+                        {
+                            <label @key="document"><input type="checkbox" @bind="document.Done" /><span>@document.Title<small>@document.Help</small></span></label>
+                        }
+                    </div>
+                    <p class="form-hint"><i class="bi bi-info-circle" aria-hidden="true"></i> Campos de assinatura preparados não equivalem a documento assinado. O encaminhamento e o pagamento ainda precisam ser confirmados no processo da instituição.</p>
+                </div>
+            </div>
+        </section>
+    }
+
+    <details class="workflow panel">
+        <summary><i class="bi bi-diagram-3" aria-hidden="true"></i> Referência do processo de preparação <span>Consultar etapas</span></summary>
+        <ol><li><strong>Registrar chegada</strong><span>NF, fornecedor e recebimento dos produtos.</span></li><li><strong>Conferir referências</strong><span>ID, cotação e OC autorizada, quando aplicável.</span></li><li><strong>Resolver pendências</strong><span>Divergências, documentos ausentes e retornos.</span></li><li><strong>Preparar documentação</strong><span>Drive, DANFE, entrada no Soul MV e campos de assinatura.</span></li><li><strong>Encaminhar o processo</strong><span>Conferência final antes da vinculação ao Trello.</span></li></ol>
+        <p>Sequência resumida dos procedimentos escritos do setor. O pagamento não é confirmado nesta tela.</p>
+    </details>
+</div>
+
+@code {
+    // Presentation-only state. No database writes or external workflow transitions.
+    private static readonly CultureInfo BrazilianCulture = CultureInfo.GetCultureInfo("pt-BR");
+    private static readonly string[] Filters = ["Todas", "Com pendências", "Sem cotação", "Em preparação", "Documentação preparada"];
+    private readonly List<ArrivalPreview> _invoices = CreateExamples();
+    private string _search = "", _origin = "", _filter = "Todas", _notice = "", _error = "";
+    private ArrivalPreview? _selected, _draft;
+    private Guid? _editingId;
+    private ElementReference _detailsElement, _supplierInput;
+    private bool _focusDetails, _focusEditor;
+
+    private List<ArrivalPreview> FilteredInvoices => _invoices.Where(x =>
+        (string.IsNullOrWhiteSpace(_search) || new[] { x.Number, x.Supplier, x.Cnpj, x.ProcessId, x.Quotation, x.PurchaseOrder }.Any(value => value.Contains(_search.Trim(), StringComparison.OrdinalIgnoreCase))) &&
+        (_origin == "" || x.Origin == _origin) &&
+        (_filter switch { "Com pendências" => x.HasIssue, "Sem cotação" => x.MissingQuotation, "Em preparação" => !x.HasIssue && !x.IsPrepared, "Documentação preparada" => x.IsPrepared, _ => true }))
+        .OrderByDescending(x => x.Received).ThenBy(x => x.Supplier).ToList();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_focusEditor && _draft is not null)
+        {
+            _focusEditor = false;
+            await _supplierInput.FocusAsync();
+        }
+        if (_focusDetails && _selected is not null)
+        {
+            _focusDetails = false;
+            await _detailsElement.FocusAsync();
+        }
+    }
+
+    private void SelectInvoice(ArrivalPreview invoice) { _selected = invoice; _focusDetails = true; }
+    private void ClearFilters() { _search = ""; _origin = ""; _filter = "Todas"; }
+    private void NewInvoice() { _draft = new(); _editingId = null; _error = ""; _notice = ""; _focusEditor = true; }
+    private void CancelEdit() { _draft = null; _editingId = null; _error = ""; }
+    private void EditSelected()
+    {
+        if (_selected is null) return;
+        _draft = _selected.Copy(); _editingId = _selected.Id; _error = ""; _notice = ""; _focusEditor = true;
+    }
+    private void SaveDraft()
+    {
+        if (_draft is null) return;
+        _draft.Supplier = _draft.Supplier.Trim();
+        _draft.Number = _draft.Number.Trim();
+        _draft.Series = _draft.Series.Trim();
+        if (string.IsNullOrWhiteSpace(_draft.Supplier) || string.IsNullOrWhiteSpace(_draft.Number) || string.IsNullOrWhiteSpace(_draft.Series))
+        { _error = "Informe fornecedor, número e série da NF."; return; }
+        if (_invoices.Any(x => x.Id != _editingId && x.Supplier.Equals(_draft.Supplier, StringComparison.OrdinalIgnoreCase) && x.Number.TrimStart('0') == _draft.Number.TrimStart('0') && x.Series.TrimStart('0') == _draft.Series.TrimStart('0')))
+        { _error = "Esta NF e série já estão registradas para esse fornecedor na prévia."; return; }
+        if (_draft.Amount < 0) { _error = "O valor da NF não pode ser negativo."; return; }
+        if (_draft.Origin == "Contrato") _draft.OrderStatus = "Não se aplica — contrato";
+        if (_draft.Origin != "Contrato" && _draft.OrderStatus == "Não se aplica — contrato") _draft.OrderStatus = "A conferir";
+        if (string.IsNullOrWhiteSpace(_draft.NextAction)) _draft.NextAction = "Conferir recebimento e documentação da nota fiscal.";
+        if (_editingId is not null) _invoices.RemoveAll(x => x.Id == _editingId);
+        _invoices.Add(_draft);
+        _selected = _draft;
+        ClearFilters();
+        CancelEdit();
+        _notice = "Registro atualizado nesta prévia. As informações ainda não são gravadas no banco de dados.";
+    }
+    private static string Money(decimal? amount) => amount.HasValue ? amount.Value.ToString("C2", BrazilianCulture) : "Valor não informado";
+    private static string DateLabel(DateTime? date) => date?.ToString("dd/MM/yyyy") ?? "Não informado";
+
+    private sealed class ArrivalPreview
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Supplier { get; set; } = "";
+        public string Cnpj { get; set; } = "";
+        public string Number { get; set; } = "";
+        public string Series { get; set; } = "1";
+        public DateTime Received { get; set; } = DateTime.Today;
+        public DateTime? Due { get; set; }
+        public decimal? Amount { get; set; }
+        public string Origin { get; set; } = "Compra por cotação";
+        public string ManagementContract { get; set; } = "045/2022";
+        public string ProcessId { get; set; } = "";
+        public string Quotation { get; set; } = "";
+        public string PurchaseOrder { get; set; } = "";
+        public string OrderStatus { get; set; } = "A conferir";
+        public string Destination { get; set; } = "Almoxarifado";
+        public string Delivery { get; set; } = "A conferir";
+        public string Owner { get; set; } = "";
+        public DateTime? FollowUp { get; set; }
+        public string Issue { get; set; } = "";
+        public string NextAction { get; set; } = "";
+        public string Notes { get; set; } = "";
+        public List<DocumentStep> Documents { get; set; } = CreateChecklist();
+        public bool MissingQuotation => Origin == "Compra por cotação" && string.IsNullOrWhiteSpace(Quotation);
+        public bool HasIssue => MissingQuotation || !string.IsNullOrWhiteSpace(Issue);
+        public bool IsPrepared => !HasIssue && Origin != "A identificar" && (Origin == "Contrato" || (!string.IsNullOrWhiteSpace(PurchaseOrder) && OrderStatus == "Autorizada")) && Documents.All(x => x.Done);
+        public string Status => HasIssue ? "Com pendência" : IsPrepared ? "Documentação preparada" : "Em preparação";
+        public string Tone => HasIssue ? "warning" : IsPrepared ? "success" : "neutral";
+        public string Reference => !string.IsNullOrWhiteSpace(ProcessId) ? $"ID {ProcessId}" : !string.IsNullOrWhiteSpace(PurchaseOrder) ? $"OC {PurchaseOrder}" : !string.IsNullOrWhiteSpace(Quotation) ? $"Cotação {Quotation}" : Origin == "Contrato" ? $"Contrato {ManagementContract}" : "Referência pendente";
+        public ArrivalPreview Copy() { var copy = (ArrivalPreview)MemberwiseClone(); copy.Documents = Documents.Select(x => new DocumentStep(x.Title, x.Help) { Done = x.Done }).ToList(); return copy; }
+    }
+    private sealed class DocumentStep(string title, string help)
+    {
+        public string Title { get; } = title;
+        public string Help { get; } = help;
+        public bool Done { get; set; }
+    }
+    private static List<DocumentStep> CreateChecklist() => [
+        new("Referências e valores conferidos", "NF, ID e OC autorizada quando aplicável; contrato identificado nos demais casos."),
+        new("Documentação do Drive reunida", "Cotação com apenas a primeira página, quando aplicável."),
+        new("Pasta da nota organizada", "Nome do fornecedor + número da NF, sem zeros à esquerda no nome da pasta."),
+        new("DANFE obtido no Cofre.SIEG", "Arquivo correspondente à nota fiscal recebida."),
+        new("Comprovante de entrada do Soul MV obtido", "Documento de Entrada de Produtos em PDF."),
+        new("Campos de assinatura preparados", "Modelos de Beatriz e Francisco; não significa documento assinado."),
+        new("Conferência final realizada", "Versão final organizada para vinculação ao card no Trello.")
+    ];
+    private static List<ArrivalPreview> CreateExamples()
+    {
+        var examples = new List<ArrivalPreview> {
+            new() { Supplier = "Fornecedor exemplo A", Number = "1001", Received = DateTime.Today, Origin = "Compra por cotação", Delivery = "Recebido", Issue = "Cotação não localizada no Drive.", NextAction = "Solicitar a cotação e acompanhar o retorno.", Amount = 2450.50m },
+            new() { Supplier = "Fornecedor exemplo B", Number = "1002", Received = DateTime.Today.AddDays(-1), ProcessId = "EX-002", Quotation = "COT-002", PurchaseOrder = "OC-002", OrderStatus = "Aguardando autorização", Delivery = "Recebimento parcial", Issue = "Valor da OC divergente da nota fiscal.", NextAction = "Solicitar correção dos valores e autorização da OC.", Amount = 1780m },
+            new() { Supplier = "Fornecedor exemplo C", Number = "1003", Received = DateTime.Today.AddDays(-2), Origin = "Contrato", OrderStatus = "Não se aplica — contrato", Delivery = "Recebido", NextAction = "Obter o comprovante de entrada e preparar o DANFE.", Amount = 3200m },
+            new() { Supplier = "Fornecedor exemplo D", Number = "1004", Received = DateTime.Today.AddDays(-3), ProcessId = "EX-004", Quotation = "COT-004", PurchaseOrder = "OC-004", OrderStatus = "Autorizada", Delivery = "Recebido", NextAction = "Vincular a documentação ao card correspondente no Trello.", Amount = 960m }
+        };
+        foreach (var step in examples[3].Documents) step.Done = true;
+        foreach (var step in examples[2].Documents.Take(3)) step.Done = true;
+        return examples;
+    }
+}

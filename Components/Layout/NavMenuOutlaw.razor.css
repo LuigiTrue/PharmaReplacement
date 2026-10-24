@@ -297,3 +297,191 @@ ul {
         display: none;
     }
 }
+
+
+/* Native disclosure keeps the stock submenu independent of application logic. */
+.sidebar-nav-outlaw:has(.stock-menu[open]),
+.sidebar-nav-outlaw:focus-within {
+    width: 300px;
+}
+
+.sidebar-nav-outlaw > ul {
+    display: flex;
+    flex-direction: column;
+    min-height: 95vh;
+    height: auto;
+}
+
+.sidebar-nav-outlaw > ul > .theme-toggle-item {
+    position: static;
+    margin-top: auto;
+}
+
+.sidebar-nav-outlaw:focus-within .text,
+.sidebar-nav-outlaw:has(.stock-menu[open]) .text {
+    opacity: 1;
+    visibility: visible;
+}
+
+.stock-menu-toggle {
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+    cursor: pointer;
+    list-style: none;
+    border-radius: 6px;
+}
+
+.stock-menu-toggle::-webkit-details-marker {
+    display: none;
+}
+
+.stock-menu-toggle .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 75px;
+    font-size: 25px;
+}
+
+.stock-menu-label {
+    font-size: 14px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.stock-menu-chevron {
+    margin: 0 12px;
+    font-size: 24px;
+    transition: transform 0.2s ease;
+}
+
+.stock-menu[open] .stock-menu-chevron {
+    transform: rotate(90deg);
+}
+
+.stock-menu-label,
+.stock-menu-chevron {
+    visibility: hidden;
+}
+
+.sidebar-nav-outlaw:hover .stock-menu-label,
+.sidebar-nav-outlaw:hover .stock-menu-chevron,
+.sidebar-nav-outlaw:focus-within .stock-menu-label,
+.sidebar-nav-outlaw:focus-within .stock-menu-chevron,
+.stock-menu[open] .stock-menu-label,
+.stock-menu[open] .stock-menu-chevron {
+    visibility: visible;
+}
+
+.sidebar-nav-outlaw ul.stock-submenu {
+    display: block;
+    position: static;
+    width: auto;
+    min-width: 0;
+    height: auto;
+    margin: 0 12px 12px 37px;
+    padding-left: 16px;
+    border-left: 1px solid currentColor;
+}
+
+.sidebar-nav-outlaw .stock-submenu li {
+    margin: 4px 0;
+}
+
+.sidebar-nav-outlaw .stock-submenu a,
+.sidebar-nav-outlaw .stock-submenu span {
+    display: block;
+    padding: 10px 12px;
+    height: auto;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: normal;
+    border-radius: 6px;
+}
+
+.stock-submenu [aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.sidebar-nav-outlaw ul li.stock-nav-item:hover {
+    background: transparent;
+}
+
+.stock-menu-toggle:hover,
+.sidebar-nav-outlaw .stock-submenu a:hover {
+    background: rgba(110, 95, 165, 0.15);
+}
+
+.stock-menu-toggle:focus-visible,
+.stock-submenu a:focus-visible {
+    outline: 2px solid #6E5FA5;
+    outline-offset: -2px;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+    .sidebar-nav-outlaw:has(.stock-menu[open]),
+    .sidebar-nav-outlaw:focus-within {
+        width: 100%;
+    }
+
+    .sidebar-nav-outlaw > ul {
+        flex-direction: row;
+        min-height: 0;
+        height: 100%;
+    }
+
+    .sidebar-nav-outlaw > ul > .theme-toggle-item {
+        margin-top: 0;
+    }
+
+    .stock-menu-toggle {
+        min-height: 4.25rem;
+        justify-content: center;
+    }
+
+    .stock-menu-toggle .icon {
+        min-width: 4.25rem;
+        font-size: 1.35rem;
+    }
+
+    .stock-menu-label,
+    .stock-menu-chevron {
+        display: none;
+    }
+
+    .sidebar-nav-outlaw ul.stock-submenu {
+        position: fixed;
+        bottom: 4.75rem;
+        left: 12px;
+        right: 12px;
+        margin: 0;
+        padding: 8px;
+        max-height: calc(100dvh - 6rem);
+        overflow-y: auto;
+        border: 1px solid #E5DFF0;
+        border-radius: 10px;
+        background: #FFFFFF;
+        box-shadow: 0 4px 20px rgba(18, 18, 28, 0.2);
+    }
+
+    .sidebar-dark ul.stock-submenu {
+        background: #20202A;
+        border-color: #5F5A78;
+    }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+    .sidebar-nav-outlaw {
+        overflow-y: auto;
+    }
+
+    .sidebar-nav-outlaw > ul {
+        min-height: calc(100dvh - 0.8rem);
+    }
+
+    .stock-menu-toggle {
+        min-height: 3.35rem;
+    }
+}

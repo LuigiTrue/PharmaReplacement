@@ -22,11 +22,20 @@
                 <span class="text">Reposição</span>
             </a>
         </li>
-        <li class="rounded-md @NavItemHoverClass">
-            <a href="/Shopping/ShoppingMain" class="@NavLinkClass">
-                <span class="icon"><i class="bi bi-cart-fill"></i></span>
-                <span class="text">Compras</span>
-            </a>
+        <li class="stock-nav-item rounded-md">
+            <details class="stock-menu">
+                <summary class="stock-menu-toggle @NavLinkClass" title="Controle de Estoque">
+                    <span class="icon"><i class="bi bi-cart-fill" aria-hidden="true"></i></span>
+                    <span class="stock-menu-label">Controle de Estoque</span>
+                    <span class="stock-menu-chevron" aria-hidden="true">›</span>
+                </summary>
+                <ul class="stock-submenu" aria-label="Controle de Estoque">
+                    <li><a href="/Estoque/ChegadaDeProdutos">Chegada de produtos</a></li>
+                    <li><span aria-disabled="true">Relatórios</span></li>
+                    <li><span aria-disabled="true">Pendências</span></li>
+                    <li><span aria-disabled="true">Demandas</span></li>
+                </ul>
+            </details>
         </li>
         <li class="rounded-md disabled-nav-item">
             <a class="@NavLinkClass" aria-disabled="true" tabindex="-1">
