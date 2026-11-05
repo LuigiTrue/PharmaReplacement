@@ -1,20 +1,23 @@
 @using System.ComponentModel.DataAnnotations
 @inject IDanfeService DanfeService
+@inject ISupplierService SupplierService
+@inject IQuotationService QuotationService
 @inject ILogger<FollowingSignInDanfe> Logger
 @implements IDisposable
 
 <section class="following-registration app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900"
-         aria-labelledby="following-form-title" aria-busy="@(_saving || IsLoadingLookups)">
+         aria-labelledby="following-form-title" aria-busy="@(_saving || _isLoadingLookups)">
     <h4 id="following-form-title">Cadastrar Nota Fiscal</h4>
     <p class="following-form-description">Informe os dados da nota e selecione o fornecedor e a cotação. Campos com * são obrigatórios.</p>
 
-    @if (IsLoadingLookups)
+    @if (_isLoadingLookups)
     {
         <p role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Carregando fornecedores e cotações...</p>
     }
-    else if (Suppliers is null || Quotations is null)
+    else if (_lookupErrorMessage is not null)
     {
-        <p class="following-form-notice" role="status">As listas de fornecedores e cotações ainda não estão disponíveis. O cadastro será liberado quando elas forem carregadas.</p>
+        <p class="following-form-error" role="alert">@_lookupErrorMessage</p>
+        <button type="button" class="btn following-form-clear mb-3" disabled="@_saving" @onclick="LoadLookupsAsync">Tentar novamente</button>
     }
 
     @if (!string.IsNullOrEmpty(_successMessage))
@@ -39,17 +42,14 @@
                 </div>
                 <div class="following-form-field">
                     <label for="following-supplier">Fornecedor *</label>
-                    <InputSelect id="following-supplier" @bind-Value="_form.SupplierId" disabled="@(IsLoadingLookups || Suppliers is null || Suppliers.Count == 0)" aria-required="true">
+                    <InputSelect id="following-supplier" @bind-Value="_form.SupplierId" disabled="@(_isLoadingLookups || _lookupErrorMessage is not null || _suppliers.Count == 0)" aria-required="true">
                         <option value="">Selecione o fornecedor</option>
-                        @if (Suppliers is not null)
+                        @foreach (var supplier in _suppliers)
                         {
-                            @foreach (var supplier in Suppliers)
-                            {
-                                <option value="@supplier.Id">@supplier.Name</option>
-                            }
+                            <option value="@supplier.Id">@supplier.Name</option>
                         }
                     </InputSelect>
-                    @if (!IsLoadingLookups && Suppliers is { Count: 0 })
+                    @if (!_isLoadingLookups && _lookupErrorMessage is null && _suppliers.Count == 0)
                     {
                         <small>Nenhum fornecedor cadastrado.</small>
                     }
@@ -57,17 +57,14 @@
                 </div>
                 <div class="following-form-field">
                     <label for="following-quotation">Cotação *</label>
-                    <InputSelect id="following-quotation" @bind-Value="_form.QuotationId" disabled="@(IsLoadingLookups || Quotations is null || Quotations.Count == 0)" aria-required="true">
+                    <InputSelect id="following-quotation" @bind-Value="_form.QuotationId" disabled="@(_isLoadingLookups || _lookupErrorMessage is not null || _quotations.Count == 0)" aria-required="true">
                         <option value="">Selecione a cotação</option>
-                        @if (Quotations is not null)
+                        @foreach (var quotation in _quotations)
                         {
-                            @foreach (var quotation in Quotations)
-                            {
-                                <option value="@quotation.Id">@quotation.QuotationNumber</option>
-                            }
+                            <option value="@quotation.Id">@quotation.QuotationNumber</option>
                         }
                     </InputSelect>
-                    @if (!IsLoadingLookups && Quotations is { Count: 0 })
+                    @if (!_isLoadingLookups && _lookupErrorMessage is null && _quotations.Count == 0)
                     {
                         <small>Nenhuma cotação cadastrada.</small>
                     }
@@ -164,17 +161,59 @@
 </style>
 
 @code {
-    // Fontes de seleção preparadas para os serviços de consulta, ainda inexistentes.
-    [Parameter] public IReadOnlyList<Supplier>? Suppliers { get; set; }
-    [Parameter] public IReadOnlyList<Quotation>? Quotations { get; set; }
-    [Parameter] public bool IsLoadingLookups { get; set; }
+    private IReadOnlyList<Supplier> _suppliers = [];
+    private IReadOnlyList<Quotation> _quotations = [];
+    private bool _isLoadingLookups = true;
+    private string? _lookupErrorMessage;
 
     private readonly CancellationTokenSource _lifetime = new();
+    private bool _disposed;
     private DanfeForm _form = new();
     private bool _saving;
     private string? _successMessage;
     private string? _errorMessage;
-    private bool CanSubmit => !_saving && !IsLoadingLookups && Suppliers is { Count: > 0 } && Quotations is { Count: > 0 };
+    private bool CanSubmit => !_saving && !_isLoadingLookups && _lookupErrorMessage is null && _suppliers.Count > 0 && _quotations.Count > 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadLookupsAsync();
+    }
+
+    private async Task LoadLookupsAsync()
+    {
+        if (_disposed)
+            return;
+
+        _isLoadingLookups = true;
+        _lookupErrorMessage = null;
+        var cancellationToken = _lifetime.Token;
+        try
+        {
+            var suppliers = await SupplierService.GetAllSuppliersAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            var quotations = await QuotationService.GetAllQuotationsAsync(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            _suppliers = suppliers;
+            _quotations = quotations;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // O componente foi descartado; não há interface ativa para notificar.
+        }
+        catch (Exception exception)
+        {
+            if (_disposed)
+                return;
+
+            Logger.LogError("Falha ao carregar fornecedores e cotações. Tipo de erro: {ErrorType}", exception.GetType().Name);
+            _lookupErrorMessage = "Não foi possível carregar fornecedores e cotações. Tente novamente. Os dados preenchidos foram mantidos.";
+        }
+        finally
+        {
+            if (!_disposed)
+                _isLoadingLookups = false;
+        }
+    }
 
     private async Task SaveAsync()
     {
@@ -251,6 +290,10 @@
 
     public void Dispose()
     {
+        if (_disposed)
+            return;
+
+        _disposed = true;
         _lifetime.Cancel();
         _lifetime.Dispose();
     }
