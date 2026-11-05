@@ -1,0 +1,288 @@
+@using System.ComponentModel.DataAnnotations
+@inject IDanfeService DanfeService
+@inject ILogger<FollowingSignInDanfe> Logger
+@implements IDisposable
+
+<section class="following-registration app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900"
+         aria-labelledby="following-form-title" aria-busy="@(_saving || IsLoadingLookups)">
+    <h4 id="following-form-title">Cadastrar Nota Fiscal</h4>
+    <p class="following-form-description">Informe os dados da nota e selecione o fornecedor e a cotação. Campos com * são obrigatórios.</p>
+
+    @if (IsLoadingLookups)
+    {
+        <p role="status"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Carregando fornecedores e cotações...</p>
+    }
+    else if (Suppliers is null || Quotations is null)
+    {
+        <p class="following-form-notice" role="status">As listas de fornecedores e cotações ainda não estão disponíveis. O cadastro será liberado quando elas forem carregadas.</p>
+    }
+
+    @if (!string.IsNullOrEmpty(_successMessage))
+    {
+        <p class="following-form-success" role="status">@_successMessage</p>
+    }
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <p class="following-form-error" role="alert">@_errorMessage</p>
+    }
+
+    <EditForm @key="_form" Model="_form" OnValidSubmit="SaveAsync" OnInvalidSubmit="OnInvalidSubmit" FormName="following-danfe" novalidate>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <fieldset class="following-form-fields" disabled="@_saving">
+            <legend>Dados da nota fiscal</legend>
+            <div class="following-form-grid">
+                <div class="following-form-field">
+                    <label for="following-number">Número da NF *</label>
+                    <InputText id="following-number" @bind-Value="_form.DanfeNumber" maxlength="255" aria-required="true" />
+                    <ValidationMessage For="@(() => _form.DanfeNumber)" />
+                </div>
+                <div class="following-form-field">
+                    <label for="following-supplier">Fornecedor *</label>
+                    <InputSelect id="following-supplier" @bind-Value="_form.SupplierId" disabled="@(IsLoadingLookups || Suppliers is null || Suppliers.Count == 0)" aria-required="true">
+                        <option value="">Selecione o fornecedor</option>
+                        @if (Suppliers is not null)
+                        {
+                            @foreach (var supplier in Suppliers)
+                            {
+                                <option value="@supplier.Id">@supplier.Name</option>
+                            }
+                        }
+                    </InputSelect>
+                    @if (!IsLoadingLookups && Suppliers is { Count: 0 })
+                    {
+                        <small>Nenhum fornecedor cadastrado.</small>
+                    }
+                    <ValidationMessage For="@(() => _form.SupplierId)" />
+                </div>
+                <div class="following-form-field">
+                    <label for="following-quotation">Cotação *</label>
+                    <InputSelect id="following-quotation" @bind-Value="_form.QuotationId" disabled="@(IsLoadingLookups || Quotations is null || Quotations.Count == 0)" aria-required="true">
+                        <option value="">Selecione a cotação</option>
+                        @if (Quotations is not null)
+                        {
+                            @foreach (var quotation in Quotations)
+                            {
+                                <option value="@quotation.Id">@quotation.QuotationNumber</option>
+                            }
+                        }
+                    </InputSelect>
+                    @if (!IsLoadingLookups && Quotations is { Count: 0 })
+                    {
+                        <small>Nenhuma cotação cadastrada.</small>
+                    }
+                    <ValidationMessage For="@(() => _form.QuotationId)" />
+                </div>
+                <div class="following-form-field">
+                    <label for="following-value">Valor (R$) *</label>
+                    <InputNumber id="following-value" @bind-Value="_form.Value" min="0" step="0.01" placeholder="0,00" aria-required="true" ParsingErrorMessage="Informe um valor válido para {0}." DisplayName="valor da nota" />
+                    <ValidationMessage For="@(() => _form.Value)" />
+                </div>
+                <div class="following-form-field">
+                    <label for="following-items">Quantidade de itens *</label>
+                    <InputNumber id="following-items" @bind-Value="_form.ItemsQuantity" min="0" step="1" aria-required="true" ParsingErrorMessage="Informe um número inteiro válido para {0}." DisplayName="quantidade de itens" />
+                    <ValidationMessage For="@(() => _form.ItemsQuantity)" />
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="following-form-fields" disabled="@_saving">
+            <legend>Informações de recebimento</legend>
+            <div class="following-form-grid">
+                <div class="following-form-field">
+                    <label for="following-receiver">Responsável pelo recebimento</label>
+                    <InputText id="following-receiver" @bind-Value="_form.UserReceiver" maxlength="255" />
+                    <ValidationMessage For="@(() => _form.UserReceiver)" />
+                </div>
+                <div class="following-form-field">
+                    <label for="following-received">Data de recebimento</label>
+                    <InputDate id="following-received" @bind-Value="_form.ReceivedAt" ParsingErrorMessage="Informe uma data de recebimento válida." />
+                    <ValidationMessage For="@(() => _form.ReceivedAt)" />
+                </div>
+                <label class="following-form-check"><InputCheckbox @bind-Value="_form.IsThermolabile" /> Contém produtos termolábeis</label>
+                <label class="following-form-check"><InputCheckbox @bind-Value="_form.ContainsPurchase" /> Contém compra</label>
+            </div>
+        </fieldset>
+
+        <fieldset class="following-form-fields" disabled="@_saving">
+            <legend>Informações financeiras</legend>
+            <div class="following-form-grid">
+                <label class="following-form-check"><InputCheckbox @bind-Value="_form.Boleto" /> Possui boleto</label>
+                <div class="following-form-field">
+                    <label for="following-due">Data de vencimento</label>
+                    <InputDate id="following-due" @bind-Value="_form.PaymentDueAt" ParsingErrorMessage="Informe uma data de vencimento válida." />
+                    <ValidationMessage For="@(() => _form.PaymentDueAt)" />
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="following-form-actions">
+            <button type="submit" class="btn btn-primary" disabled="@(!CanSubmit)">
+                @if (_saving)
+                {
+                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                }
+                @(_saving ? "Cadastrando..." : "Cadastrar Nota Fiscal")
+            </button>
+            <button type="button" class="btn following-form-clear" disabled="@_saving" @onclick="ClearForm">Limpar formulário</button>
+        </div>
+    </EditForm>
+</section>
+
+<style>
+    .following-registration h4 { margin: 0; color: var(--app-text, #221A3D); font-size: 1rem; font-weight: 700; }
+    .following-registration .following-form-description,
+    .following-registration small { color: var(--app-text-muted, #5F5A78); font-size: .9rem; }
+    .following-registration .following-form-description { margin: .5rem 0 1rem; }
+    .following-registration .following-form-fields { min-width: 0; margin: 0 0 1.5rem; padding: 0; border: 0; }
+    .following-registration legend { float: none; width: auto; margin: 0 0 1rem; padding: 0; font-size: .95rem; font-weight: 700; }
+    .following-registration .following-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }
+    .following-registration .following-form-field { display: flex; flex-direction: column; gap: .4rem; min-width: 0; }
+    .following-registration label { color: var(--app-text, #221A3D); font-size: .9rem; font-weight: 600; }
+    .following-registration .following-form-field input,
+    .following-registration select {
+        width: 100%; min-height: 2.5rem; border: 1px solid var(--app-border, #E5DFF0); border-radius: 7px;
+        padding: .55rem .65rem; background: var(--app-surface, #FFFFFF); color: var(--app-text, #221A3D); font-size: .9rem;
+    }
+    .following-registration input:focus-visible,
+    .following-registration select:focus-visible { outline: 2px solid var(--app-link, #3320C9); outline-offset: 2px; }
+    .following-registration .following-form-check { display: flex; align-items: center; gap: .5rem; min-height: 2.5rem; }
+    .following-registration input[type="checkbox"] { width: 1rem; height: 1rem; accent-color: var(--app-link, #3320C9); }
+    .following-registration .following-form-actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .following-registration .following-form-clear { border: 1px solid var(--app-border, #E5DFF0); color: var(--app-text, #221A3D); }
+    .following-registration .following-form-notice { color: var(--app-text-muted, #5F5A78); }
+    .following-registration .following-form-error { color: #C0392B; }
+    .following-registration .following-form-success { color: #18794E; }
+    .theme-dark .following-registration .following-form-error { color: #FDA4AF; }
+    .theme-dark .following-registration .following-form-success { color: #86EFAC; }
+    .following-registration button:disabled,
+    .following-registration select:disabled { opacity: .6; cursor: not-allowed; }
+    @@media (max-width: 640px) {
+        .following-registration .following-form-actions { flex-direction: column; }
+        .following-registration .following-form-actions button { width: 100%; }
+    }
+</style>
+
+@code {
+    // Fontes de seleção preparadas para os serviços de consulta, ainda inexistentes.
+    [Parameter] public IReadOnlyList<Supplier>? Suppliers { get; set; }
+    [Parameter] public IReadOnlyList<Quotation>? Quotations { get; set; }
+    [Parameter] public bool IsLoadingLookups { get; set; }
+
+    private readonly CancellationTokenSource _lifetime = new();
+    private DanfeForm _form = new();
+    private bool _saving;
+    private string? _successMessage;
+    private string? _errorMessage;
+    private bool CanSubmit => !_saving && !IsLoadingLookups && Suppliers is { Count: > 0 } && Quotations is { Count: > 0 };
+
+    private async Task SaveAsync()
+    {
+        if (_saving)
+            return;
+
+        _successMessage = null;
+        _errorMessage = null;
+        if (!CanSubmit)
+        {
+            _errorMessage = "Aguarde a disponibilização dos fornecedores e das cotações para cadastrar a nota.";
+            return;
+        }
+
+        _saving = true;
+        try
+        {
+            var danfe = new Danfe
+            {
+                SupplierId = _form.SupplierId!.Value,
+                QuotationId = _form.QuotationId!.Value,
+                DanfeNumber = _form.DanfeNumber.Trim(),
+                Value = _form.Value!.Value,
+                ItemsQuantity = _form.ItemsQuantity!.Value,
+                Boleto = _form.Boleto,
+                UserReceiver = string.IsNullOrWhiteSpace(_form.UserReceiver) ? null : _form.UserReceiver.Trim(),
+                ReceivedAt = _form.ReceivedAt?.Date,
+                PaymentDueAt = _form.PaymentDueAt?.Date,
+                IsThermolabile = _form.IsThermolabile,
+                ContainsPurchase = _form.ContainsPurchase
+            };
+            await DanfeService.CreateDanfeAsync(danfe, _lifetime.Token);
+            _form = new DanfeForm();
+            _successMessage = "Nota fiscal cadastrada com sucesso.";
+        }
+        catch (OperationCanceledException) when (_lifetime.IsCancellationRequested)
+        {
+            // O componente foi descartado; não há interface ativa para notificar.
+        }
+        catch (ArgumentException)
+        {
+            _errorMessage = "Confira os campos e verifique se o fornecedor e a cotação continuam disponíveis. Os dados preenchidos foram mantidos.";
+        }
+        catch (InvalidOperationException)
+        {
+            _errorMessage = "Não foi possível cadastrar a nota. Verifique se já existe uma nota com o mesmo número para este fornecedor. Os dados preenchidos foram mantidos.";
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Falha ao cadastrar DANFE. Tipo de erro: {ErrorType}", exception.GetType().Name);
+            _errorMessage = "Não foi possível cadastrar a nota fiscal. Tente novamente. Os dados preenchidos foram mantidos.";
+        }
+        finally
+        {
+            _saving = false;
+        }
+    }
+
+    private void OnInvalidSubmit()
+    {
+        _successMessage = null;
+        _errorMessage = "Confira os campos indicados antes de cadastrar a nota fiscal.";
+    }
+
+    private void ClearForm()
+    {
+        if (_saving)
+            return;
+
+        _form = new DanfeForm();
+        _successMessage = null;
+        _errorMessage = null;
+    }
+
+    public void Dispose()
+    {
+        _lifetime.Cancel();
+        _lifetime.Dispose();
+    }
+
+    public sealed class DanfeForm
+    {
+        [Required(ErrorMessage = "Selecione o fornecedor.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Selecione um fornecedor válido.")]
+        public int? SupplierId { get; set; }
+
+        [Required(ErrorMessage = "Selecione a cotação.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Selecione uma cotação válida.")]
+        public int? QuotationId { get; set; }
+
+        [Required(ErrorMessage = "Informe o número da nota fiscal.")]
+        [StringLength(255, ErrorMessage = "O número da nota deve ter até 255 caracteres.")]
+        public string DanfeNumber { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Informe o valor da nota fiscal.")]
+        [Range(typeof(decimal), "0", "79228162514264337593543950335", ErrorMessage = "O valor não pode ser negativo.")]
+        public decimal? Value { get; set; }
+
+        [Required(ErrorMessage = "Informe a quantidade de itens.")]
+        [Range(0, int.MaxValue, ErrorMessage = "A quantidade de itens não pode ser negativa.")]
+        public int? ItemsQuantity { get; set; }
+
+        [StringLength(255, ErrorMessage = "O responsável deve ter até 255 caracteres.")]
+        public string? UserReceiver { get; set; }
+        public DateTime? ReceivedAt { get; set; }
+        public DateTime? PaymentDueAt { get; set; }
+        public bool Boleto { get; set; }
+        public bool IsThermolabile { get; set; }
+        public bool ContainsPurchase { get; set; }
+    }
+}

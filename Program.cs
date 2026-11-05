@@ -73,6 +73,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 
 //Services
+builder.Services.AddScoped<IDanfeService, DanfeService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IProductStockService, ProductStockService>();
 builder.Services.AddScoped<IStockJsonService, StockJsonService>();
