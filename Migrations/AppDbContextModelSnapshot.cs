@@ -302,6 +302,60 @@ namespace RepyPharma.Migrations
                     b.ToTable("daily_consumptions", (string)null);
                 });
 
+            modelBuilder.Entity("RepyPharma.Domain.Entities.Danfe", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Boleto")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("ContainsPurchase")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("DanfeNumber")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<bool>("IsThermolabile")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ItemsQuantity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("PaymentDueAt")
+                        .HasColumnType("date");
+
+                    b.Property<int>("QuotationId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ReceivedAt")
+                        .HasColumnType("date");
+
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserReceiver")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<decimal>("Value")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuotationId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("danfes", (string)null);
+                });
+
             modelBuilder.Entity("RepyPharma.Domain.Entities.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -452,6 +506,58 @@ namespace RepyPharma.Migrations
                         .IsUnique();
 
                     b.ToTable("locations", (string)null);
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.Quotation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("QuotationNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuotationNumber")
+                        .IsUnique();
+
+                    b.ToTable("quotations", (string)null);
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.QuotationXItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("QuantityRequested")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.Property<int>("QuotationId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("QuotationId", "ItemId")
+                        .IsUnique();
+
+                    b.ToTable("quotation_x_items", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_quotation_x_items_quantity_requested", "\"QuantityRequested\" >= 0");
+                        });
                 });
 
             modelBuilder.Entity("RepyPharma.Domain.Entities.ReplenishmentRule", b =>
@@ -649,6 +755,36 @@ namespace RepyPharma.Migrations
                     b.ToTable("stock_balances", (string)null);
                 });
 
+            modelBuilder.Entity("RepyPharma.Domain.Entities.Supplier", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Cnpj")
+                        .HasMaxLength(14)
+                        .HasColumnType("character varying(14)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Observations")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Cnpj")
+                        .IsUnique()
+                        .HasFilter("\"Cnpj\" IS NOT NULL");
+
+                    b.ToTable("suppliers", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -722,6 +858,25 @@ namespace RepyPharma.Migrations
                     b.Navigation("Item");
                 });
 
+            modelBuilder.Entity("RepyPharma.Domain.Entities.Danfe", b =>
+                {
+                    b.HasOne("RepyPharma.Domain.Entities.Quotation", "Quotation")
+                        .WithMany("Danfes")
+                        .HasForeignKey("QuotationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RepyPharma.Domain.Entities.Supplier", "Supplier")
+                        .WithMany("Danfes")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Quotation");
+
+                    b.Navigation("Supplier");
+                });
+
             modelBuilder.Entity("RepyPharma.Domain.Entities.ItemConsumptionAverage", b =>
                 {
                     b.HasOne("RepyPharma.Domain.Entities.Item", "Item")
@@ -730,6 +885,25 @@ namespace RepyPharma.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.QuotationXItem", b =>
+                {
+                    b.HasOne("RepyPharma.Domain.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("RepyPharma.Domain.Entities.Quotation", "Quotation")
+                        .WithMany("Items")
+                        .HasForeignKey("QuotationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Quotation");
                 });
 
             modelBuilder.Entity("RepyPharma.Domain.Entities.ReplenishmentRule", b =>
@@ -827,9 +1001,21 @@ namespace RepyPharma.Migrations
                     b.Navigation("StockBalances");
                 });
 
+            modelBuilder.Entity("RepyPharma.Domain.Entities.Quotation", b =>
+                {
+                    b.Navigation("Danfes");
+
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("RepyPharma.Domain.Entities.ReportImport", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.Supplier", b =>
+                {
+                    b.Navigation("Danfes");
                 });
 #pragma warning restore 612, 618
         }

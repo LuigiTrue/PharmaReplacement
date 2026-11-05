@@ -16,10 +16,109 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<ReplenishmentRule> ReplenishmentRules => Set<ReplenishmentRule>();
     public DbSet<ReportImport> ReportImports => Set<ReportImport>();
     public DbSet<ReportItem> ReportItems => Set<ReportItem>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<Quotation> Quotations => Set<Quotation>();
+    public DbSet<QuotationXItem> QuotationXItems => Set<QuotationXItem>();
+    public DbSet<Danfe> Danfes => Set<Danfe>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Supplier>(entity =>
+        {
+            entity.ToTable("suppliers");
+            entity.HasKey(supplier => supplier.Id);
+            entity.Property(supplier => supplier.Id).ValueGeneratedOnAdd();
+
+            entity.Property(supplier => supplier.Name)
+                .HasMaxLength(255)
+                .IsRequired();
+            entity.Property(supplier => supplier.Cnpj)
+                .HasMaxLength(14)
+                .IsRequired(false);
+            entity.Property(supplier => supplier.Observations)
+                .HasMaxLength(255);
+
+            entity.HasIndex(supplier => supplier.Cnpj)
+                .IsUnique()
+                .HasFilter("\"Cnpj\" IS NOT NULL");
+
+            entity.HasMany(supplier => supplier.Danfes)
+                .WithOne(danfe => danfe.Supplier)
+                .HasForeignKey(danfe => danfe.SupplierId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Quotation>(entity =>
+        {
+            entity.ToTable("quotations");
+            entity.HasKey(quotation => quotation.Id);
+            entity.Property(quotation => quotation.Id).ValueGeneratedOnAdd();
+
+            entity.Property(quotation => quotation.QuotationNumber)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.HasIndex(quotation => quotation.QuotationNumber)
+                .IsUnique();
+
+            entity.HasMany(quotation => quotation.Danfes)
+                .WithOne(danfe => danfe.Quotation)
+                .HasForeignKey(danfe => danfe.QuotationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasMany(quotation => quotation.Items)
+                .WithOne(quotationItem => quotationItem.Quotation)
+                .HasForeignKey(quotationItem => quotationItem.QuotationId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<QuotationXItem>(entity =>
+        {
+            entity.ToTable("quotation_x_items", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_quotation_x_items_quantity_requested",
+                    "\"QuantityRequested\" >= 0");
+            });
+            entity.HasKey(quotationItem => quotationItem.Id);
+            entity.Property(quotationItem => quotationItem.Id).ValueGeneratedOnAdd();
+
+            entity.Property(quotationItem => quotationItem.QuantityRequested)
+                .HasPrecision(18, 3);
+
+            entity.HasIndex(quotationItem => new { quotationItem.QuotationId, quotationItem.ItemId })
+                .IsUnique();
+            entity.HasIndex(quotationItem => quotationItem.ItemId);
+
+            entity.HasOne(quotationItem => quotationItem.Item)
+                .WithMany()
+                .HasForeignKey(quotationItem => quotationItem.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Danfe>(entity =>
+        {
+            entity.ToTable("danfes");
+            entity.HasKey(danfe => danfe.Id);
+            entity.Property(danfe => danfe.Id).ValueGeneratedOnAdd();
+
+            entity.Property(danfe => danfe.DanfeNumber)
+                .HasMaxLength(255)
+                .IsRequired();
+            entity.Property(danfe => danfe.Value)
+                .HasPrecision(18, 2);
+            entity.Property(danfe => danfe.UserReceiver)
+                .HasMaxLength(255);
+            entity.Property(danfe => danfe.ReceivedAt)
+                .HasColumnType("date");
+            entity.Property(danfe => danfe.PaymentDueAt)
+                .HasColumnType("date");
+
+            entity.HasIndex(danfe => danfe.SupplierId);
+            entity.HasIndex(danfe => danfe.QuotationId);
+        });
 
         modelBuilder.Entity<ApplicationUser>(entity =>
         {
