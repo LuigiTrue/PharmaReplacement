@@ -269,6 +269,60 @@ namespace RepyPharma.Migrations
                     b.ToTable("batches", (string)null);
                 });
 
+            modelBuilder.Entity("RepyPharma.Domain.Entities.Consumption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("AverageVariation")
+                        .HasPrecision(10, 4)
+                        .HasColumnType("numeric(10,4)");
+
+                    b.Property<decimal>("DailyAverage")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)");
+
+                    b.Property<DateTime>("FinalDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateTimeOffset>("ImportedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<DateTime>("InitialDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<decimal>("TotalConsumption")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId", "InitialDate", "FinalDate", "Source")
+                        .IsUnique();
+
+                    b.ToTable("consumptions", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_consumptions_daily_average", "\"DailyAverage\" >= 0");
+
+                            t.HasCheckConstraint("CK_consumptions_period", "\"FinalDate\" >= \"InitialDate\"");
+
+                            t.HasCheckConstraint("CK_consumptions_total_consumption", "\"TotalConsumption\" >= 0");
+                        });
+                });
+
             modelBuilder.Entity("RepyPharma.Domain.Entities.DailyConsumption", b =>
                 {
                     b.Property<int>("Id")
@@ -842,6 +896,17 @@ namespace RepyPharma.Migrations
                         .WithMany("Batches")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.Consumption", b =>
+                {
+                    b.HasOne("RepyPharma.Domain.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Item");

@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<StockBalance> StockBalances => Set<StockBalance>();
     public DbSet<DailyConsumption> DailyConsumptions => Set<DailyConsumption>();
+    public DbSet<Consumption> Consumptions => Set<Consumption>();
     public DbSet<ItemConsumptionAverage> ItemConsumptionAverages => Set<ItemConsumptionAverage>();
     public DbSet<ReplenishmentRule> ReplenishmentRules => Set<ReplenishmentRule>();
     public DbSet<ReportImport> ReportImports => Set<ReportImport>();
@@ -234,6 +235,63 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
             entity.HasIndex(balance => new { balance.ItemId, balance.BatchId, balance.LocationId })
                 .IsUnique();
+        });
+
+        modelBuilder.Entity<Consumption>(entity =>
+        {
+            entity.ToTable("consumptions", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_consumptions_period",
+                    "\"FinalDate\" >= \"InitialDate\"");
+                table.HasCheckConstraint(
+                    "CK_consumptions_total_consumption",
+                    "\"TotalConsumption\" >= 0");
+                table.HasCheckConstraint(
+                    "CK_consumptions_daily_average",
+                    "\"DailyAverage\" >= 0");
+            });
+            entity.HasKey(consumption => consumption.Id);
+            entity.Property(consumption => consumption.Id).ValueGeneratedOnAdd();
+            entity.Property(consumption => consumption.ProductId).IsRequired();
+            entity.Property(consumption => consumption.InitialDate)
+                .HasColumnType("date")
+                .IsRequired();
+            entity.Property(consumption => consumption.FinalDate)
+                .HasColumnType("date")
+                .IsRequired();
+            entity.Property(consumption => consumption.TotalConsumption)
+                .HasPrecision(18, 3)
+                .IsRequired();
+            entity.Property(consumption => consumption.DailyAverage)
+                .HasPrecision(18, 4)
+                .IsRequired();
+            entity.Property(consumption => consumption.AverageVariation)
+                .HasPrecision(10, 4)
+                .IsRequired(false);
+            entity.Property(consumption => consumption.Source)
+                .HasMaxLength(50)
+                .IsRequired();
+            entity.Property(consumption => consumption.ImportedAt)
+                .HasColumnType("timestamp with time zone")
+                .HasConversion(
+                    importedAt => importedAt.ToUniversalTime(),
+                    importedAt => importedAt.ToUniversalTime())
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .IsRequired();
+
+            entity.HasOne(consumption => consumption.Item)
+                .WithMany()
+                .HasForeignKey(consumption => consumption.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(consumption => new
+            {
+                consumption.ProductId,
+                consumption.InitialDate,
+                consumption.FinalDate,
+                consumption.Source
+            }).IsUnique();
         });
 
         modelBuilder.Entity<DailyConsumption>(entity =>
