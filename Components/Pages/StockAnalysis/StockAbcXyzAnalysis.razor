@@ -1,0 +1,60 @@
+<div class="sa-section-intro"><div><h2>Classificação ABC/XYZ</h2><p>Impacto financeiro e criticidade assistencial em uma mesma leitura.</p></div><span class="sa-subtle-pill">Conjunto fixo · novembro de 2026</span></div>
+<div class="sa-metrics sa-metrics-four">
+    <StockAnalysisMetric Label="Itens analisados" Value="@Items.Count.ToString(Br)" Hint="Medicamentos e materiais" Icon="bi-box-seam" />
+    <StockAnalysisMetric Label="Consumo financeiro" Value="@Money(Items.Sum(i => i.Abc.ConsumptionValue))" Hint="Total da amostra no período" Icon="bi-currency-dollar" Tone="cyan" />
+    @foreach (var abc in Enum.GetValues<AbcClassification>()) { <StockAnalysisMetric Label="@($"Itens classe {abc}")" Value="@Items.Count(i => i.Abc.Classification == abc).ToString(Br)" Hint="Classificação financeira simulada" Icon="bi-pie-chart" /> }
+    @foreach (var xyz in Enum.GetValues<XyzCriticality>()) { <StockAnalysisMetric Label="@($"Itens criticidade {xyz}")" Value="@Items.Count(i => i.Xyz == xyz).ToString(Br)" Hint="Criticidade manual simulada" Icon="bi-shield-check" Tone="@(xyz == XyzCriticality.Z ? "rose" : "slate")" /> }
+</div>
+<section class="sa-card"><div class="sa-card-heading"><div><h3>Pareto do consumo financeiro</h3><p>Valores individuais em ordem decrescente e participação acumulada.</p></div><span class="sa-subtle-pill">12 itens · R$ 1.000.000,00</span></div>
+    <StockAnalysisChart Title="Pareto do consumo financeiro por item" Financial="true" YLabel="Valor individual (R$)" XLabel="Código do item · ordem financeira" Labels="ParetoLabels" Series="ParetoSeries" />
+    <div class="sa-inline-stats"><span class="sa-legend-tag"><i style="background:#8b5cf6"></i>A · 80% do valor</span><span class="sa-legend-tag"><i style="background:#06b6d4"></i>B · 16% do valor</span><span class="sa-legend-tag"><i style="background:#94a3b8"></i>C · 4% do valor</span></div>
+    <p class="sa-caption">As classes e percentuais são dados fixos de demonstração. O acumulado termina em 100%; filtros da tabela não recalculam o Pareto.</p>
+</section>
+<section class="sa-card"><div class="sa-card-heading"><div><h3>Matriz ABC × XYZ</h3><p>Selecione uma combinação para filtrar o ranking abaixo.</p></div><div class="sa-segmented" aria-label="Modo de exibição da matriz"><button type="button" aria-pressed="@(!_financialMode ? "true" : "false")" class="@(!_financialMode ? "is-selected" : null)" @onclick="() => _financialMode = false">Quantidade de itens</button><button type="button" aria-pressed="@(_financialMode ? "true" : "false")" class="@(_financialMode ? "is-selected" : null)" @onclick="() => _financialMode = true">Valor financeiro</button></div></div>
+    <div class="sa-table-scroll"><table class="sa-matrix"><thead><tr><th>ABC / XYZ</th><th>X</th><th>Y</th><th>Z</th></tr></thead><tbody>
+        @foreach (var abc in Enum.GetValues<AbcClassification>())
+        {
+            <tr><th><span class="@AbcClass(abc)">@abc</span></th>
+            @foreach (var xyz in Enum.GetValues<XyzCriticality>())
+            {
+                var cell = Matrix.Cells.Single(c => c.AbcClassification == abc && c.Criticality == xyz);
+                var selected = _matrixAbc == abc && _matrixXyz == xyz;
+                <td><button type="button" class="sa-matrix-cell @(selected ? "is-selected" : null)" aria-pressed="@(selected ? "true" : "false")" aria-label="@($"Filtrar combinação {abc}{xyz}: {cell.ItemCount} itens, {Money(cell.ConsumptionValue)}")" @onclick="() => SelectCell(abc, xyz)"><span class="sa-cell-combination">@abc@xyz</span><strong>@(_financialMode ? Money(cell.ConsumptionValue) : cell.ItemCount.ToString(Br))</strong><small>@(_financialMode ? cell.ItemCount + " item(ns)" : "Ver itens desta combinação")</small></button></td>
+            }
+            </tr>
+        }
+    </tbody></table></div>
+    <p class="sa-caption">Os @Items.Count(i => i.Xyz is null) itens sem classificação XYZ não integram as nove células e continuam disponíveis no ranking, pelo filtro “Sem XYZ”. XYZ é uma classificação manual.</p>
+</section>
+<section class="sa-card" aria-label="Ranking financeiro dos itens">
+    <div class="sa-card-heading"><div><h3>Ranking financeiro</h3><p>Posições e percentuais referem-se ao conjunto completo da amostra.</p></div><span class="sa-subtle-pill" aria-live="polite">@FilteredItems.Count de @Items.Count itens</span></div>
+    <div class="sa-filters"><label class="sa-control sa-grow"><span>Buscar item</span><input type="search" placeholder="Código ou descrição" @bind="_search" @bind:event="oninput" /></label>
+        <label class="sa-control"><span>Grupo do produto</span><select aria-label="Filtrar ranking por grupo" @bind="_group"><option value="">Todos os grupos</option>@foreach (var type in Items.Select(i => i.Item.ItemType).Distinct().OrderBy(t => t)) { <option value="@type">@ItemTypeLabels.GetLabel(type)</option> }</select></label>
+        <label class="sa-control"><span>Classe ABC</span><select aria-label="Filtrar ranking por ABC" @bind="_abc"><option value="">Todas</option><option>A</option><option>B</option><option>C</option></select></label>
+        <label class="sa-control"><span>Criticidade XYZ</span><select aria-label="Filtrar ranking por XYZ" @bind="_xyz"><option value="">Todas</option><option>X</option><option>Y</option><option>Z</option><option value="none">Sem XYZ</option></select></label>
+    </div>
+    @if (HasFilters) { <div class="sa-filter-summary"><span>@(_matrixAbc is null ? "Filtros aplicados à listagem" : $"Combinação selecionada: {_matrixAbc}{_matrixXyz}")</span><button type="button" class="sa-text-button" @onclick="ClearFilters">Limpar filtros</button></div> }
+    <div class="sa-table-scroll"><table class="sa-table"><thead><tr><th>Pos.</th><th>Código</th><th>Descrição do produto</th><th>Grupo</th><th class="sa-numeric">Consumo financeiro</th><th class="sa-numeric">Participação</th><th class="sa-numeric">Acumulado</th><th>ABC</th><th>XYZ</th></tr></thead><tbody>
+        @foreach (var item in FilteredItems)
+        {
+            <tr><td class="sa-code">#@item.Abc.Position</td><td class="sa-code">@item.Item.Code</td><td><button type="button" class="sa-item-link" @onclick="() => OnSelectItem.InvokeAsync(item.Item.ItemId)">@item.Item.Name <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></td><td>@ItemTypeLabels.GetLabel(item.Item.ItemType)</td><td class="sa-numeric">@Money(item.Abc.ConsumptionValue)</td><td class="sa-numeric">@item.Share.ToString("N1", Br)%</td><td class="sa-numeric">@item.Abc.AccumulatedPercentage.ToString("N1", Br)%</td><td><span class="@AbcClass(item.Abc.Classification)">@item.Abc.Classification</span></td><td><span class="@XyzClass(item.Xyz)">@ClassLabel(item.Xyz)</span></td></tr>
+        }
+    </tbody></table></div>
+    @if (FilteredItems.Count == 0) { <p class="sa-empty">Nenhum item da amostra atende a essa combinação de filtros.</p> }
+</section>
+
+@code {
+    [Parameter] public IReadOnlyList<DemoItem> Items { get; set; } = [];
+    [Parameter] public AbcXyzMatrixDto Matrix { get; set; } = new();
+    [Parameter] public EventCallback<int> OnSelectItem { get; set; }
+    private string _search = "", _group = "", _abc = "", _xyz = "";
+    private bool _financialMode;
+    private AbcClassification? _matrixAbc;
+    private XyzCriticality? _matrixXyz;
+    private bool HasFilters => _matrixAbc is not null || _search.Length > 0 || _group.Length > 0 || _abc.Length > 0 || _xyz.Length > 0;
+    private IReadOnlyList<DemoItem> FilteredItems => Items.Where(i => Matches(i.Item, _search) && (_group.Length == 0 || i.Item.ItemType.ToString() == _group) && (_abc.Length == 0 || i.Abc.Classification.ToString() == _abc) && (_xyz.Length == 0 || (_xyz == "none" ? i.Xyz is null : i.Xyz?.ToString() == _xyz)) && (_matrixAbc is null || (i.Abc.Classification == _matrixAbc && i.Xyz == _matrixXyz))).ToArray();
+    private void ClearFilters() { _search = _group = _abc = _xyz = ""; _matrixAbc = null; _matrixXyz = null; }
+    private void SelectCell(AbcClassification abc, XyzCriticality xyz) { var repeat = _matrixAbc == abc && _matrixXyz == xyz; ClearFilters(); if (!repeat) { _matrixAbc = abc; _matrixXyz = xyz; } }
+    private IReadOnlyList<string> ParetoLabels => Items.Select(i => i.Item.Code).ToArray();
+    private IReadOnlyList<StockAnalysisChart.ChartSeries> ParetoSeries => [new("Valor consumido", Items.Select(i => i.Abc.ConsumptionValue).ToArray(), "#8b5cf6", PointColors: Items.Select(i => i.Abc.Classification switch { AbcClassification.A => "#8b5cf6", AbcClassification.B => "#06b6d4", _ => "#94a3b8" }).ToArray()), new("Acumulado financeiro", Items.Select(i => i.Abc.AccumulatedPercentage).ToArray(), "#f59e0b", true, true)];
+}

@@ -1,0 +1,13 @@
+<article class="sa-metric sa-tone-@Tone">
+    <div class="sa-metric-top"><span>@Label</span><span class="sa-metric-icon"><i class="bi @Icon" aria-hidden="true"></i></span></div>
+    <strong>@Value</strong>
+    <small>@Hint</small>
+</article>
+
+@code {
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public string Hint { get; set; } = "";
+    [Parameter] public string Icon { get; set; } = "bi-bar-chart";
+    [Parameter] public string Tone { get; set; } = "purple";
+}

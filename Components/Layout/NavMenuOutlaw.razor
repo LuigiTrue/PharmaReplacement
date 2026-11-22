@@ -20,18 +20,19 @@
                 <span class="text">Itens em estoque</span>
             </a>
         </li>
-        <li class="stock-nav-item rounded-md">
-            <details class="stock-menu">
-                <summary class="stock-menu-toggle @NavLinkClass" title="Controle de Estoque">
-                    <span class="icon"><i class="bi bi-cart-fill" aria-hidden="true"></i></span>
-                    <span class="stock-menu-label">Controle de Estoque</span>
-                    <span class="stock-menu-chevron" aria-hidden="true">›</span>
-                </summary>
-                <ul class="stock-submenu" aria-label="Controle de Estoque">
-                    <li><a href="/FollowingDanfe/Following">Acompanhamento de Notas</a></li>
-                </ul>
-            </details>
+        <li class="rounded-md @NavItemHoverClass">
+            <a href="/StockAnalysis" class="@NavLinkClass" aria-label="Análise de Estoque" title="Análise de Estoque">
+                <span class="icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span>
+                <span class="text">Análise de Estoque</span>
+            </a>
+        </li> 
+        <li class="rounded-md @NavItemHoverClass">
+            <a href="/FollowingDanfe/Following" class="@NavLinkClass" aria-label="Notas Fiscais" title="Notas Fiscais">
+                <span class="icon"><i class="bi bi-cart-fill" aria-hidden="true"></i></span>
+                <span class="text">Notas Fiscais</span>
+            </a>
         </li>
+        
 
         <li class="theme-toggle-item rounded-md @NavItemHoverClass">
             <button type="button" class="theme-toggle-button @NavLinkClass" title="@ThemeButtonTitle" @onclick="ThemeState.Toggle">

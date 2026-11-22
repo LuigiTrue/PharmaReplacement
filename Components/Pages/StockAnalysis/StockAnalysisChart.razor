@@ -1,0 +1,106 @@
+<div class="sa-chart">
+    <div class="sa-chart-legend" aria-label="Legenda">
+        @foreach (var series in Series)
+        {
+            <span><i style="background:@series.Color"></i>@series.Name</span>
+        }
+    </div>
+    @if (Labels.Count == 0 || Series.Count == 0)
+    {
+        <p class="sa-empty">Histórico insuficiente para esta visualização.</p>
+    }
+    else
+    {
+        <div class="sa-chart-viewport" tabindex="0" aria-label="Gráfico com rolagem horizontal em telas menores">
+            <svg class="sa-chart-svg" viewBox="0 0 900 295" role="img" aria-label="@Title" @onmouseleave="ClearHover">
+                <title>@Title</title>
+                <desc>@YLabel em função de @XLabel. Use o mouse ou o teclado nos pontos para consultar os valores.</desc>
+                @for (var tick = 0; tick <= 4; tick++)
+                {
+                    var y = Top + PlotHeight * tick / 4;
+                    var value = Maximum * (4 - tick) / 4;
+                    <g><line x1="@F(Left)" y1="@F(y)" x2="@F(Left + PlotWidth)" y2="@F(y)" class="sa-chart-gridline" />
+                    <text x="@F(Left - 12)" y="@F(y + 4)" text-anchor="end" class="sa-axis">@AxisValue(value)</text></g>
+                    @if (HasPercentage)
+                    {
+                        <g><text x="@F(Left + PlotWidth + 10)" y="@F(y + 4)" class="sa-axis">@((100 - tick * 25).ToString(Br))%</text></g>
+                    }
+                }
+                <g><text x="@F(Left)" y="14" class="sa-axis-caption">@YLabel</text><text x="@F(Left + PlotWidth / 2)" y="287" text-anchor="middle" class="sa-axis-caption">@XLabel</text></g>
+                @if (HasPercentage)
+                {
+                    <g><text x="@F(Left + PlotWidth)" y="14" text-anchor="end" class="sa-axis-caption">Acumulado (%)</text></g>
+                }
+                @foreach (var series in Series)
+                {
+                    @if (series.IsLine)
+                    {
+                        <polyline points="@LinePoints(series)" fill="none" stroke="@series.Color" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    }
+                    else
+                    {
+                        @for (var index = 0; index < Math.Min(Labels.Count, series.Values.Count); index++)
+                        {
+                            var y = Y(series.Values[index], series.IsPercentage);
+                            var color = series.PointColors is not null && index < series.PointColors.Count ? series.PointColors[index] : series.Color;
+                            <rect x="@F(X(index) - BarWidth / 2)" y="@F(y)" width="@F(BarWidth)" height="@F(Top + PlotHeight - y)" rx="4" fill="@color" opacity="0.9" />
+                        }
+                    }
+                }
+                @for (var index = 0; index < Labels.Count; index++)
+                {
+                    var point = index;
+                    @if (Labels.Count <= 12 || index == 0 || index == Labels.Count - 1 || index % Math.Max(1, Labels.Count / 6) == 0)
+                    {
+                        <g><text x="@F(X(index))" y="263" text-anchor="middle" class="sa-axis sa-axis-x">@Labels[index]</text></g>
+                    }
+                    <rect class="sa-chart-hit" x="@F(X(index) - Slot / 2)" y="@F(Top)" width="@F(Slot)" height="@F(PlotHeight)" fill="transparent" tabindex="0" aria-label="@Tooltip(index)" @onmouseenter="() => _hoverIndex = point" @onfocus="() => _hoverIndex = point" @onblur="ClearHover">
+                        <title>@Tooltip(index)</title>
+                    </rect>
+                }
+            </svg>
+        </div>
+        <div class="sa-chart-tooltip" role="status" aria-live="polite">
+            @if (_hoverIndex is int hovered && hovered < Labels.Count)
+            {
+                <strong>@Labels[hovered]</strong>
+                @foreach (var series in Series.Where(s => hovered < s.Values.Count))
+                {
+                    <span><i style="background:@series.Color"></i>@series.Name: <b>@FormatValue(series.Values[hovered], series.IsPercentage)</b></span>
+                }
+            }
+            else
+            {
+                <span class="sa-muted"><i class="bi bi-cursor" aria-hidden="true"></i> Passe o mouse ou use o teclado para consultar os valores.</span>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string YLabel { get; set; } = "Quantidade";
+    [Parameter] public string XLabel { get; set; } = "Período";
+    [Parameter] public bool Financial { get; set; }
+    [Parameter] public IReadOnlyList<string> Labels { get; set; } = [];
+    [Parameter] public IReadOnlyList<ChartSeries> Series { get; set; } = [];
+    public sealed record ChartSeries(string Name, IReadOnlyList<decimal> Values, string Color, bool IsLine = false, bool IsPercentage = false, IReadOnlyList<string>? PointColors = null);
+    private int? _hoverIndex;
+    private const double Left = 100, Top = 33, PlotWidth = 718, PlotHeight = 206;
+    // Apenas geometria de apresentação SVG; não calcula indicadores de consumo.
+    private decimal Maximum => Math.Max(1m, Series.Where(s => !s.IsPercentage).SelectMany(s => s.Values).DefaultIfEmpty(0m).Max() * 1.12m);
+    private bool HasPercentage => Series.Any(s => s.IsPercentage);
+    private double Slot => PlotWidth / Math.Max(1, Labels.Count);
+    private double BarWidth => Math.Min(64, Slot * 0.65);
+    private double X(int index) => Left + Slot * (index + 0.5);
+    private double Y(decimal value, bool percentage) => Top + PlotHeight - (double)(value / (percentage ? 100m : Maximum)) * PlotHeight;
+    private string LinePoints(ChartSeries series) => string.Join(" ", series.Values.Take(Labels.Count).Select((v, i) => F(X(i)) + "," + F(Y(v, series.IsPercentage))));
+    private static string F(double value) => value.ToString("0.##", CultureInfo.InvariantCulture);
+    private string FormatValue(decimal value, bool percentage) => percentage ? value.ToString("N1", Br) + "%" : Financial ? Money(value) : value.ToString("N2", Br);
+    private string AxisValue(decimal value) => !Financial ? value.ToString("N0", Br)
+        : value >= 1_000_000 ? "R$ " + (value / 1_000_000).ToString("N2", Br) + " mi"
+        : value >= 1000 ? "R$ " + (value / 1000).ToString("N0", Br) + " mil" : Money(value);
+    private string Tooltip(int index) => Labels[index] + ": " + string.Join("; ", Series.Where(s => index < s.Values.Count).Select(s => s.Name + " " + FormatValue(s.Values[index], s.IsPercentage)));
+    private void ClearHover() => _hoverIndex = null;
+    protected override void OnParametersSet() { if (_hoverIndex >= Labels.Count) _hoverIndex = null; }
+}

@@ -1,0 +1,93 @@
+<div class="sa-section-intro"><div><h2>Análise por Item</h2><p>Explore o comportamento de um medicamento ou material da amostra.</p></div></div>
+<section class="sa-card sa-search-panel">
+    <div class="sa-search-grid"><label class="sa-control sa-search-control"><span>Pesquisar por código ou descrição</span><input type="search" placeholder="Ex.: MED-001, noradrenalina, seringa..." @bind="_search" @bind:event="oninput" /></label>
+    <label class="sa-control"><span>Item selecionado</span><select aria-label="Selecionar item para análise" @bind="SelectedItemId" @bind:after="NotifySelection">@foreach (var option in Items) { <option value="@option.Item.ItemId">@option.Item.Code · @option.Item.Name</option> }</select></label></div>
+    @if (!string.IsNullOrWhiteSpace(_search))
+    {
+        <div class="sa-search-results" role="region" aria-label="Resultados da pesquisa de itens">
+            @foreach (var result in Items.Where(i => Matches(i.Item, _search)))
+            {
+                <button type="button" @onclick="() => ChooseItem(result.Item.ItemId)"><span class="sa-code">@result.Item.Code</span><strong>@result.Item.Name</strong><span class="@AbcClass(result.Abc.Classification)">@result.Abc.Classification</span><span class="@XyzClass(result.Xyz)">@ClassLabel(result.Xyz)</span></button>
+            }
+            @if (!Items.Any(i => Matches(i.Item, _search))) { <p class="sa-empty">Nenhum item fictício corresponde à pesquisa.</p> }
+        </div>
+    }
+</section>
+@if (Current is { } item)
+{
+    <section class="sa-item-identity"><div class="sa-identity-icon"><i class="bi @(item.Item.ItemType == ItemType.Material ? "bi-box-seam" : "bi-capsule")" aria-hidden="true"></i></div><div><span class="sa-code">@item.Item.Code</span><h3>@item.Item.Name</h3><p>@ItemTypeLabels.GetLabel(item.Item.ItemType) · Unidade: @item.Item.Unit</p></div><div class="sa-identity-badges"><span class="@AbcClass(item.Abc.Classification)">ABC @item.Abc.Classification</span><span class="@XyzClass(item.Xyz)">@ClassLabel(item.Xyz)</span></div></section>
+    @if (item.Analysis.DataQuality?.ItemsWithInsufficientHistory > 0)
+    {
+        <p class="sa-inline-notice"><i class="bi bi-info-circle" aria-hidden="true"></i> Este item ilustra um histórico diário curto. Indicadores indisponíveis permanecem sinalizados como histórico insuficiente.</p>
+    }
+    <div class="sa-metrics sa-metrics-six">
+        <StockAnalysisMetric Label="Consumo no mês" Value="@Number(item.Analysis.Consumption?.TotalQuantity)" Hint="@($"Novembro de 2026 · {item.Item.Unit}")" Icon="bi-box-seam" />
+        <StockAnalysisMetric Label="Média diária" Value="@DecimalNumber(item.Analysis.Consumption?.AverageDailyConsumption)" Hint="@($"Unidade por dia · {item.Item.Unit}")" Icon="bi-calendar-day" Tone="cyan" />
+        <StockAnalysisMetric Label="Variação mensal" Value="@Percent(item.Variation)" Hint="Em relação a outubro de 2026" Icon="bi-arrow-left-right" Tone="amber" />
+        <StockAnalysisMetric Label="Projeção para 45 dias" Value="@Number(item.Analysis.Forecast?.TotalQuantity)" Hint="Estimativa exclusivamente ilustrativa" Icon="bi-graph-up-arrow" />
+        <StockAnalysisMetric Label="Consumo financeiro" Value="@Money(item.Abc.ConsumptionValue)" Hint="No mês de referência" Icon="bi-currency-dollar" Tone="cyan" />
+        <StockAnalysisMetric Label="Ranking financeiro" Value="@($"#{item.Abc.Position}")" Hint="@($"Entre {Items.Count} itens da amostra")" Icon="bi-trophy" Tone="slate" />
+    </div>
+    <section class="sa-card"><div class="sa-card-heading"><div><h3>Consumo diário</h3><p>Histórico e médias móveis da amostra.</p></div><label class="sa-control"><span>Janela diária</span><select aria-label="Período do consumo diário" @bind="_days"><option value="30">Últimos 30 dias</option><option value="90">Últimos 90 dias</option></select></label></div>
+        <StockAnalysisChart Title="Histórico diário e médias móveis do item" YLabel="@($"Consumo ({item.Item.Unit})")" XLabel="Data" Labels="DailyLabels(item)" Series="DailySeries(item)" />
+        <p class="sa-caption">Séries e médias ilustrativas para avaliação da apresentação. @if (item.Moving30.Points.Count == 0) { <span>Média móvel de 30 dias indisponível neste exemplo.</span> }</p>
+    </section>
+    <div class="sa-grid-two">
+        <section class="sa-card"><div class="sa-card-heading"><div><h3>Consumo mensal</h3><p>Quantidade por mês de referência.</p></div><label class="sa-control"><span>Janela mensal</span><select aria-label="Período do consumo mensal do item" @bind="_months"><option value="6">Últimos 6 meses</option><option value="12">Últimos 12 meses</option></select></label></div>
+            <StockAnalysisChart Title="Histórico mensal do item" YLabel="@($"Consumo ({item.Item.Unit})")" XLabel="Mês" Labels="MonthlyLabels(item)" Series="MonthlySeries(item)" />
+        </section>
+        <section class="sa-card"><div class="sa-card-heading"><div><h3>Comparação entre anos</h3><p>Janeiro a novembro · períodos equivalentes.</p></div><span class="sa-subtle-pill">2025 × 2026</span></div>
+            @if (item.Analysis.DataQuality?.ItemsWithInsufficientHistory > 0) { <p class="sa-empty">Histórico insuficiente para comparar dois anos neste item.</p> }
+            else { <StockAnalysisChart Title="Comparação do consumo entre 2025 e 2026" YLabel="@($"Consumo ({item.Item.Unit})")" XLabel="Mês do ano" Labels="YearLabels" Series="YearSeriesFor(item)" /> }
+        </section>
+    </div>
+    <section class="sa-card"><div class="sa-card-heading"><div><h3>Histórico ABC</h3><p>O contexto e o conjunto de itens de cada análise são preservados.</p></div></div>
+        <div class="sa-table-scroll"><table class="sa-table"><thead><tr><th>Período analisado</th><th>ABC</th><th class="sa-numeric">Consumo financeiro</th><th class="sa-numeric">Participação financeira</th><th class="sa-numeric">Ranking</th></tr></thead><tbody>
+            @for (var index = item.AbcHistory.Count - 1; index >= 0; index--)
+            {
+                var history = item.AbcHistory[index];
+                <tr><td>@history.Period.StartDate.ToString("MMMM/yyyy", Br)</td><td><span class="@AbcClass(history.Classification)">@history.Classification</span></td><td class="sa-numeric">@Money(history.ConsumptionValue)</td><td class="sa-numeric">@item.HistoryShares[index].ToString("N2", Br)%</td><td class="sa-numeric">#@history.Position</td></tr>
+            }
+        </tbody></table></div>
+    </section>
+    <section class="sa-card"><div class="sa-card-heading"><div><h3>Projeção de demanda</h3><p>Comparação visual de cenários simulados para apoiar a discussão.</p></div><span class="sa-subtle-pill">Horizonte de comparação · 45 dias</span></div>
+        <div class="sa-projection-grid">
+            <div><span>Média · 30 dias</span><strong>@DecimalNumber(item.Analysis.Consumption?.AverageDailyConsumption) <small>@item.Item.Unit/dia</small></strong></div>
+            <div><span>Média · 90 dias</span><strong>@DecimalNumber(item.Average90) <small>@(item.Average90 is null ? "Histórico insuficiente" : item.Item.Unit + "/dia")</small></strong></div>
+            <div><span>Média · 180 dias</span><strong>@DecimalNumber(item.Average180) <small>@(item.Average180 is null ? "Histórico insuficiente" : item.Item.Unit + "/dia")</small></strong></div>
+            @for (var i = 0; i < 3; i++) { <div class="sa-projection-highlight"><span>Projeção · @HorizonDays[i] dias</span><strong>@Number(item.Projections[i]) <small>@item.Item.Unit</small></strong></div> }
+        </div>
+        <div class="sa-table-scroll"><table class="sa-table"><thead><tr><th>Método de apresentação</th><th class="sa-numeric">Projeção para 45 dias</th><th>Disponibilidade</th></tr></thead><tbody>
+            @for (var i = 0; i < item.ForecastComparison.Forecasts.Count; i++)
+            {
+                var forecast = item.ForecastComparison.Forecasts[i];
+                <tr><td>@MethodLabels[i]</td><td class="sa-numeric">@Number(forecast.TotalQuantity) <small>@(forecast.TotalQuantity is null ? "" : item.Item.Unit)</small></td><td><span class="sa-subtle-pill">@(forecast.TotalQuantity is null ? "Histórico insuficiente" : "Cenário simulado")</span></td></tr>
+            }
+        </tbody></table></div>
+        <p class="sa-caption">Valores de amostra previamente definidos. Não há execução de algoritmos de previsão ou geração de pedidos.</p>
+    </section>
+}
+
+@code {
+    [Parameter] public IReadOnlyList<DemoItem> Items { get; set; } = [];
+    [Parameter] public int SelectedItemId { get; set; }
+    [Parameter] public EventCallback<int> SelectedItemIdChanged { get; set; }
+    private string _search = "";
+    private int _days = 30, _months = 6;
+    private DemoItem? Current => Items.FirstOrDefault(i => i.Item.ItemId == SelectedItemId);
+    private Task NotifySelection() => SelectedItemIdChanged.InvokeAsync(SelectedItemId);
+    private Task ChooseItem(int id) { _search = ""; return SelectedItemIdChanged.InvokeAsync(id); }
+    private static readonly int[] HorizonDays = [15, 30, 45];
+    private static readonly string[] MethodLabels = ["Média dos últimos 30 dias", "Média dos últimos 90 dias", "Média dos últimos 180 dias"];
+    private static readonly string[] YearLabels = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov"];
+    private IReadOnlyList<string> DailyLabels(DemoItem item) => item.Daily.TakeLast(_days).Select(d => d.Date.ToString("dd/MM", Br)).ToArray();
+    private IReadOnlyList<StockAnalysisChart.ChartSeries> DailySeries(DemoItem item)
+    {
+        var series = new List<StockAnalysisChart.ChartSeries> { new("Consumo diário", item.Daily.TakeLast(_days).Select(d => d.Quantity).ToArray(), "#8b5cf6", true), new("Média móvel · 7 dias", item.Moving7.Points.TakeLast(_days).Select(p => p.Quantity ?? 0).ToArray(), "#06b6d4", true) };
+        if (item.Moving30.Points.Count > 0) series.Add(new("Média móvel · 30 dias", item.Moving30.Points.TakeLast(_days).Select(p => p.Quantity ?? 0).ToArray(), "#f59e0b", true));
+        return series;
+    }
+    private IReadOnlyList<string> MonthlyLabels(DemoItem item) => item.Monthly.TakeLast(_months).Select(m => new DateOnly(m.Year, m.Month, 1).ToString("MMM/yy", Br)).ToArray();
+    private IReadOnlyList<StockAnalysisChart.ChartSeries> MonthlySeries(DemoItem item) => [new("Consumo mensal", item.Monthly.TakeLast(_months).Select(m => m.TotalQuantity).ToArray(), "#8b5cf6")];
+    private static IReadOnlyList<StockAnalysisChart.ChartSeries> YearSeriesFor(DemoItem item) => [new("2025", item.YearComparison.ReferenceSeries.Select(p => p.Quantity ?? 0).ToArray(), "#94a3b8", true), new("2026", item.YearComparison.ComparisonSeries.Select(p => p.Quantity ?? 0).ToArray(), "#06b6d4", true)];
+}

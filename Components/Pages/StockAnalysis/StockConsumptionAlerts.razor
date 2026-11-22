@@ -1,0 +1,48 @@
+<div class="sa-section-intro"><div><h2>Alertas de Consumo</h2><p>Sinais para investigação e acompanhamento, sem conclusões definitivas.</p></div></div>
+<div class="sa-metrics sa-metrics-five">
+    <StockAnalysisMetric Label="Total de alertas" Value="@Alerts.Count.ToString(Br)" Hint="Ocorrências na amostra" Icon="bi-bell" />
+    <StockAnalysisMetric Label="Aumento expressivo" Value="@Alerts.Count(a => a.Data.Code is "growth" or "critical-growth").ToString(Br)" Hint="Comparação mensal simulada" Icon="bi-graph-up-arrow" Tone="amber" />
+    <StockAnalysisMetric Label="Redução expressiva" Value="@Alerts.Count(a => a.Data.Code == "reduction").ToString(Br)" Hint="Itens que merecem revisão" Icon="bi-graph-down-arrow" Tone="cyan" />
+    <StockAnalysisMetric Label="Críticos com crescimento" Value="@Alerts.Count(a => Items.Any(i => i.Item.ItemId == a.Data.Item.ItemId && i.Xyz == XyzCriticality.Z && i.Variation > 0)).ToString(Br)" Hint="Criticidade Z na amostra" Icon="bi-shield-exclamation" Tone="rose" />
+    <StockAnalysisMetric Label="Histórico insuficiente" Value="@Alerts.Count(a => a.Data.Code == "insufficient").ToString(Br)" Hint="Dados ainda incompletos" Icon="bi-calendar-x" Tone="slate" />
+</div>
+<p class="sa-inline-notice"><i class="bi bi-info-circle" aria-hidden="true"></i> Os alertas são exemplos para discussão com a gestão. Representam informações a investigar, não diagnósticos ou recomendações automáticas de compra.</p>
+<section class="sa-card">
+    <div class="sa-card-heading"><div><h3>Ocorrências para investigação</h3><p>Selecione um alerta para consultar o contexto e abrir a análise do item.</p></div><span class="sa-subtle-pill" aria-live="polite">@FilteredAlerts.Count de @Alerts.Count alertas</span></div>
+    <div class="sa-filters"><label class="sa-control sa-grow"><span>Buscar item</span><input type="search" placeholder="Código ou descrição" @bind="_search" @bind:event="oninput" @bind:after="ClearSelection" /></label>
+        <label class="sa-control"><span>Tipo de alerta</span><select aria-label="Filtrar alertas por tipo" @bind="_type" @bind:after="ClearSelection"><option value="">Todos os tipos</option>@foreach (var a in Alerts.DistinctBy(a => a.Data.Code)) { <option value="@a.Data.Code">@a.Data.Description</option> }</select></label>
+        <label class="sa-control"><span>Nível de atenção</span><select aria-label="Filtrar alertas por nível" @bind="_severity" @bind:after="ClearSelection"><option value="">Todos os níveis</option><option value="Critical">Alta atenção</option><option value="Warning">Atenção</option><option value="Information">Acompanhamento</option></select></label>
+    </div>
+    @if (_search.Length > 0 || _type.Length > 0 || _severity.Length > 0) { <div class="sa-filter-summary"><span>Listagem filtrada</span><button type="button" class="sa-text-button" @onclick="ClearFilters">Limpar filtros</button></div> }
+    <div class="sa-table-scroll"><table class="sa-table"><thead><tr><th>Código</th><th>Descrição</th><th>Tipo de alerta</th><th>ABC / XYZ</th><th class="sa-numeric">Variação</th><th>Identificado em</th><th>Nível de atenção</th></tr></thead><tbody>
+        @foreach (var alert in FilteredAlerts)
+        {
+            var item = Items.Single(i => i.Item.ItemId == alert.Data.Item.ItemId);
+            <tr class="@(_selected == alert ? "sa-row-selected" : null)"><td class="sa-code">@alert.Data.Item.Code</td><td><button type="button" class="sa-item-link" aria-expanded="@(_selected == alert ? "true" : "false")" aria-controls="sa-alert-detail" @onclick="() => _selected = alert">@alert.Data.Item.Name <i class="bi bi-chevron-right" aria-hidden="true"></i></button></td><td>@alert.Data.Description</td><td><span class="@AbcClass(item.Abc.Classification)">@item.Abc.Classification</span> <span class="@XyzClass(item.Xyz)">@ClassLabel(item.Xyz)</span></td><td class="sa-numeric">@Percent(alert.Data.VariationPercentage)</td><td>@alert.IdentifiedAt.ToString("dd/MM/yyyy", Br)</td><td><span class="sa-attention @SeverityClass(alert.Data.Severity)"><i class="bi @SeverityIcon(alert.Data.Severity)" aria-hidden="true"></i>@SeverityLabel(alert.Data.Severity)</span></td></tr>
+        }
+    </tbody></table></div>
+    @if (FilteredAlerts.Count == 0) { <p class="sa-empty">Nenhum alerta fictício corresponde aos filtros selecionados.</p> }
+</section>
+@if (_selected is { } selected)
+{
+    <section id="sa-alert-detail" class="sa-card sa-alert-detail" role="region" aria-label="Detalhes do alerta selecionado">
+        <div class="sa-card-heading"><div><span class="sa-eyebrow">CONTEXTO PARA INVESTIGAÇÃO</span><h3>@selected.Data.Description</h3><p>@selected.Data.Item.Code · @selected.Data.Item.Name</p></div><button type="button" class="sa-secondary-button" @onclick="ClearSelection"><i class="bi bi-x-lg" aria-hidden="true"></i> Fechar detalhes</button></div>
+        <div class="sa-detail-grid"><div><span class="sa-detail-label">Identificação</span><strong>@selected.IdentifiedAt.ToString("dd/MM/yyyy", Br)</strong></div><div><span class="sa-detail-label">Nível de atenção</span><strong>@SeverityLabel(selected.Data.Severity)</strong></div><div><span class="sa-detail-label">Valor observado (quantidade)</span><strong>@DecimalNumber(selected.Data.ObservedValue)</strong></div><div><span class="sa-detail-label">Variação ilustrativa</span><strong>@Percent(selected.Data.VariationPercentage)</strong></div></div>
+        <div class="sa-grid-two"><div class="sa-context-box"><h4>O que a amostra apresenta</h4><p>@selected.Context</p></div><div class="sa-context-box"><h4>Ponto para conferência</h4><p>@selected.SuggestedReview</p></div></div>
+        <div class="sa-detail-footer"><p>Este exemplo não determina causa, diagnóstico ou necessidade de compra.</p><button type="button" class="sa-primary-button" @onclick="() => OnSelectItem.InvokeAsync(selected.Data.Item.ItemId)">Ver análise do item <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></div>
+    </section>
+}
+
+@code {
+    [Parameter] public IReadOnlyList<DemoItem> Items { get; set; } = [];
+    [Parameter] public IReadOnlyList<DemoAlert> Alerts { get; set; } = [];
+    [Parameter] public EventCallback<int> OnSelectItem { get; set; }
+    private string _search = "", _type = "", _severity = "";
+    private DemoAlert? _selected;
+    private IReadOnlyList<DemoAlert> FilteredAlerts => Alerts.Where(a => Matches(a.Data.Item, _search) && (_type.Length == 0 || a.Data.Code == _type) && (_severity.Length == 0 || a.Data.Severity.ToString() == _severity)).ToArray();
+    private void ClearSelection() => _selected = null;
+    private void ClearFilters() { _search = _type = _severity = ""; ClearSelection(); }
+    private static string SeverityLabel(AnalysisSeverity value) => value switch { AnalysisSeverity.Critical => "Alta atenção", AnalysisSeverity.Warning => "Atenção", _ => "Acompanhamento" };
+    private static string SeverityClass(AnalysisSeverity value) => value switch { AnalysisSeverity.Critical => "sa-level-critical", AnalysisSeverity.Warning => "sa-level-warning", _ => "sa-level-info" };
+    private static string SeverityIcon(AnalysisSeverity value) => value switch { AnalysisSeverity.Critical => "bi-exclamation-octagon", AnalysisSeverity.Warning => "bi-exclamation-triangle", _ => "bi-info-circle" };
+}

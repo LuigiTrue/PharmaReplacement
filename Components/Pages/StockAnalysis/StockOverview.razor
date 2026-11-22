@@ -1,0 +1,72 @@
+<div class="sa-section-intro"><div><h2>Visão Geral</h2><p>Um panorama do consumo e dos itens que merecem acompanhamento.</p></div><span class="sa-subtle-pill">Novembro de 2026 · 12 itens da amostra</span></div>
+<div class="sa-metrics sa-metrics-six">
+    <StockAnalysisMetric Label="Itens cadastrados" Value="@Items.Count.ToString(Br)" Hint="Medicamentos e materiais" Icon="bi-box-seam" />
+    <StockAnalysisMetric Label="Consumo financeiro" Value="@Money(Distribution.TotalConsumptionValue)" Hint="No mês de referência" Icon="bi-currency-dollar" Tone="cyan" />
+    <StockAnalysisMetric Label="Itens classe A" Value="@Items.Count(i => i.Abc.Classification == AbcClassification.A).ToString(Br)" Hint="Maior participação financeira" Icon="bi-pie-chart" />
+    <StockAnalysisMetric Label="Itens criticidade Z" Value="@Items.Count(i => i.Xyz == XyzCriticality.Z).ToString(Br)" Hint="Classificação manual simulada" Icon="bi-shield-exclamation" Tone="rose" />
+    <StockAnalysisMetric Label="Consumo em aumento" Value="@Items.Count(i => i.Variation > 0).ToString(Br)" Hint="Tendência ilustrativa na amostra" Icon="bi-graph-up-arrow" Tone="amber" />
+    <StockAnalysisMetric Label="Itens com estoque crítico" Value="@CriticalStockItems.Count.ToString(Br)" Hint="Autonomia inferior a 15 dias" Icon="bi-exclamation-triangle" Tone="rose" />
+</div>
+<div class="sa-grid-two">
+    <section class="sa-card sa-span-two">
+        <div class="sa-card-heading"><div><h3>Evolução mensal do consumo financeiro</h3><p>Valores simulados de todos os itens da amostra.</p></div><label class="sa-control"><span>Histórico financeiro</span><select aria-label="Período da evolução financeira" @bind="_months"><option value="6">Últimos 6 meses</option><option value="12">Últimos 12 meses</option></select></label></div>
+        <StockAnalysisChart Title="Evolução mensal do consumo financeiro" Financial="true" YLabel="Consumo financeiro (R$)" XLabel="Mês de referência" Labels="FinancialLabels" Series="FinancialSeries" />
+    </section>
+    <section class="sa-card"><div class="sa-card-heading"><div><h3>Distribuição ABC</h3><p>Quantidade de itens em cada classe.</p></div></div>
+        <StockAnalysisChart Title="Distribuição dos itens por classe ABC" YLabel="Itens" XLabel="Classificação ABC" Labels="AbcLabels" Series="AbcSeries" />
+        <div class="sa-inline-stats"><span><b>A</b> 80% do valor</span><span><b>B</b> 16% do valor</span><span><b>C</b> 4% do valor</span></div>
+    </section>
+    <section class="sa-card"><div class="sa-card-heading"><div><h3>Distribuição XYZ</h3><p>Criticidade manual; não calculada pelo consumo.</p></div></div>
+        <StockAnalysisChart Title="Distribuição dos itens por criticidade XYZ" YLabel="Itens" XLabel="Criticidade XYZ" Labels="XyzLabels" Series="XyzSeries" />
+        <p class="sa-caption">A categoria “Sem XYZ” mantém visíveis os itens ainda não classificados.</p>
+    </section>
+</div>
+<section id="sa-critical-stock" class="sa-card" aria-label="Itens com estoque crítico">
+    <div class="sa-card-heading"><div><h3>Itens com estoque crítico</h3><p>Autonomia estimada inferior a 15 dias, considerando o estoque atual e a média diária de consumo.</p></div><span class="sa-subtle-pill" aria-live="polite">@CriticalStockItems.Count itens em estoque crítico</span></div>
+    <div class="sa-table-scroll"><table class="sa-table"><thead><tr><th>Código</th><th>Descrição</th><th>ABC</th><th>XYZ</th><th class="sa-numeric">Estoque atual</th><th class="sa-numeric">Média diária</th><th class="sa-numeric">Autonomia estimada</th></tr></thead><tbody>
+        @foreach (var item in CriticalStockItems)
+        {
+            var coverage = item.Analysis.StockCoverage!;
+            <tr>
+                <td class="sa-code">@item.Item.Code</td>
+                <td><button type="button" class="sa-item-link" @onclick="() => OnSelectItem.InvokeAsync(item.Item.ItemId)">@item.Item.Name <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button><small class="sa-table-subtitle">@ItemTypeLabels.GetLabel(item.Item.ItemType)</small></td>
+                <td><span class="@AbcClass(item.Abc.Classification)">@item.Abc.Classification</span></td>
+                <td><span class="@XyzClass(item.Xyz)">@ClassLabel(item.Xyz)</span></td>
+                <td class="sa-numeric">@Number(coverage.AvailableQuantity) <small>@item.Item.Unit</small></td>
+                <td class="sa-numeric">@DecimalNumber(coverage.AverageDailyConsumption) <small>@item.Item.Unit/dia</small></td>
+                <td class="sa-numeric"><span class="sa-attention sa-level-critical"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i>@DecimalNumber(coverage.CoverageDays) dias</span></td>
+            </tr>
+        }
+    </tbody></table></div>
+    @if (CriticalStockItems.Count == 0) { <p class="sa-empty">Nenhum item da amostra possui autonomia estimada inferior a 15 dias.</p> }
+</section>
+<section class="sa-card">
+    <div class="sa-card-heading"><div><h3>Itens que exigem atenção</h3><p>Selecione a descrição para abrir a análise individual.</p></div><span class="sa-subtle-pill">6 itens para acompanhar</span></div>
+    <div class="sa-table-scroll"><table class="sa-table"><thead><tr><th>Código</th><th>Descrição</th><th>ABC</th><th>XYZ</th><th class="sa-numeric">Últimos 30 dias</th><th class="sa-numeric">Variação</th><th class="sa-numeric">Projeção · 45 dias</th></tr></thead><tbody>
+        @foreach (var item in Items.Where(i => AttentionIds.Contains(i.Item.ItemId)))
+        {
+            <tr><td class="sa-code">@item.Item.Code</td><td><button type="button" class="sa-item-link" @onclick="() => OnSelectItem.InvokeAsync(item.Item.ItemId)">@item.Item.Name <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button><small class="sa-table-subtitle">@ItemTypeLabels.GetLabel(item.Item.ItemType)</small></td><td><span class="@AbcClass(item.Abc.Classification)">@item.Abc.Classification</span></td><td><span class="@XyzClass(item.Xyz)">@ClassLabel(item.Xyz)</span></td><td class="sa-numeric">@Number(item.Analysis.Consumption?.TotalQuantity) <small>@item.Item.Unit</small></td><td class="sa-numeric"><span class="@(item.Variation > 0 ? "sa-rise" : "sa-fall")">@Percent(item.Variation)</span></td><td class="sa-numeric">@Number(item.Analysis.Forecast?.TotalQuantity) <small>@item.Item.Unit</small></td></tr>
+        }
+    </tbody></table></div>
+</section>
+
+@code {
+    [Parameter] public IReadOnlyList<DemoItem> Items { get; set; } = [];
+    [Parameter] public IReadOnlyList<decimal> FinancialMonths { get; set; } = [];
+    [Parameter] public AbcDistributionDto Distribution { get; set; } = new();
+    [Parameter] public EventCallback<int> OnSelectItem { get; set; }
+    private int _months = 6;
+    private IReadOnlyList<DemoItem> CriticalStockItems => Items
+        .Where(i => i.Analysis.StockCoverage?.CoverageDays is < 15m)
+        .OrderBy(i => i.Analysis.StockCoverage!.CoverageDays)
+        .ThenBy(i => i.Item.Code)
+        .ToArray();
+    private static readonly int[] AttentionIds = [1, 2, 5, 6, 8, 11];
+    private static readonly string[] MonthLabels = ["dez/25", "jan/26", "fev/26", "mar/26", "abr/26", "mai/26", "jun/26", "jul/26", "ago/26", "set/26", "out/26", "nov/26"];
+    private IReadOnlyList<string> FinancialLabels => MonthLabels.TakeLast(_months).ToArray();
+    private IReadOnlyList<StockAnalysisChart.ChartSeries> FinancialSeries => [new("Consumo financeiro", FinancialMonths.TakeLast(_months).ToArray(), "#8b5cf6", true)];
+    private static readonly string[] AbcLabels = ["A", "B", "C"];
+    private IReadOnlyList<StockAnalysisChart.ChartSeries> AbcSeries => [new("Itens", Distribution.Classes.Select(c => (decimal)c.ItemCount).ToArray(), "#8b5cf6", PointColors: ["#8b5cf6", "#06b6d4", "#94a3b8"])];
+    private static readonly string[] XyzLabels = ["X", "Y", "Z", "Sem XYZ"];
+    private IReadOnlyList<StockAnalysisChart.ChartSeries> XyzSeries => [new("Itens", new[] { (decimal)Items.Count(i => i.Xyz == XyzCriticality.X), Items.Count(i => i.Xyz == XyzCriticality.Y), Items.Count(i => i.Xyz == XyzCriticality.Z), Items.Count(i => i.Xyz is null) }, "#06b6d4", PointColors: ["#10b981", "#f59e0b", "#f43f5e", "#94a3b8"])];
+}
