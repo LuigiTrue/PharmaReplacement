@@ -1,4 +1,3 @@
-fasdf
 namespace RepyPharma.Domain.Entities;
 
 public class ItemConsumptionAverage
