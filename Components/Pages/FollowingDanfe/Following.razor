@@ -1,92 +1,10 @@
 @page "/FollowingDanfe/Following"
 @attribute [Authorize(Roles = "Admin,Farmacia,Almoxarifado,Consulta")]
 
-<PageTitle>Acompanhamento de Notas Fiscais</PageTitle>
+<PageTitle>Notas fiscais</PageTitle>
 
-<div class="following-page">
-    <div class="following-heading">
-        <section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <h3>Acompanhamento de Notas Fiscais</h3>
-        </section>
-    </div>
+<section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
+    <h3>Notas fiscais</h3>
+</section>
 
-    <div class="following-tabs-host">
-        <input class="following-tab-input" type="radio" name="following-tabs" id="following-tab-dashboard"
-               checked="@(_activeTab == FollowingTab.Dashboard)" @onchange="() => SelectTab(FollowingTab.Dashboard)" aria-label="Dashboard" />
-        <input class="following-tab-input" type="radio" name="following-tabs" id="following-tab-grid"
-               checked="@(_activeTab == FollowingTab.Grid)" @onchange="() => SelectTab(FollowingTab.Grid)" aria-label="Acompanhamento" />
-        <input class="following-tab-input" type="radio" name="following-tabs" id="following-tab-registration"
-               checked="@(_activeTab == FollowingTab.Registration)" @onchange="() => SelectTab(FollowingTab.Registration)" aria-label="Cadastrar NF" />
-        <input class="following-tab-input" type="radio" name="following-tabs" id="following-tab-settings"
-               checked="@(_activeTab == FollowingTab.Settings)" @onchange="() => SelectTab(FollowingTab.Settings)" aria-label="Configurações" />
-
-        <div class="app-tabs" role="tablist" aria-label="Seções do acompanhamento de notas fiscais">
-            <label id="following-dashboard-label" class="app-tab" role="tab" for="following-tab-dashboard"
-                   aria-controls="following-dashboard-panel" aria-selected="@(_activeTab == FollowingTab.Dashboard)">Dashboard</label>
-            <label id="following-grid-label" class="app-tab" role="tab" for="following-tab-grid"
-                   aria-controls="following-grid-panel" aria-selected="@(_activeTab == FollowingTab.Grid)">Acompanhamento</label>
-            <label id="following-registration-label" class="app-tab" role="tab" for="following-tab-registration"
-                   aria-controls="following-registration-panel" aria-selected="@(_activeTab == FollowingTab.Registration)">Cadastrar NF</label>
-            <label id="following-settings-label" class="app-tab" role="tab" for="following-tab-settings"
-                   aria-controls="following-settings-panel" aria-selected="@(_activeTab == FollowingTab.Settings)">Configurações</label>
-        </div>
-
-        <div id="following-dashboard-panel" class="following-tab-panel following-dashboard-panel" role="tabpanel" aria-labelledby="following-dashboard-label">
-            <FollowingDashboad />
-        </div>
-        <div id="following-grid-panel" class="following-tab-panel following-grid-panel" role="tabpanel" aria-labelledby="following-grid-label">
-            <FollowingGrid />
-        </div>
-        <div id="following-registration-panel" class="following-tab-panel following-registration-panel" role="tabpanel" aria-labelledby="following-registration-label">
-            <FollowingSignInDanfe />
-        </div>
-        <div id="following-settings-panel" class="following-tab-panel following-settings-panel" role="tabpanel" aria-labelledby="following-settings-label">
-            @* O arquivo existente FollowingConfiguration não tem extensão .razor.
-               Integrar o componente aqui quando ele estiver disponível, sem alterar seu conteúdo. *@
-        </div>
-    </div>
-</div>
-
-<style>
-    .following-page .following-heading { padding: 0 0 10px; }
-    .following-page .following-heading h3 { margin: 0; color: inherit; }
-    .following-page .app-tabs {
-        display: inline-flex; align-items: center; gap: .35rem; max-width: 100%; margin-bottom: .3rem;
-        padding: .35rem; overflow-x: auto; border: 1px solid var(--app-border, #E5DFF0); border-radius: 8px;
-        background: var(--app-surface, #FFFFFF); box-shadow: 0 0 10px var(--app-nav-shadow, rgba(42, 27, 158, .16));
-    }
-    .following-page .app-tab {
-        min-width: 9rem; border: 0; border-radius: 6px; padding: .7rem 1rem; cursor: pointer;
-        background: transparent; color: var(--app-text-muted, #5F5A78); font-size: .9rem;
-        font-weight: 600; line-height: 1; text-align: center; white-space: nowrap;
-        transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
-    }
-    .following-page .app-tab:hover,
-    .following-page .app-tab[aria-selected="true"] {
-        background: #F5F0FA; color: #3320C9;
-    }
-    .following-page .app-tab[aria-selected="true"] { box-shadow: inset 0 0 0 1px var(--app-border, #E5DFF0); }
-    .theme-dark .following-page .app-tab:hover,
-    .theme-dark .following-page .app-tab[aria-selected="true"] { background: #6E5FA5; color: #F4F1F6; }
-    .following-page .following-tab-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-    .following-page .following-tab-panel { display: none; }
-    .following-page #following-tab-dashboard:checked ~ .following-dashboard-panel,
-    .following-page #following-tab-grid:checked ~ .following-grid-panel,
-    .following-page #following-tab-registration:checked ~ .following-registration-panel,
-    .following-page #following-tab-settings:checked ~ .following-settings-panel { display: block; }
-    .following-page #following-tab-dashboard:focus-visible ~ .app-tabs label[for="following-tab-dashboard"],
-    .following-page #following-tab-grid:focus-visible ~ .app-tabs label[for="following-tab-grid"],
-    .following-page #following-tab-registration:focus-visible ~ .app-tabs label[for="following-tab-registration"],
-    .following-page #following-tab-settings:focus-visible ~ .app-tabs label[for="following-tab-settings"] { outline: 2px solid var(--app-link, #3320C9); outline-offset: 2px; }
-    @@media (max-width: 640px) {
-        .following-page .app-tabs { display: flex; width: 100%; }
-        .following-page .app-tab { min-width: 7.25rem; flex: 1 0 auto; }
-        .following-page .following-heading h3 { font-size: 1.1rem; }
-    }
-</style>
-
-@code {
-    private enum FollowingTab { Dashboard, Grid, Registration, Settings }
-    private FollowingTab _activeTab = FollowingTab.Dashboard;
-    private void SelectTab(FollowingTab tab) => _activeTab = tab;
-}
+<FollowingSignInDanfe />

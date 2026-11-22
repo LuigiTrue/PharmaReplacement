@@ -121,121 +121,6 @@ h1:focus {
     background: #14102B;
 }
 
-/* Dashboard */
-.metric-card {
-    background: var(--app-surface-muted, rgba(217,166,232,0.15));
-    border-radius: 8px;
-    padding: 1rem;
-}
-
-.metric-label {
-    font-size: 12px;
-    color: var(--app-text-muted, #D9A6E8);
-    margin: 0 0 4px;
-}
-
-.metric-value {
-    font-size: 28px;
-    font-weight: 500;
-    margin: 0;
-}
-
-.metric-value.danger {
-    color: #8B3FE0;
-}
-
-.metric-value.warning {
-    color: #8B3FE0;
-}
-
-.metric-value.info {
-    color: #8B3FE0;
-}
-
-.dashboard-section {
-    border: 0.5px solid var(--app-border, rgba(217,166,232,0.15));
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
-    background: var(--app-surface, #1E1640);
-}
-
-.section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-
-.section-title {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--app-text, #FBF3EC);
-}
-
-.badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 8px;
-    font-weight: 500;
-}
-
-.badge.danger {
-    background: #6420C4;
-    color: #FBF3EC;
-}
-
-.badge.warning {
-    background: #E8924F;
-    color: #14102B;
-}
-
-.badge.info {
-    background: #3320C9;
-    color: #FBF3EC;
-}
-
-.priority-chip {
-    font-size: 10px;
-    padding: 1px 6px;
-    border-radius: 99px;
-    font-weight: 500;
-}
-
-.priority-chip.ultrahigh {
-    background: #6420C4;
-    color: #FBF3EC;
-}
-
-.priority-chip.high {
-    background: #E8924F;
-    color: #14102B;
-}
-
-.priority-chip.moderate {
-    background: #3320C9;
-    color: #FBF3EC;
-}
-
-.priority-chip.low {
-    background: #8B3FE0;
-    color: #FBF3EC;
-}
-
-.empty-msg {
-    font-size: 13px;
-    color: var(--app-text-muted, #5F5A78);
-}
-
-.ver-btn {
-    font-size: 12px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--app-link, #1BAEDB);
-    padding: 8px 0 0;
-}
-
 .theme-dark .app-grid-card {
     background: var(--app-surface, #1E1640) !important;
     border-color: var(--app-border, rgba(217,166,232,0.15)) !important;
@@ -390,9 +275,7 @@ h1:focus {
     .header,
     .top-row,
     button,
-    nav,
-    .ver-btn,
-    .badge {
+    nav {
         display: none !important;
     }
 
@@ -413,8 +296,7 @@ h1:focus {
         margin: 0 !important;
     }
 
-    section,
-    .dashboard-section {
+    section {
         border: none !important;
         background: transparent !important;
         box-shadow: none !important;

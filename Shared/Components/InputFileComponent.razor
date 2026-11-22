@@ -1,10 +1,7 @@
 @using Microsoft.FluentUI.AspNetCore.Components
 @using Icons = Microsoft.FluentUI.AspNetCore.Components.Icons
-@using RepyPharma.Services.Import.Interfaces
 @inject PdfParserService Parser
 @inject PdfStorageService Storage
-@inject IConsumptionAverageReportService ConsumptionAverageReportService
-@inject ReplenishmentDataState ReplenishmentDataState
 @inject ThemeState ThemeState
 
 <div class="update-input-file-shell @(ThemeState.IsDarkMode ? "is-dark" : null)">
@@ -38,20 +35,17 @@
 @code {
 
     [Parameter] public string UploadId { get; set; } = "file-uploader";
-    [Parameter] public string ImportMode { get; set; } = "stock";
     [Parameter] public string Title { get; set; } = "Importar arquivo";
     [Parameter] public string Description { get; set; } = "Arraste aqui ou selecione o arquivo.";
     [Parameter] public string Hint { get; set; } = string.Empty;
 
     private int ProgressPercent = 0;
-    private FluentInputFileEventArgs[] Files = Array.Empty<FluentInputFileEventArgs>();
     private string? _statusMessage;
     private bool _statusIsError;
 
     private async Task OnCompletedAsync(IEnumerable<FluentInputFileEventArgs> files)
     {
-        Files = files.ToArray();
-        var file = Files.FirstOrDefault();
+        var file = files.FirstOrDefault();
         if (file?.LocalFile is null)
             return;
 
@@ -60,10 +54,7 @@
 
         try
         {
-            if (ImportMode.Equals("consumption", StringComparison.OrdinalIgnoreCase))
-                await ImportConsumptionReportAsync(file.LocalFile.FullName);
-            else
-                await ImportStockMirrorAsync(file.LocalFile.FullName);
+            await ImportStockMirrorAsync(file.LocalFile.FullName);
         }
         catch (Exception ex)
         {
@@ -88,26 +79,4 @@
         _statusMessage = $"Espelho de estoque importado com {produtos.Count} itens.";
     }
 
-    private async Task ImportConsumptionReportAsync(string filePath)
-    {
-        var validation = ConsumptionAverageReportService.ValidateConsumptionReportPdf(filePath);
-        if (!validation.IsValid)
-        {
-            _statusIsError = true;
-            _statusMessage = validation.Message;
-            return;
-        }
-
-        var result = await ConsumptionAverageReportService.ImportPdfAsync(filePath);
-
-        if (result.Errors > 0)
-        {
-            _statusIsError = true;
-            _statusMessage = $"Relatório processado com {result.Errors} erro(s). {string.Join(" ", result.ErrorMessages.Take(2))}";
-            return;
-        }
-
-        ReplenishmentDataState.NotifyChanged();
-        _statusMessage = $"Relatório de consumo importado. {result.CreatedRecords} novos, {result.UpdatedRecords} atualizados.";
-    }
 }

@@ -11,15 +11,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Batch> Batches => Set<Batch>();
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<StockBalance> StockBalances => Set<StockBalance>();
-    public DbSet<DailyConsumption> DailyConsumptions => Set<DailyConsumption>();
-    public DbSet<Consumption> Consumptions => Set<Consumption>();
-    public DbSet<ItemConsumptionAverage> ItemConsumptionAverages => Set<ItemConsumptionAverage>();
-    public DbSet<ReplenishmentRule> ReplenishmentRules => Set<ReplenishmentRule>();
-    public DbSet<ReportImport> ReportImports => Set<ReportImport>();
-    public DbSet<ReportItem> ReportItems => Set<ReportItem>();
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Quotation> Quotations => Set<Quotation>();
-    public DbSet<QuotationXItem> QuotationXItems => Set<QuotationXItem>();
     public DbSet<Danfe> Danfes => Set<Danfe>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,35 +60,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
             entity.HasMany(quotation => quotation.Danfes)
                 .WithOne(danfe => danfe.Quotation)
                 .HasForeignKey(danfe => danfe.QuotationId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasMany(quotation => quotation.Items)
-                .WithOne(quotationItem => quotationItem.Quotation)
-                .HasForeignKey(quotationItem => quotationItem.QuotationId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
-
-        modelBuilder.Entity<QuotationXItem>(entity =>
-        {
-            entity.ToTable("quotation_x_items", table =>
-            {
-                table.HasCheckConstraint(
-                    "CK_quotation_x_items_quantity_requested",
-                    "\"QuantityRequested\" >= 0");
-            });
-            entity.HasKey(quotationItem => quotationItem.Id);
-            entity.Property(quotationItem => quotationItem.Id).ValueGeneratedOnAdd();
-
-            entity.Property(quotationItem => quotationItem.QuantityRequested)
-                .HasPrecision(18, 3);
-
-            entity.HasIndex(quotationItem => new { quotationItem.QuotationId, quotationItem.ItemId })
-                .IsUnique();
-            entity.HasIndex(quotationItem => quotationItem.ItemId);
-
-            entity.HasOne(quotationItem => quotationItem.Item)
-                .WithMany()
-                .HasForeignKey(quotationItem => quotationItem.ItemId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
 
@@ -159,26 +123,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithOne(balance => balance.Item)
                 .HasForeignKey(balance => balance.ItemId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasMany(item => item.DailyConsumptions)
-                .WithOne(consumption => consumption.Item)
-                .HasForeignKey(consumption => consumption.ItemId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(item => item.ConsumptionAverages)
-                .WithOne(average => average.Item)
-                .HasForeignKey(average => average.ItemId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            entity.HasOne(item => item.ReplenishmentRule)
-                .WithOne(rule => rule.Item)
-                .HasForeignKey<ReplenishmentRule>(rule => rule.ItemId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(item => item.ReportItems)
-                .WithOne(reportItem => reportItem.Item)
-                .HasForeignKey(reportItem => reportItem.ItemId)
-                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<Batch>(entity =>
@@ -218,11 +162,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithOne(balance => balance.Location)
                 .HasForeignKey(balance => balance.LocationId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasMany(location => location.ReportImports)
-                .WithOne(reportImport => reportImport.Location)
-                .HasForeignKey(reportImport => reportImport.LocationId)
-                .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<StockBalance>(entity =>
@@ -235,195 +174,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
             entity.HasIndex(balance => new { balance.ItemId, balance.BatchId, balance.LocationId })
                 .IsUnique();
-        });
-
-        modelBuilder.Entity<Consumption>(entity =>
-        {
-            entity.ToTable("consumptions", table =>
-            {
-                table.HasCheckConstraint(
-                    "CK_consumptions_period",
-                    "\"FinalDate\" >= \"InitialDate\"");
-                table.HasCheckConstraint(
-                    "CK_consumptions_total_consumption",
-                    "\"TotalConsumption\" >= 0");
-                table.HasCheckConstraint(
-                    "CK_consumptions_daily_average",
-                    "\"DailyAverage\" >= 0");
-            });
-            entity.HasKey(consumption => consumption.Id);
-            entity.Property(consumption => consumption.Id).ValueGeneratedOnAdd();
-            entity.Property(consumption => consumption.ProductId).IsRequired();
-            entity.Property(consumption => consumption.InitialDate)
-                .HasColumnType("date")
-                .IsRequired();
-            entity.Property(consumption => consumption.FinalDate)
-                .HasColumnType("date")
-                .IsRequired();
-            entity.Property(consumption => consumption.TotalConsumption)
-                .HasPrecision(18, 3)
-                .IsRequired();
-            entity.Property(consumption => consumption.DailyAverage)
-                .HasPrecision(18, 4)
-                .IsRequired();
-            entity.Property(consumption => consumption.AverageVariation)
-                .HasPrecision(10, 4)
-                .IsRequired(false);
-            entity.Property(consumption => consumption.Source)
-                .HasMaxLength(50)
-                .IsRequired();
-            entity.Property(consumption => consumption.ImportedAt)
-                .HasColumnType("timestamp with time zone")
-                .HasConversion(
-                    importedAt => importedAt.ToUniversalTime(),
-                    importedAt => importedAt.ToUniversalTime())
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .IsRequired();
-
-            entity.HasOne(consumption => consumption.Item)
-                .WithMany()
-                .HasForeignKey(consumption => consumption.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasIndex(consumption => new
-            {
-                consumption.ProductId,
-                consumption.InitialDate,
-                consumption.FinalDate,
-                consumption.Source
-            }).IsUnique();
-        });
-
-        modelBuilder.Entity<DailyConsumption>(entity =>
-        {
-            entity.ToTable("daily_consumptions");
-            entity.HasKey(consumption => consumption.Id);
-
-            entity.Property(consumption => consumption.Quantity)
-                .HasPrecision(18, 3);
-            entity.Property(consumption => consumption.Source)
-                .HasMaxLength(100)
-                .IsRequired();
-        });
-
-        modelBuilder.Entity<ItemConsumptionAverage>(entity =>
-        {
-            entity.ToTable("item_consumption_averages");
-            entity.HasKey(average => average.Id);
-
-            entity.Property(average => average.ItemCode)
-                .HasMaxLength(50)
-                .IsRequired();
-            entity.Property(average => average.ItemName)
-                .HasMaxLength(255)
-                .IsRequired();
-            entity.Property(average => average.AveragePeriodKind)
-                .HasMaxLength(20)
-                .IsRequired();
-            entity.Property(average => average.SourceFileName)
-                .HasMaxLength(255)
-                .IsRequired();
-            entity.Property(average => average.MonthlyAverageOutput)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.WeeklyAverageOutput)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.CurrentAverageOutput)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.TotalOutput)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.StockBalance)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.ProjectedCoverageDays)
-                .HasPrecision(18, 3);
-
-            entity.HasIndex(average => new
-            {
-                average.ItemCode,
-                average.ReportStartDate,
-                average.ReportEndDate
-            }).IsUnique();
-        });
-
-        modelBuilder.Entity<ReplenishmentRule>(entity =>
-        {
-            entity.ToTable("replenishment_rules");
-            entity.HasKey(rule => rule.Id);
-
-            entity.Property(rule => rule.MinimumStock)
-                .HasPrecision(18, 3);
-            entity.Property(rule => rule.SafetyStock)
-                .HasPrecision(18, 3);
-            entity.Property(rule => rule.CalculationMethod)
-                .HasMaxLength(50)
-                .IsRequired();
-            entity.Property(rule => rule.ItemPriority)
-                .HasConversion<int>();
-
-            entity.HasIndex(rule => rule.ItemId)
-                .IsUnique();
-        });
-
-        modelBuilder.Entity<ReportImport>(entity =>
-        {
-            entity.ToTable("report_imports", table =>
-            {
-                table.HasCheckConstraint(
-                    "CK_report_imports_reference_month",
-                    "\"ReferenceMonth\" BETWEEN 1 AND 12");
-                table.HasCheckConstraint(
-                    "CK_report_imports_reference_year",
-                    "\"ReferenceYear\" >= 2000");
-            });
-            entity.HasKey(reportImport => reportImport.Id);
-
-            entity.Property(reportImport => reportImport.Status)
-                .HasConversion<int>();
-            entity.Property(reportImport => reportImport.SourceFileName)
-                .HasMaxLength(255);
-            entity.Property(reportImport => reportImport.FileHash)
-                .HasMaxLength(64);
-            entity.Property(reportImport => reportImport.ErrorMessage)
-                .HasColumnType("text");
-
-            entity.HasIndex(reportImport => new
-            {
-                reportImport.LocationId,
-                reportImport.ReferenceYear,
-                reportImport.ReferenceMonth
-            }).IsUnique();
-
-            entity.HasMany(reportImport => reportImport.Items)
-                .WithOne(reportItem => reportItem.ReportImport)
-                .HasForeignKey(reportItem => reportItem.ReportImportId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
-        modelBuilder.Entity<ReportItem>(entity =>
-        {
-            entity.ToTable("report_items", table =>
-            {
-                table.HasCheckConstraint(
-                    "CK_report_items_total_output",
-                    "\"TotalOutput\" >= 0");
-                table.HasCheckConstraint(
-                    "CK_report_items_movement_days",
-                    "\"MovementDays\" IS NULL OR \"MovementDays\" BETWEEN 0 AND 31");
-            });
-            entity.HasKey(reportItem => reportItem.Id);
-
-            entity.Property(reportItem => reportItem.TotalOutput)
-                .HasPrecision(18, 3)
-                .HasDefaultValue(0m);
-            entity.Property(reportItem => reportItem.AverageDailyOutput)
-                .HasPrecision(18, 6);
-            entity.Property(reportItem => reportItem.TotalCost)
-                .HasPrecision(18, 4);
-            entity.Property(reportItem => reportItem.AverageUnitCost)
-                .HasPrecision(18, 6);
-
-            entity.HasIndex(reportItem => new { reportItem.ReportImportId, reportItem.ItemId })
-                .IsUnique();
-            entity.HasIndex(reportItem => reportItem.ItemId);
         });
     }
 }

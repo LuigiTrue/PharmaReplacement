@@ -13,8 +13,4 @@ public class Item
 
     public ICollection<Batch> Batches { get; set; } = new List<Batch>();
     public ICollection<StockBalance> StockBalances { get; set; } = new List<StockBalance>();
-    public ICollection<DailyConsumption> DailyConsumptions { get; set; } = new List<DailyConsumption>();
-    public ICollection<ItemConsumptionAverage> ConsumptionAverages { get; set; } = new List<ItemConsumptionAverage>();
-    public ICollection<ReportItem> ReportItems { get; set; } = new List<ReportItem>();
-    public ReplenishmentRule? ReplenishmentRule { get; set; }
 }

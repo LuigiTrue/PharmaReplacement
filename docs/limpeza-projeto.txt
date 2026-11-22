@@ -1,0 +1,81 @@
+LIMPEZA DO PROJETO — 22/11/2026
+
+Objetivo: manter a base de cadastro de estoque e autenticação, retirando a
+lógica antiga para a futura implementação de consumo e pedidos de compra.
+
+PRESERVADO
+
+- Autenticação, usuários, papéis, perfil e solicitações de alteração de senha.
+- Item, Batch, Location e StockBalance, incluindo classificação dos itens.
+- Danfe e os cadastros Supplier e Quotation exigidos por suas relações.
+- Leitura dos itens ativos e de seus lotes/saldos por localização.
+- Validação, leitura e persistência do espelho de estoque em PDF.
+- Importação JSON de itens, lotes, locais e saldos de estoque.
+
+REMOVIDO
+
+- Serviços, contratos, modelos, cálculos, configuração de mínimos, prioridades,
+  dashboards, fracionamento e impressão relacionados à reposição.
+- Importação de médias em PDF e de consumo diário em JSON, seus contratos,
+  resultados, DTOs e endpoint de desenvolvimento de consumo.
+- Entidades Consumption, DailyConsumption, ItemConsumptionAverage,
+  ReplenishmentRule, ReportImport, ReportItem e QuotationXItem, além do enum
+  ReportImportStatus, DbSets, mapeamentos e navegações correspondentes.
+- Repositórios sem consumidores e todos os registros de serviços removidos.
+- Telas demonstrativas de compras e chegada de produtos, componentes isolados,
+  abas vazias de DANFEs, estilos associados e dependência ApexCharts.
+- Documentação antiga exclusiva das funcionalidades descartadas.
+
+TELAS
+
+A tela anterior de reposição agora consulta e importa o estoque, sem chamar
+serviços de reposição. Está disponível em /Estoque/Itens; a rota antiga
+/Replacement/ReplacementGrid permanece como alias. A navegação e a página
+inicial foram ajustadas. O cadastro de DANFEs e as telas de usuário continuam.
+A nova lógica de consumo e pedidos ainda não foi implementada.
+
+BANCO DE DADOS
+
+A migration 20261122150535_RemoveLegacyConsumptionAndReplenishment remove
+exclusivamente as sete tabelas descartadas. O snapshot foi atualizado e as
+migrations históricas foram preservadas para manter a evolução dos bancos.
+
+Após autorização do usuário, a migration foi aplicada em 22/11/2026 ao banco
+configurado: repypharm em 127.0.0.1:5432. As sete tabelas antigas foram
+excluídas, incluindo seus dados. As contagens de registros das 14 tabelas
+preservadas (estoque, DANFEs e Identity) permaneceram iguais. Não há migrations
+pendentes.
+
+Os testes de integração anteriores à aplicação utilizaram somente um cluster
+PostgreSQL temporário em /tmp/repypharma-cleanup.vAXcip, com dados fictícios.
+
+VERIFICAÇÃO REALIZADA
+
+- Aplicação no banco configurado e comparação das contagens antes/depois,
+  confirmando a preservação dos registros das tabelas mantidas.
+- Compilação sem erros ou avisos.
+- Ausência de referências aos tipos removidos no código ativo.
+- Modelo EF consistente com a migration, sem alterações pendentes.
+- Aplicação das migrations em PostgreSQL temporário, partindo do esquema
+  anterior com registros de estoque, DANFE e autenticação já cadastrados.
+- Preservação desses registros, da senha e do papel do usuário após a limpeza.
+- Conferência de que a migration executa exatamente sete remoções de tabela,
+  sem alterar as tabelas preservadas.
+- Importação de PDF sintético com dois itens, lotes e saldos em dois locais;
+  reimportação com remoção de saldos obsoletos e inativação de itens ausentes.
+- Rejeição de PDFs inválidos/ausentes sem alteração de estoque.
+- Importação e reimportação de JSON de estoque, sem duplicar os registros;
+  tratamento de arquivo ausente e notificação de atualização da tela.
+- Resolução das dependências injetadas nos componentes mantidos e renderização
+  da tela com os itens persistidos.
+- Testes HTTP da aplicação usando exclusivamente o banco temporário: rejeição
+  de senha inválida, login com cookie, acesso às rotas mantidas, logout e
+  redirecionamento ao login para acesso anônimo ao estoque.
+- Retorno 404 para as telas removidas e o antigo endpoint de consumo.
+
+A renderização do conteúdo da tela de estoque foi verificada com HtmlRenderer.
+Os testes HTTP verificaram endpoints, cookies e rotas; não houve simulação
+de navegação interativa em navegador.
+
+Os testes de integração foram executados por um programa temporário fora do
+repositório; não houve inclusão de dependências de teste na aplicação.

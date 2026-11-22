@@ -8,5 +8,4 @@ public class Location
     public bool IsActive { get; set; } = true;
 
     public ICollection<StockBalance> StockBalances { get; set; } = new List<StockBalance>();
-    public ICollection<ReportImport> ReportImports { get; set; } = new List<ReportImport>();
 }

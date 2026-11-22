@@ -1,6 +1,4 @@
 @inject ThemeState ThemeState
-@inject IAuthService AuthService
-@inject NavigationManager Navigation
 
 <div class="sidebar-nav-outlaw @SidebarClass">
     <ul>
@@ -17,9 +15,9 @@
             </a>
         </li>
         <li class="rounded-md @NavItemHoverClass">
-            <a href="/Replacement/ReplacementGrid" class="@NavLinkClass">
+            <a href="/Estoque/Itens" class="@NavLinkClass">
                 <span class="icon"><i class="bi bi-capsule"></i></span>
-                <span class="text">Reposição</span>
+                <span class="text">Itens em estoque</span>
             </a>
         </li>
         <li class="stock-nav-item rounded-md">
@@ -31,17 +29,8 @@
                 </summary>
                 <ul class="stock-submenu" aria-label="Controle de Estoque">
                     <li><a href="/FollowingDanfe/Following">Acompanhamento de Notas</a></li>
-                    <li><span aria-disabled="true">Relatórios</span></li>
-                    <li><span aria-disabled="true">Pendências</span></li>
-                    <li><span aria-disabled="true">Demandas</span></li>
                 </ul>
             </details>
-        </li>
-        <li class="rounded-md disabled-nav-item">
-            <a class="@NavLinkClass" aria-disabled="true" tabindex="-1">
-                <span class="icon"><i class="bi bi-prescription2"></i></span>
-                <span class="text">Controle de ATBs</span>
-            </a>
         </li>
 
         <li class="theme-toggle-item rounded-md @NavItemHoverClass">
@@ -72,9 +61,4 @@
 
     private string ThemeButtonTitle => ThemeState.IsDarkMode ? "Ativar tema claro" : "Ativar tema escuro";
 
-    private async Task LogoutAsync()
-    {
-        await AuthService.LogoutAsync();
-        Navigation.NavigateTo("/Login", replace: true);
-    }
 }

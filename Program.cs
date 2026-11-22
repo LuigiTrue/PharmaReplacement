@@ -1,6 +1,5 @@
 using RepyPharma.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
-using ApexCharts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +8,7 @@ using RepyPharma.Domain.Entities;
 using RepyPharma.Infrastructure.Identity;
 using RepyPharma.Services.Implementatios;
 using RepyPharma.Services.Import;
-using RepyPharma.Services.Inventory;
-using RepyPharma.Services.Replenishment;
 using RepyPharma.Infrastructure.Json;
-using RepyPharma.Infrastructure.Repositories;
-using RepyPharma.Infrastructure.Repositories.Interfaces;
 using RepyPharma.Services.Import.Interfaces;
 using RepyPharma.Services.Interfaces;
 
@@ -26,8 +21,6 @@ if (!string.IsNullOrWhiteSpace(port))
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddFluentUIComponents();
-builder.Services.AddApexCharts();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddDbContextFactory<AppDbContext>(options =>
 {
@@ -71,42 +64,20 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
     options.KnownProxies.Clear();
 });
 
-
-//Services
+// Application services
 builder.Services.AddScoped<IDanfeService, DanfeService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IQuotationService, QuotationService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IProductStockService, ProductStockService>();
 builder.Services.AddScoped<IStockJsonService, StockJsonService>();
-builder.Services.AddScoped<IMinimumStockService, MinimumStockService>();
-builder.Services.AddScoped<IReplenishmentService, ReplenishmentService>();
-builder.Services.AddScoped<IReplenishmentDashboardService, ReplenishmentDashboardService>();
-builder.Services.AddScoped<IDailyReplenishmentService, DailyReplenishmentService>();
-builder.Services.AddScoped<IReplacementSettingsService, ReplacementSettingsService>();
-builder.Services.AddScoped<IFractionationSupplyService, FractionationSupplyService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
 builder.Services.AddScoped<IJsonImportService, JsonImportService>();
-builder.Services.AddScoped<IConsumptionAverageReportService, ConsumptionAverageReportService>();
 
-//Repositories
-builder.Services.AddScoped<IItemRepository, ItemRepository>();
-builder.Services.AddScoped<IBatchRepository, BatchRepository>();
-builder.Services.AddScoped<ILocationRepository, LocationRepository>();
-builder.Services.AddScoped<IStockBalanceRepository, StockBalanceRepository>();
-builder.Services.AddScoped<IDailyConsumptionRepository, DailyConsumptionRepository>();
-builder.Services.AddScoped<IReplenishmentRuleRepository, ReplenishmentRuleRepository>();
-
-//Abstractions 
-builder.Services.AddScoped<IGridColumnService, GridColumnService>();
+// Stock import and UI state
 builder.Services.AddScoped<PdfStorageService>();
-builder.Services.AddScoped<PdfValidationService>();
 builder.Services.AddScoped<PdfParserService>();
-builder.Services.AddScoped<LayoutState>();
 builder.Services.AddScoped<ThemeState>();
-builder.Services.AddSingleton<ReplenishmentDataState>();
-builder.Services.AddScoped<ReportHtmlService>();
+builder.Services.AddSingleton<StockDataState>();
 
 builder.Services.AddFluentUIComponents(options =>
 {
@@ -142,18 +113,6 @@ if (app.Environment.IsDevelopment())
     app.MapPost("/dev/import-stock", async (IJsonImportService importService) =>
     {
         var result = await importService.ImportStockAsync("storage/estoque.json");
-        return Results.Ok(result);
-    });
-
-    app.MapPost("/dev/import-consumption-average-report", async (
-        IConsumptionAverageReportService importService,
-        string? filePath) =>
-    {
-        var result = await importService.ImportPdfAsync(
-            string.IsNullOrWhiteSpace(filePath)
-                ? "/home/luigi/Downloads/20260625_relatorio_farmacia_central.pdf"
-                : filePath);
-
         return Results.Ok(result);
     });
 }

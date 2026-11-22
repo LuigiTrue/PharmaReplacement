@@ -10,11 +10,10 @@ namespace RepyPharma.Services.Import;
 
 public class JsonImportService(
     IDbContextFactory<AppDbContext> dbContextFactory,
-    IWebHostEnvironment environment,
-    ILogger<JsonImportService> logger) : IJsonImportService
+    ILogger<JsonImportService> logger,
+    StockDataState stockDataState) : IJsonImportService
 {
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory = dbContextFactory;
-    private readonly IWebHostEnvironment _environment = environment;
     private readonly ILogger<JsonImportService> _logger = logger;
     private readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -116,114 +115,7 @@ public class JsonImportService(
             result.StockBalancesUpdated,
             result.Errors);
 
-        return result;
-    }
-
-    public async Task<ImportResult> ImportDailyConsumptionAsync(string filePath)
-    {
-        var result = new ImportResult();
-
-        if (!File.Exists(filePath))
-        {
-            result.AddError($"Arquivo de consumo diário não encontrado: {filePath}");
-            _logger.LogWarning("Arquivo de consumo diário não encontrado: {FilePath}", filePath);
-            return result;
-        }
-
-        List<DailyConsumptionJsonDto>? consumptions;
-        try
-        {
-            await using var stream = File.OpenRead(filePath);
-            consumptions = await JsonSerializer.DeserializeAsync<List<DailyConsumptionJsonDto>>(stream, _jsonOptions);
-        }
-        catch (Exception ex)
-        {
-            result.AddError($"Falha ao ler arquivo de consumo diário '{filePath}': {ex.Message}");
-            _logger.LogError(ex, "Falha ao ler arquivo de consumo diário {FilePath}", filePath);
-            return result;
-        }
-
-        if (consumptions is null || consumptions.Count == 0)
-        {
-            _logger.LogInformation("Arquivo de consumo diário sem registros para importar: {FilePath}", filePath);
-            return result;
-        }
-
-        await using var context = await _dbContextFactory.CreateDbContextAsync();
-        await using var transaction = await context.Database.BeginTransactionAsync();
-
-        try
-        {
-            var itemsByCode = await context.Items.ToDictionaryAsync(item => item.Code);
-
-            foreach (var consumption in consumptions)
-            {
-                try
-                {
-                    await ImportDailyConsumptionItemAsync(context, consumption, itemsByCode, result);
-                }
-                catch (DbUpdateException ex)
-                {
-                    var code = GetConsumptionItemCode(consumption);
-                    var errorMessage = GetExceptionMessage(ex);
-                    result.AddError($"Erro ao importar consumo do item {code}: {errorMessage}");
-                    _logger.LogError(
-                        ex,
-                        "Erro ao importar consumo diário do item {Code}. InnerException: {InnerExceptionMessage}",
-                        code,
-                        ex.InnerException?.Message);
-                }
-                catch (Exception ex)
-                {
-                    var code = GetConsumptionItemCode(consumption);
-                    result.AddError($"Erro ao importar consumo do item {code}: {ex.Message}");
-                    _logger.LogError(ex, "Erro ao importar consumo diário do item {Code}", code);
-                }
-            }
-
-            await context.SaveChangesAsync();
-            await transaction.CommitAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            await transaction.RollbackAsync();
-            var errorMessage = GetExceptionMessage(ex);
-            result.AddError($"Falha na transação de importação de consumo diário: {errorMessage}");
-            _logger.LogError(
-                ex,
-                "Falha na transação de importação de consumo diário. InnerException: {InnerExceptionMessage}",
-                ex.InnerException?.Message);
-            return result;
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            result.AddError($"Falha na transação de importação de consumo diário: {ex.Message}");
-            _logger.LogError(ex, "Falha na transação de importação de consumo diário");
-            return result;
-        }
-
-        _logger.LogInformation(
-            "Importação de consumo diário concluída. Registros criados: {DailyConsumptionsCreated}, erros: {Errors}",
-            result.DailyConsumptionsCreated,
-            result.Errors);
-
-        return result;
-    }
-
-    public async Task<ImportResult> ImportAllAsync()
-    {
-        var result = new ImportResult();
-        var stockPath = Path.Combine(_environment.ContentRootPath, "storage", "estoque.json");
-        var dailyConsumptionPath = Path.Combine(_environment.ContentRootPath, "storage", "consumo-diario.json");
-
-        result.Merge(await ImportStockAsync(stockPath));
-
-        if (File.Exists(dailyConsumptionPath))
-            result.Merge(await ImportDailyConsumptionAsync(dailyConsumptionPath));
-        else
-            _logger.LogInformation("Arquivo de consumo diário não encontrado para ImportAllAsync: {FilePath}", dailyConsumptionPath);
-
+        stockDataState.NotifyChanged();
         return result;
     }
 
@@ -379,52 +271,6 @@ public class JsonImportService(
         stockBalance.Quantity = locationDto.Quantity;
         stockBalance.UpdatedAt = ToUtc(DateTime.UtcNow);
         result.StockBalancesUpdated++;
-    }
-
-    private static async Task ImportDailyConsumptionItemAsync(
-        AppDbContext context,
-        DailyConsumptionJsonDto consumptionDto,
-        Dictionary<string, Item> itemsByCode,
-        ImportResult result)
-    {
-        var itemCode = GetConsumptionItemCode(consumptionDto);
-        if (string.IsNullOrWhiteSpace(itemCode))
-        {
-            result.AddError("Consumo diário ignorado porque Code/ItemCode está vazio.");
-            return;
-        }
-
-        if (!itemsByCode.TryGetValue(itemCode, out var item))
-        {
-            result.AddError($"Consumo diário ignorado porque o item {itemCode} não existe.");
-            return;
-        }
-
-        var consumptionDate = consumptionDto.ConsumptionDate ?? consumptionDto.Date;
-        if (consumptionDate is null || IsInvalidDate(consumptionDate.Value))
-        {
-            result.AddError($"Consumo diário do item {itemCode} ignorado porque a data está vazia ou inválida.");
-            return;
-        }
-
-        var dailyConsumption = new DailyConsumption
-        {
-            Item = item,
-            ConsumptionDate = ToUtc(consumptionDate.Value),
-            Quantity = consumptionDto.Quantity,
-            Source = string.IsNullOrWhiteSpace(consumptionDto.Source) ? "json" : consumptionDto.Source.Trim(),
-            CreatedAt = ToUtc(DateTime.UtcNow)
-        };
-
-        await context.DailyConsumptions.AddAsync(dailyConsumption);
-        result.DailyConsumptionsCreated++;
-    }
-
-    private static string GetConsumptionItemCode(DailyConsumptionJsonDto consumptionDto)
-    {
-        return string.IsNullOrWhiteSpace(consumptionDto.Code)
-            ? consumptionDto.ItemCode.Trim()
-            : consumptionDto.Code.Trim();
     }
 
     private static DateTime ToUtc(DateTime date)

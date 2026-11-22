@@ -7,7 +7,7 @@ namespace RepyPharma.Infrastructure.Json;
 
 public class PdfStorageService(
     IDbContextFactory<AppDbContext> dbContextFactory,
-    ReplenishmentDataState replenishmentDataState)
+    StockDataState stockDataState)
 {
     private static readonly Dictionary<string, string> LocationNames = new()
     {
@@ -19,7 +19,7 @@ public class PdfStorageService(
     };
 
     private readonly IDbContextFactory<AppDbContext> _dbContextFactory = dbContextFactory;
-    private readonly ReplenishmentDataState _replenishmentDataState = replenishmentDataState;
+    private readonly StockDataState _stockDataState = stockDataState;
 
     public async Task SaveAsync(List<ProductStock> produtos)
     {
@@ -173,7 +173,7 @@ public class PdfStorageService(
         await context.SaveChangesAsync();
         await transaction.CommitAsync();
 
-        _replenishmentDataState.NotifyChanged();
+        _stockDataState.NotifyChanged();
     }
 
     private static string GetLocationName(string code)
