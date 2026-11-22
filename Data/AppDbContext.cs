@@ -11,13 +11,79 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Batch> Batches => Set<Batch>();
     public DbSet<Location> Locations => Set<Location>();
     public DbSet<StockBalance> StockBalances => Set<StockBalance>();
-    public DbSet<DailyConsumption> DailyConsumptions => Set<DailyConsumption>();
-    public DbSet<ItemConsumptionAverage> ItemConsumptionAverages => Set<ItemConsumptionAverage>();
-    public DbSet<ReplenishmentRule> ReplenishmentRules => Set<ReplenishmentRule>();
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<Quotation> Quotations => Set<Quotation>();
+    public DbSet<Danfe> Danfes => Set<Danfe>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Supplier>(entity =>
+        {
+            entity.ToTable("suppliers");
+            entity.HasKey(supplier => supplier.Id);
+            entity.Property(supplier => supplier.Id).ValueGeneratedOnAdd();
+
+            entity.Property(supplier => supplier.Name)
+                .HasMaxLength(255)
+                .IsRequired();
+            entity.Property(supplier => supplier.Cnpj)
+                .HasMaxLength(14)
+                .IsRequired(false);
+            entity.Property(supplier => supplier.Observations)
+                .HasMaxLength(255);
+
+            entity.HasIndex(supplier => supplier.Cnpj)
+                .IsUnique()
+                .HasFilter("\"Cnpj\" IS NOT NULL");
+
+            entity.HasMany(supplier => supplier.Danfes)
+                .WithOne(danfe => danfe.Supplier)
+                .HasForeignKey(danfe => danfe.SupplierId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Quotation>(entity =>
+        {
+            entity.ToTable("quotations");
+            entity.HasKey(quotation => quotation.Id);
+            entity.Property(quotation => quotation.Id).ValueGeneratedOnAdd();
+
+            entity.Property(quotation => quotation.QuotationNumber)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.HasIndex(quotation => quotation.QuotationNumber)
+                .IsUnique();
+
+            entity.HasMany(quotation => quotation.Danfes)
+                .WithOne(danfe => danfe.Quotation)
+                .HasForeignKey(danfe => danfe.QuotationId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Danfe>(entity =>
+        {
+            entity.ToTable("danfes");
+            entity.HasKey(danfe => danfe.Id);
+            entity.Property(danfe => danfe.Id).ValueGeneratedOnAdd();
+
+            entity.Property(danfe => danfe.DanfeNumber)
+                .HasMaxLength(255)
+                .IsRequired();
+            entity.Property(danfe => danfe.Value)
+                .HasPrecision(18, 2);
+            entity.Property(danfe => danfe.UserReceiver)
+                .HasMaxLength(255);
+            entity.Property(danfe => danfe.ReceivedAt)
+                .HasColumnType("date");
+            entity.Property(danfe => danfe.PaymentDueAt)
+                .HasColumnType("date");
+
+            entity.HasIndex(danfe => danfe.SupplierId);
+            entity.HasIndex(danfe => danfe.QuotationId);
+        });
 
         modelBuilder.Entity<ApplicationUser>(entity =>
         {
@@ -57,21 +123,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithOne(balance => balance.Item)
                 .HasForeignKey(balance => balance.ItemId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            entity.HasMany(item => item.DailyConsumptions)
-                .WithOne(consumption => consumption.Item)
-                .HasForeignKey(consumption => consumption.ItemId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            entity.HasMany(item => item.ConsumptionAverages)
-                .WithOne(average => average.Item)
-                .HasForeignKey(average => average.ItemId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            entity.HasOne(item => item.ReplenishmentRule)
-                .WithOne(rule => rule.Item)
-                .HasForeignKey<ReplenishmentRule>(rule => rule.ItemId)
-                .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Batch>(entity =>
@@ -122,75 +173,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .HasPrecision(18, 3);
 
             entity.HasIndex(balance => new { balance.ItemId, balance.BatchId, balance.LocationId })
-                .IsUnique();
-        });
-
-        modelBuilder.Entity<DailyConsumption>(entity =>
-        {
-            entity.ToTable("daily_consumptions");
-            entity.HasKey(consumption => consumption.Id);
-
-            entity.Property(consumption => consumption.Quantity)
-                .HasPrecision(18, 3);
-            entity.Property(consumption => consumption.Source)
-                .HasMaxLength(100)
-                .IsRequired();
-        });
-
-        modelBuilder.Entity<ItemConsumptionAverage>(entity =>
-        {
-            entity.ToTable("item_consumption_averages");
-            entity.HasKey(average => average.Id);
-
-            entity.Property(average => average.ItemCode)
-                .HasMaxLength(50)
-                .IsRequired();
-            entity.Property(average => average.ItemName)
-                .HasMaxLength(255)
-                .IsRequired();
-            entity.Property(average => average.AveragePeriodKind)
-                .HasMaxLength(20)
-                .IsRequired();
-            entity.Property(average => average.SourceFileName)
-                .HasMaxLength(255)
-                .IsRequired();
-            entity.Property(average => average.MonthlyAverageOutput)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.WeeklyAverageOutput)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.CurrentAverageOutput)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.TotalOutput)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.StockBalance)
-                .HasPrecision(18, 3);
-            entity.Property(average => average.ProjectedCoverageDays)
-                .HasPrecision(18, 3);
-
-            entity.HasIndex(average => new
-            {
-                average.ItemCode,
-                average.ReportStartDate,
-                average.ReportEndDate
-            }).IsUnique();
-        });
-
-        modelBuilder.Entity<ReplenishmentRule>(entity =>
-        {
-            entity.ToTable("replenishment_rules");
-            entity.HasKey(rule => rule.Id);
-
-            entity.Property(rule => rule.MinimumStock)
-                .HasPrecision(18, 3);
-            entity.Property(rule => rule.SafetyStock)
-                .HasPrecision(18, 3);
-            entity.Property(rule => rule.CalculationMethod)
-                .HasMaxLength(50)
-                .IsRequired();
-            entity.Property(rule => rule.ItemPriority)
-                .HasConversion<int>();
-
-            entity.HasIndex(rule => rule.ItemId)
                 .IsUnique();
         });
     }

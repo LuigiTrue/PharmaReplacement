@@ -8,14 +8,13 @@
 }
 
 .hero-card,
-.info-card,
-.warning-card,
-.objective-card {
+.info-card {
     padding: 25px;
     margin: 0;
 }
 
-.hero-card h1 {
+.hero-card h1,
+.info-card h3 {
     margin-bottom: 15px;
 }
 
@@ -28,43 +27,4 @@
 
 .info-card {
     height: 100%;
-}
-
-.info-card h3 {
-    margin-bottom: 15px;
-}
-
-.warning-card h2 {
-    margin-bottom: 15px;
-}
-
-.warning-card h4 {
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-.objective-card blockquote {
-    margin-top: 20px;
-    padding: 15px;
-    border-left: 4px solid #3320C9;
-    font-style: italic;
-    font-size: 1.05rem;
-}
-
-@media (max-width: 720px) {
-    .home-container {
-        padding: 1rem;
-        gap: 1rem;
-    }
-
-    .hero-card,
-    .info-card,
-    .warning-card,
-    .objective-card {
-        padding: 1rem;
-    }
-
-    .objective-card blockquote {
-        font-size: 0.95rem;
-    }
 }

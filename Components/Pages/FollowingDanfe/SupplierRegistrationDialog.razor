@@ -1,0 +1,158 @@
+@using System.ComponentModel.DataAnnotations
+@implements IDialogContentComponent
+@implements IDisposable
+@inject ISupplierService SupplierService
+@inject ILogger<SupplierRegistrationDialog> Logger
+
+<FluentDialogHeader ShowDismiss="false" Style="padding-bottom: 1rem;">
+    <div class="registration-header">
+        <div class="registration-heading">
+            <span class="registration-icon" aria-hidden="true"><i class="bi bi-truck"></i></span>
+            <div>
+                <h2>Cadastrar fornecedor</h2>
+                <p>Dados do fornecedor que emite a nota fiscal.</p>
+            </div>
+        </div>
+        <button type="button" class="registration-close" title="Fechar" aria-label="Fechar cadastro de fornecedor"
+                disabled="@_saving" @onclick="CancelAsync">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+    </div>
+</FluentDialogHeader>
+
+<FluentDialogBody Style="min-height: 0; overflow: hidden; display: flex; flex-direction: column;">
+    <div class="supplier-registration" aria-busy="@_saving">
+        <EditForm class="registration-form" Model="_form" OnValidSubmit="SaveAsync" FormName="following-supplier-registration" novalidate>
+            <DataAnnotationsValidator />
+            <div class="registration-content">
+                @if (_errorMessage is not null)
+                {
+                    <p class="registration-error" role="alert">@_errorMessage</p>
+                }
+                <ValidationSummary />
+                <fieldset class="registration-fields" disabled="@_saving">
+                    <div class="registration-field">
+                        <label for="supplier-registration-name">Nome do fornecedor <span aria-hidden="true">*</span></label>
+                        <InputText id="supplier-registration-name" @bind-Value="_form.Name" maxlength="255" aria-required="true" autocomplete="organization" placeholder="Razão social ou nome do fornecedor" />
+                        <ValidationMessage For="@(() => _form.Name)" />
+                    </div>
+                    <div class="registration-field">
+                        <label for="supplier-registration-cnpj">CNPJ <span class="optional-label">Opcional</span></label>
+                        <InputText id="supplier-registration-cnpj" @bind-Value="_form.Cnpj" maxlength="14" aria-describedby="supplier-registration-cnpj-hint" placeholder="CNPJ sem pontuação" />
+                        <small id="supplier-registration-cnpj-hint">Informe até 14 caracteres, sem pontuação.</small>
+                        <ValidationMessage For="@(() => _form.Cnpj)" />
+                    </div>
+                    <div class="registration-field registration-field-wide">
+                        <label for="supplier-registration-observations">Observações <span class="optional-label">Opcional</span></label>
+                        <InputTextArea id="supplier-registration-observations" @bind-Value="_form.Observations" maxlength="255" rows="3" placeholder="Informações adicionais sobre o fornecedor" />
+                        <small>Até 255 caracteres.</small>
+                        <ValidationMessage For="@(() => _form.Observations)" />
+                    </div>
+                </fieldset>
+            </div>
+            <div class="registration-actions">
+                <small>* Campo obrigatório</small>
+                <button type="button" class="btn registration-cancel" disabled="@_saving" @onclick="CancelAsync">Cancelar</button>
+                <button type="submit" class="btn btn-primary" disabled="@_saving">
+                    @if (_saving)
+                    {
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    }
+                    @(_saving ? "Cadastrando..." : "Cadastrar fornecedor")
+                </button>
+            </div>
+        </EditForm>
+    </div>
+</FluentDialogBody>
+
+@code {
+    [CascadingParameter] public FluentDialog Dialog { get; set; } = null!;
+
+    private readonly SupplierForm _form = new();
+    private readonly CancellationTokenSource _lifetime = new();
+    private bool _saving;
+    private bool _disposed;
+    private Supplier? _saved;
+    private string? _errorMessage;
+
+    protected override void OnInitialized()
+    {
+        Dialog.Instance.Parameters.ValidateDialogAsync = () => Task.FromResult(!_saving || _saved is not null);
+    }
+
+    private async Task SaveAsync()
+    {
+        if (_saving || _disposed || _saved is not null)
+            return;
+
+        _saving = true;
+        _errorMessage = null;
+        var cancellationToken = _lifetime.Token;
+        try
+        {
+            var supplier = await SupplierService.CreateSupplierAsync(new Supplier
+            {
+                Name = _form.Name.Trim(),
+                Cnpj = string.IsNullOrWhiteSpace(_form.Cnpj) ? null : _form.Cnpj.Trim(),
+                Observations = string.IsNullOrWhiteSpace(_form.Observations) ? null : _form.Observations.Trim()
+            }, cancellationToken);
+            if (_disposed)
+                return;
+
+            _saved = supplier;
+            await Dialog.CloseAsync(supplier);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // O diálogo foi descartado; não há interface ativa para notificar.
+        }
+        catch (ArgumentException) when (!_disposed)
+        {
+            _errorMessage = "Confira os campos informados antes de cadastrar o fornecedor.";
+        }
+        catch (InvalidOperationException) when (!_disposed)
+        {
+            _errorMessage = "Não foi possível cadastrar o fornecedor. Verifique se o CNPJ já está cadastrado.";
+        }
+        catch (Exception exception)
+        {
+            Logger.LogError("Falha no cadastro de fornecedor. Tipo de erro: {ErrorType}", exception.GetType().Name);
+            if (!_disposed)
+                _errorMessage = "Não foi possível cadastrar o fornecedor. Tente novamente. Os dados foram mantidos.";
+        }
+        finally
+        {
+            if (!_disposed)
+                _saving = false;
+        }
+    }
+
+    private async Task CancelAsync()
+    {
+        if (!_saving && !_disposed)
+            await Dialog.CancelAsync();
+    }
+
+    public void Dispose()
+    {
+        if (_disposed)
+            return;
+
+        _disposed = true;
+        _lifetime.Cancel();
+        _lifetime.Dispose();
+    }
+
+    public sealed class SupplierForm
+    {
+        [Required(ErrorMessage = "Informe o nome do fornecedor.")]
+        [StringLength(255, ErrorMessage = "O nome deve ter até 255 caracteres.")]
+        public string Name { get; set; } = string.Empty;
+
+        [StringLength(14, ErrorMessage = "O CNPJ deve ter até 14 caracteres.")]
+        public string? Cnpj { get; set; }
+
+        [StringLength(255, ErrorMessage = "As observações devem ter até 255 caracteres.")]
+        public string? Observations { get; set; }
+    }
+}
