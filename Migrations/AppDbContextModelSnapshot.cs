@@ -154,6 +154,60 @@ namespace RepyPharma.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("RepyPharma.Domain.Entities.AbcClassificationResult", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("AccumulatedPercentage")
+                        .HasPrecision(7, 4)
+                        .HasColumnType("numeric(7,4)");
+
+                    b.Property<Guid>("AnalysisId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Classification")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("ConsumptionValue")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)");
+
+                    b.Property<DateOnly>("EndDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("AnalysisId", "ItemId")
+                        .IsUnique();
+
+                    b.HasIndex("StartDate", "EndDate");
+
+                    b.ToTable("abc_classification_results", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_abc_classification_results_accumulated_percentage", "\"AccumulatedPercentage\" BETWEEN 0 AND 100");
+
+                            t.HasCheckConstraint("CK_abc_classification_results_analysis_id", "\"AnalysisId\" <> '00000000-0000-0000-0000-000000000000'::uuid");
+
+                            t.HasCheckConstraint("CK_abc_classification_results_classification", "\"Classification\" IN (0, 1, 2)");
+
+                            t.HasCheckConstraint("CK_abc_classification_results_consumption_value", "\"ConsumptionValue\" >= 0");
+
+                            t.HasCheckConstraint("CK_abc_classification_results_period", "\"EndDate\" >= \"StartDate\"");
+                        });
+                });
+
             modelBuilder.Entity("RepyPharma.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -267,6 +321,35 @@ namespace RepyPharma.Migrations
                         .IsUnique();
 
                     b.ToTable("batches", (string)null);
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.DailyConsumption", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Quantity")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId", "Date")
+                        .IsUnique();
+
+                    b.ToTable("daily_consumptions", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_daily_consumptions_quantity", "\"Quantity\" >= 0");
+                        });
                 });
 
             modelBuilder.Entity("RepyPharma.Domain.Entities.Danfe", b =>
@@ -393,6 +476,54 @@ namespace RepyPharma.Migrations
                         .IsUnique();
 
                     b.ToTable("locations", (string)null);
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.MonthlyConsumption", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("AverageDailyConsumption")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("numeric(18,6)");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Month")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("TotalQuantity")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.Property<decimal?>("UnitPurchasePrice")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("numeric(18,6)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId", "Year", "Month")
+                        .IsUnique();
+
+                    b.ToTable("monthly_consumptions", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_monthly_consumptions_average_daily_consumption", "\"AverageDailyConsumption\" >= 0");
+
+                            t.HasCheckConstraint("CK_monthly_consumptions_month", "\"Month\" BETWEEN 1 AND 12");
+
+                            t.HasCheckConstraint("CK_monthly_consumptions_total_quantity", "\"TotalQuantity\" >= 0");
+
+                            t.HasCheckConstraint("CK_monthly_consumptions_unit_purchase_price", "\"UnitPurchasePrice\" IS NULL OR \"UnitPurchasePrice\" >= 0");
+
+                            t.HasCheckConstraint("CK_monthly_consumptions_year", "\"Year\" BETWEEN 1 AND 9999");
+                        });
                 });
 
             modelBuilder.Entity("RepyPharma.Domain.Entities.Quotation", b =>
@@ -533,12 +664,34 @@ namespace RepyPharma.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RepyPharma.Domain.Entities.AbcClassificationResult", b =>
+                {
+                    b.HasOne("RepyPharma.Domain.Entities.Item", "Item")
+                        .WithMany("AbcClassificationResults")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+                });
+
             modelBuilder.Entity("RepyPharma.Domain.Entities.Batch", b =>
                 {
                     b.HasOne("RepyPharma.Domain.Entities.Item", "Item")
                         .WithMany("Batches")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.DailyConsumption", b =>
+                {
+                    b.HasOne("RepyPharma.Domain.Entities.Item", "Item")
+                        .WithMany("DailyConsumptions")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Item");
@@ -561,6 +714,17 @@ namespace RepyPharma.Migrations
                     b.Navigation("Quotation");
 
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("RepyPharma.Domain.Entities.MonthlyConsumption", b =>
+                {
+                    b.HasOne("RepyPharma.Domain.Entities.Item", "Item")
+                        .WithMany("MonthlyConsumptions")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Item");
                 });
 
             modelBuilder.Entity("RepyPharma.Domain.Entities.StockBalance", b =>
@@ -597,7 +761,13 @@ namespace RepyPharma.Migrations
 
             modelBuilder.Entity("RepyPharma.Domain.Entities.Item", b =>
                 {
+                    b.Navigation("AbcClassificationResults");
+
                     b.Navigation("Batches");
+
+                    b.Navigation("DailyConsumptions");
+
+                    b.Navigation("MonthlyConsumptions");
 
                     b.Navigation("StockBalances");
                 });

@@ -73,6 +73,17 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserSettingsService, UserSettingsService>();
 builder.Services.AddScoped<IJsonImportService, JsonImportService>();
 
+// Analytics contracts; business methods are intentionally not implemented yet.
+builder.Services.AddScoped<IConsumptionAnalysisService, ConsumptionAnalysisService>();
+builder.Services.AddScoped<IAbcClassificationService, AbcClassificationService>();
+builder.Services.AddScoped<IXyzCriticalityService, XyzCriticalityService>();
+builder.Services.AddScoped<IConsumptionForecastService, ConsumptionForecastService>();
+builder.Services.AddScoped<IInventoryAnalysisService, InventoryAnalysisService>();
+builder.Services.AddScoped<IPurchasePlanningService, PurchasePlanningService>();
+builder.Services.AddScoped<IConsumptionDataQualityService, ConsumptionDataQualityService>();
+builder.Services.AddScoped<IConsumptionImportService, ConsumptionImportService>();
+builder.Services.AddScoped<IConsumptionAggregationService, ConsumptionAggregationService>();
+
 // Stock import and UI state
 builder.Services.AddScoped<PdfStorageService>();
 builder.Services.AddScoped<PdfParserService>();

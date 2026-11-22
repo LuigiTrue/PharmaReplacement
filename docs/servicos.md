@@ -32,3 +32,9 @@ As telas demonstrativas de compras e chegada de produtos, os gráficos, a impres
 ## Verificação da limpeza
 
 A verificação está documentada em `limpeza-projeto.txt`. Nenhuma migration de exclusão deve ser aplicada ao banco de trabalho sem considerar a perda dos dados antigos de consumo e reposição. A aplicação não executa migrations automaticamente.
+
+## Contratos analíticos para desenvolvimento incremental
+
+Foram adicionados nove serviços e suas interfaces para análise de consumo, ABC, XYZ manual, projeção, análise gerencial, planejamento de compras, qualidade dos dados, importação CSV e consolidação mensal. Todos estão registrados como `Scoped`; os 54 métodos contêm somente `throw new NotImplementedException();` e não estão ligados aos fluxos atuais da aplicação.
+
+O inventário completo de interfaces, assinaturas, DTOs e limitações do modelo está em [Contratos dos serviços analíticos](contratos-servicos-analiticos.md). Nenhuma regra de negócio ou persistência desses serviços foi implementada.

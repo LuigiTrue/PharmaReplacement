@@ -2,6 +2,14 @@
 
 O modelo permanece em `Data/AppDbContext.cs`, com PostgreSQL e ASP.NET Core Identity.
 
+O diagrama completo foi extraído diretamente dos catálogos do banco `repypharm` em 22/11/2026: **15 tabelas, 86 colunas, 12 chaves estrangeiras e 32 índices**, incluindo autenticação e `__EFMigrationsHistory`.
+
+- [Imagem PNG em alta resolução](../wwwroot/img/diagrama-banco-dados.png).
+- [Imagem SVG para ampliar sem perder qualidade](../wwwroot/img/diagrama-banco-dados.svg).
+- [Fonte editável em Graphviz DOT](diagrama-banco-dados.dot).
+
+As imagens mostram campos, tipos, nulabilidade, valores padrão, identidades, chaves primárias simples/compostas, chaves estrangeiras, cardinalidades, índices únicos/compostos/parciais e regras de exclusão/atualização. Foram consultados somente metadados, sem incluir registros das tabelas.
+
 | Tabela | Entidade | Função |
 | --- | --- | --- |
 | `items` | `Item` | Código, nome, unidade, classificação, estado ativo e datas do item. |

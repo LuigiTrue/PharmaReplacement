@@ -14,6 +14,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Supplier> Suppliers => Set<Supplier>();
     public DbSet<Quotation> Quotations => Set<Quotation>();
     public DbSet<Danfe> Danfes => Set<Danfe>();
+    public DbSet<DailyConsumption> DailyConsumptions => Set<DailyConsumption>();
+    public DbSet<MonthlyConsumption> MonthlyConsumptions => Set<MonthlyConsumption>();
+    public DbSet<AbcClassificationResult> AbcClassificationResults => Set<AbcClassificationResult>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -174,6 +177,102 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
             entity.HasIndex(balance => new { balance.ItemId, balance.BatchId, balance.LocationId })
                 .IsUnique();
+        });
+
+        modelBuilder.Entity<DailyConsumption>(entity =>
+        {
+            entity.ToTable("daily_consumptions", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_daily_consumptions_quantity",
+                    "\"Quantity\" >= 0");
+            });
+            entity.HasKey(consumption => consumption.Id);
+            entity.Property(consumption => consumption.Id).ValueGeneratedOnAdd();
+            entity.Property(consumption => consumption.Date).HasColumnType("date");
+            entity.Property(consumption => consumption.Quantity).HasPrecision(18, 3);
+
+            entity.HasIndex(consumption => new { consumption.ItemId, consumption.Date })
+                .IsUnique();
+
+            entity.HasOne(consumption => consumption.Item)
+                .WithMany(item => item.DailyConsumptions)
+                .HasForeignKey(consumption => consumption.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<MonthlyConsumption>(entity =>
+        {
+            entity.ToTable("monthly_consumptions", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_monthly_consumptions_year",
+                    "\"Year\" BETWEEN 1 AND 9999");
+                table.HasCheckConstraint(
+                    "CK_monthly_consumptions_month",
+                    "\"Month\" BETWEEN 1 AND 12");
+                table.HasCheckConstraint(
+                    "CK_monthly_consumptions_total_quantity",
+                    "\"TotalQuantity\" >= 0");
+                table.HasCheckConstraint(
+                    "CK_monthly_consumptions_average_daily_consumption",
+                    "\"AverageDailyConsumption\" >= 0");
+                table.HasCheckConstraint(
+                    "CK_monthly_consumptions_unit_purchase_price",
+                    "\"UnitPurchasePrice\" IS NULL OR \"UnitPurchasePrice\" >= 0");
+            });
+            entity.HasKey(consumption => consumption.Id);
+            entity.Property(consumption => consumption.Id).ValueGeneratedOnAdd();
+            entity.Property(consumption => consumption.TotalQuantity).HasPrecision(18, 3);
+            entity.Property(consumption => consumption.AverageDailyConsumption).HasPrecision(18, 6);
+            entity.Property(consumption => consumption.UnitPurchasePrice).HasPrecision(18, 6);
+
+            entity.HasIndex(consumption => new { consumption.ItemId, consumption.Year, consumption.Month })
+                .IsUnique();
+
+            entity.HasOne(consumption => consumption.Item)
+                .WithMany(item => item.MonthlyConsumptions)
+                .HasForeignKey(consumption => consumption.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<AbcClassificationResult>(entity =>
+        {
+            entity.ToTable("abc_classification_results", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_abc_classification_results_analysis_id",
+                    "\"AnalysisId\" <> '00000000-0000-0000-0000-000000000000'::uuid");
+                table.HasCheckConstraint(
+                    "CK_abc_classification_results_period",
+                    "\"EndDate\" >= \"StartDate\"");
+                table.HasCheckConstraint(
+                    "CK_abc_classification_results_consumption_value",
+                    "\"ConsumptionValue\" >= 0");
+                table.HasCheckConstraint(
+                    "CK_abc_classification_results_accumulated_percentage",
+                    "\"AccumulatedPercentage\" BETWEEN 0 AND 100");
+                table.HasCheckConstraint(
+                    "CK_abc_classification_results_classification",
+                    "\"Classification\" IN (0, 1, 2)");
+            });
+            entity.HasKey(result => result.Id);
+            entity.Property(result => result.Id).ValueGeneratedOnAdd();
+            entity.Property(result => result.AnalysisId).HasColumnType("uuid");
+            entity.Property(result => result.StartDate).HasColumnType("date");
+            entity.Property(result => result.EndDate).HasColumnType("date");
+            entity.Property(result => result.ConsumptionValue).HasPrecision(18, 4);
+            entity.Property(result => result.AccumulatedPercentage).HasPrecision(7, 4);
+            entity.Property(result => result.Classification).HasConversion<int>();
+
+            entity.HasIndex(result => new { result.AnalysisId, result.ItemId })
+                .IsUnique();
+            entity.HasIndex(result => new { result.StartDate, result.EndDate });
+
+            entity.HasOne(result => result.Item)
+                .WithMany(item => item.AbcClassificationResults)
+                .HasForeignKey(result => result.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

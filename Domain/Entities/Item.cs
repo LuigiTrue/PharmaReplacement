@@ -13,4 +13,7 @@ public class Item
 
     public ICollection<Batch> Batches { get; set; } = new List<Batch>();
     public ICollection<StockBalance> StockBalances { get; set; } = new List<StockBalance>();
+    public ICollection<DailyConsumption> DailyConsumptions { get; set; } = new List<DailyConsumption>();
+    public ICollection<MonthlyConsumption> MonthlyConsumptions { get; set; } = new List<MonthlyConsumption>();
+    public ICollection<AbcClassificationResult> AbcClassificationResults { get; set; } = new List<AbcClassificationResult>();
 }
