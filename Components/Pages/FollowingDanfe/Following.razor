@@ -1,10 +1,466 @@
 @page "/FollowingDanfe/Following"
 @attribute [Authorize(Roles = "Admin,Farmacia,Almoxarifado,Consulta")]
+@using System.Globalization
+@using System.ComponentModel.DataAnnotations
+@inject IAuthService AuthService
+@implements IDisposable
 
-<PageTitle>Notas fiscais</PageTitle>
+<PageTitle>Notas Fiscais | RepyPharma</PageTitle>
 
-<section class="app-grid-card mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-    <h3>Notas fiscais</h3>
-</section>
+<div class="nf-module">
+    <header class="nf-header">
+        <div><div class="nf-eyebrow">GESTÃO HOSPITALAR · CONTROLE DE NOTAS FISCAIS</div><h1><i class="bi bi-receipt" aria-hidden="true"></i> Notas Fiscais</h1><p>Acompanhe vencimentos, organize os recebimentos e visualize os pedidos emergenciais.</p></div>
+        <div class="nf-header-context"><span class="nf-demo-badge"><i class="bi bi-circle-fill" aria-hidden="true"></i> Ambiente demonstrativo — Dados fictícios</span><span class="nf-muted">Referência simulada · @ReferenceDate.ToString("dd/MM/yyyy", Br)</span></div>
+    </header>
+    <p class="nf-demo-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Cadastros, pagamentos e pedidos são simulados. Nenhuma informação é gravada; as alterações são descartadas ao sair ou recarregar esta página.</p>
+    <nav class="nf-tabs" role="tablist" aria-label="Seções de notas fiscais">
+        @for (var index = 0; index < TabNames.Length; index++)
+        {
+            var tab = index;
+            <button type="button" role="tab" id="@($"nf-tab-{tab}")" aria-controls="@($"nf-panel-{tab}")" aria-selected="@(tab == _activeTab ? "true" : "false")" class="@(tab == _activeTab ? "is-active" : null)" @onclick="() => _activeTab = tab"><i class="bi @TabIcons[tab]" aria-hidden="true"></i>@TabNames[tab]</button>
+        }
+    </nav>
+    @if (!CanEdit) { <p class="nf-notice"><i class="bi bi-eye" aria-hidden="true"></i> Perfil de consulta: visualize os dados e detalhes. As simulações estão disponíveis para perfis com permissão de atualização.</p> }
+    @if (_message is not null)
+    {
+        <div class="nf-feedback" role="status"><i class="bi bi-check-circle" aria-hidden="true"></i><span>@_message</span><button type="button" class="nf-icon-button" aria-label="Fechar mensagem" @onclick="() => _message = null"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+    }
 
-<FollowingSignInDanfe />
+    <section id="nf-panel-0" role="tabpanel" aria-labelledby="nf-tab-0" hidden="@(_activeTab != 0)">
+        <div class="nf-section-heading"><div><h2>Acompanhamento de pagamento</h2><p>Do vencimento mais próximo para o mais distante, com as notas vencidas no início.</p></div><span class="nf-status nf-neutral"><i class="bi bi-sort-down" aria-hidden="true"></i> Ordem de vencimento</span></div>
+        <div class="nf-metrics">
+            <article><span><i class="bi bi-currency-dollar" aria-hidden="true"></i> Total em aberto</span><strong>@Money(_invoices.Where(i => !i.IsPaid).Sum(i => i.Value))</strong><small>@_invoices.Count(i => !i.IsPaid) notas da amostra</small></article>
+            <article><span><i class="bi bi-exclamation-circle nf-red-icon" aria-hidden="true"></i> Notas vencidas</span><strong>@_invoices.Count(i => !i.IsPaid && i.DueDate < ReferenceDate)</strong><small>Exigem acompanhamento prioritário</small></article>
+            <article><span><i class="bi bi-calendar-event nf-amber-icon" aria-hidden="true"></i> Vencem em até 7 dias</span><strong>@_invoices.Count(i => !i.IsPaid && DaysUntilDue(i) is >= 0 and <= 7)</strong><small>Inclui vencimentos de hoje</small></article>
+            <article><span><i class="bi bi-check-circle nf-green-icon" aria-hidden="true"></i> Notas pagas</span><strong>@_invoices.Count(i => i.IsPaid)</strong><small>Confirmações demonstrativas</small></article>
+        </div>
+        <section class="nf-card">
+            <div class="nf-card-heading"><div><h3>Agenda de vencimentos</h3><p>Selecione uma nota para consultar os dados de recebimento e pagamento.</p></div><span class="nf-status nf-neutral" aria-live="polite">@FilteredInvoices.Count de @_invoices.Count notas</span></div>
+            <div class="nf-filters">
+                <label class="nf-control nf-grow"><span>Buscar NF ou fornecedor</span><input type="search" placeholder="Ex.: 000184, Vida Hospitalar" @bind="_invoiceSearch" @bind:event="oninput" @bind:after="ClearInvoiceSelection" /></label>
+                <label class="nf-control"><span>Situação do pagamento</span><select aria-label="Filtrar notas por situação" @bind="_paymentFilter" @bind:after="ClearInvoiceSelection"><option value="open">Em aberto</option><option value="overdue">Vencidas</option><option value="week">Vencem em até 7 dias</option><option value="paid">Pagas</option><option value="all">Todas as notas</option></select></label>
+                <label class="nf-control"><span>Fornecedor</span><select aria-label="Filtrar notas por fornecedor" @bind="_supplierFilter" @bind:after="ClearInvoiceSelection"><option value="">Todos os fornecedores</option>@foreach (var supplier in Suppliers) { <option value="@supplier.Id">@supplier.Name</option> }</select></label>
+            </div>
+            @if (HasInvoiceFilters) { <div class="nf-filter-summary"><span>Indicadores referem-se à amostra completa.</span><button type="button" class="nf-text-button" @onclick="ResetInvoiceFilters">Limpar filtros</button></div> }
+            <div class="nf-table-scroll"><table class="nf-table nf-payment-table"><thead><tr><th>Vencimento</th><th>Nota fiscal</th><th>Fornecedor</th><th class="nf-numeric">Valor da nota</th><th>Situação</th><th>Detalhes</th></tr></thead><tbody>
+                @foreach (var invoice in FilteredInvoices)
+                {
+                    <tr data-due="@invoice.DueDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)" class="@(_selectedInvoiceId == invoice.Id ? "is-selected" : null)">
+                        <td><div class="nf-due-date @DueTone(invoice)"><i class="bi bi-calendar3" aria-hidden="true"></i><strong>@invoice.DueDate.ToString("dd/MM/yyyy", Br)</strong></div><small>@DueLabel(invoice)</small></td>
+                        <td><strong class="nf-code">NF @invoice.Number</strong><small>@invoice.ItemCount @(invoice.ItemCount == 1 ? "item" : "itens") · @invoice.Quotation</small></td>
+                        <td>@SupplierName(invoice.SupplierId)</td><td class="nf-numeric">@Money(invoice.Value)</td><td><span class="nf-status @DueTone(invoice)"><i class="bi @DueIcon(invoice)" aria-hidden="true"></i>@PaymentLabel(invoice)</span></td>
+                        <td><button type="button" class="nf-text-button" aria-label="@($"Ver nota {invoice.Number}")" aria-expanded="@(_selectedInvoiceId == invoice.Id ? "true" : "false")" aria-controls="nf-invoice-detail" @onclick="() => _selectedInvoiceId = invoice.Id">Ver nota <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></td>
+                    </tr>
+                }
+            </tbody></table></div>
+            @if (FilteredInvoices.Count == 0) { <p class="nf-empty">Nenhuma nota da amostra corresponde aos filtros selecionados.</p> }
+        </section>
+        @if (_invoices.FirstOrDefault(i => i.Id == _selectedInvoiceId) is { } selectedInvoice)
+        {
+            <section id="nf-invoice-detail" class="nf-card nf-detail" role="region" aria-label="Detalhes da nota fiscal">
+                <div class="nf-card-heading"><div><span class="nf-eyebrow">DETALHES DA NOTA · DEMONSTRAÇÃO</span><h3>NF @selectedInvoice.Number · @SupplierName(selectedInvoice.SupplierId)</h3><p>@selectedInvoice.Quotation · @selectedInvoice.PaymentMethod</p></div><button type="button" class="nf-secondary-button" @onclick="ClearInvoiceSelection"><i class="bi bi-x-lg" aria-hidden="true"></i> Fechar detalhes</button></div>
+                <div class="nf-detail-grid"><div><span>Valor da nota</span><strong>@Money(selectedInvoice.Value)</strong></div><div><span>Emissão</span><strong>@selectedInvoice.IssueDate.ToString("dd/MM/yyyy", Br)</strong></div><div><span>Recebimento</span><strong>@selectedInvoice.ReceivedDate.ToString("dd/MM/yyyy", Br)</strong></div><div><span>Vencimento</span><strong>@selectedInvoice.DueDate.ToString("dd/MM/yyyy", Br)</strong></div></div>
+                <div class="nf-detail-grid"><div><span>Quantidade de itens</span><strong>@selectedInvoice.ItemCount</strong></div><div><span>Responsável pelo recebimento</span><strong>@selectedInvoice.Receiver</strong></div><div><span>Produtos termolábeis</span><strong>@(selectedInvoice.IsThermolabile ? "Sim" : "Não")</strong></div><div><span>Contém compra</span><strong>@(selectedInvoice.ContainsPurchase ? "Sim" : "Não")</strong></div></div>
+                <div class="nf-inline-info"><span class="nf-status @DueTone(selectedInvoice)">@PaymentLabel(selectedInvoice)</span>@if (selectedInvoice.PaidDate is { } paidDate) { <span>Pagamento demonstrativo em @paidDate.ToString("dd/MM/yyyy", Br)</span> }</div>
+                @if (!string.IsNullOrWhiteSpace(selectedInvoice.AttachmentName)) { <p class="nf-muted"><i class="bi bi-paperclip" aria-hidden="true"></i> Anexo selecionado: @selectedInvoice.AttachmentName · conteúdo não processado.</p> }
+                @if (!string.IsNullOrWhiteSpace(selectedInvoice.Notes)) { <p class="nf-notice"><i class="bi bi-chat-left-text" aria-hidden="true"></i>@selectedInvoice.Notes</p> }
+                <div class="nf-detail-footer"><p>Dados ilustrativos para avaliação do acompanhamento financeiro.</p>@if (!selectedInvoice.IsPaid && CanEdit) { <button type="button" class="nf-primary-button" @onclick="() => SimulatePayment(selectedInvoice)"><i class="bi bi-check2-circle" aria-hidden="true"></i> Simular pagamento</button> }</div>
+            </section>
+        }
+    </section>
+
+    <section id="nf-panel-1" role="tabpanel" aria-labelledby="nf-tab-1" hidden="@(_activeTab != 1)">
+        <div class="nf-section-heading"><div><h2>Cadastro de NF</h2><p>Preencha os dados para demonstrar o recebimento e a inclusão da nota no acompanhamento.</p></div><span class="nf-status nf-neutral">Campos com * são obrigatórios</span></div>
+        <EditForm @key="_invoiceForm" Model="_invoiceForm" OnValidSubmit="SimulateInvoiceRegistration" FormName="nf-demonstration-registration">
+            <DataAnnotationsValidator />
+            <div class="nf-form-layout">
+                <section class="nf-card">
+                    <div class="nf-card-heading"><div><h3>Dados da nota fiscal</h3><p>Fornecedores e cotações desta tela são fictícios.</p></div><span class="nf-form-step">01</span></div>
+                    <fieldset class="nf-fieldset" disabled="@(!CanEdit)">
+                        <div class="nf-form-grid">
+                            <div class="nf-control"><label for="nf-number">Número da NF *</label><InputText id="nf-number" @bind-Value="_invoiceForm.Number" maxlength="30" placeholder="Ex.: 000250" /><ValidationMessage For="@(() => _invoiceForm.Number)" /></div>
+                            <div class="nf-control"><label for="nf-supplier">Fornecedor *</label><InputSelect id="nf-supplier" @bind-Value="_invoiceForm.SupplierId"><option value="">Selecione o fornecedor</option>@foreach (var supplier in Suppliers) { <option value="@supplier.Id">@supplier.Name</option> }</InputSelect><ValidationMessage For="@(() => _invoiceForm.SupplierId)" /></div>
+                            <div class="nf-control"><label for="nf-quotation">Cotação *</label><InputSelect id="nf-quotation" @bind-Value="_invoiceForm.Quotation"><option value="">Selecione a cotação</option>@foreach (var quotation in Quotations) { <option>@quotation</option> }</InputSelect><ValidationMessage For="@(() => _invoiceForm.Quotation)" /></div>
+                            <div class="nf-control"><label for="nf-value">Valor da nota (R$) *</label><InputNumber id="nf-value" @bind-Value="_invoiceForm.Value" min="0.01" step="0.01" placeholder="0,00" ParsingErrorMessage="Informe um valor numérico válido." /><ValidationMessage For="@(() => _invoiceForm.Value)" /></div>
+                            <div class="nf-control"><label for="nf-item-count">Quantidade de itens *</label><InputNumber id="nf-item-count" @bind-Value="_invoiceForm.ItemCount" min="1" step="1" ParsingErrorMessage="Informe uma quantidade inteira válida." /><ValidationMessage For="@(() => _invoiceForm.ItemCount)" /></div>
+                            <div class="nf-control"><label for="nf-payment-method">Forma de pagamento *</label><InputSelect id="nf-payment-method" @bind-Value="_invoiceForm.PaymentMethod"><option>Boleto</option><option>Transferência</option><option>Pix</option></InputSelect></div>
+                        </div>
+                    </fieldset>
+                </section>
+                <aside class="nf-card nf-form-aside"><div class="nf-aside-icon"><i class="bi bi-receipt-cutoff" aria-hidden="true"></i></div><h3>Do recebimento ao pagamento</h3><p>A nota cadastrada na simulação será apresentada na agenda, respeitando a ordem da data de vencimento.</p><ol><li>Informe fornecedor e cotação.</li><li>Confira valor e datas.</li><li>Simule o cadastro e consulte a nota.</li></ol><span class="nf-status nf-neutral">Sem gravação no banco</span></aside>
+                <section class="nf-card">
+                    <div class="nf-card-heading"><div><h3>Recebimento e vencimento</h3><p>Identifique o prazo de pagamento e a entrada da nota.</p></div><span class="nf-form-step">02</span></div>
+                    <fieldset class="nf-fieldset" disabled="@(!CanEdit)"><div class="nf-form-grid">
+                        <div class="nf-control"><label for="nf-issued">Data de emissão *</label><InputDate id="nf-issued" @bind-Value="_invoiceForm.IssueDate" /><ValidationMessage For="@(() => _invoiceForm.IssueDate)" /></div>
+                        <div class="nf-control"><label for="nf-received">Data de recebimento *</label><InputDate id="nf-received" @bind-Value="_invoiceForm.ReceivedDate" /><ValidationMessage For="@(() => _invoiceForm.ReceivedDate)" /></div>
+                        <div class="nf-control"><label for="nf-due">Data de vencimento *</label><InputDate id="nf-due" @bind-Value="_invoiceForm.DueDate" /><ValidationMessage For="@(() => _invoiceForm.DueDate)" /></div>
+                        <div class="nf-control"><label for="nf-receiver">Responsável pelo recebimento</label><InputText id="nf-receiver" @bind-Value="_invoiceForm.Receiver" maxlength="120" placeholder="Nome do responsável" /></div>
+                    </div><div class="nf-checks"><label><InputCheckbox @bind-Value="_invoiceForm.IsThermolabile" /> Produtos termolábeis</label><label><InputCheckbox @bind-Value="_invoiceForm.ContainsPurchase" /> Contém compra</label></div></fieldset>
+                </section>
+                <section class="nf-card nf-form-wide">
+                    <div class="nf-card-heading"><div><h3>Anexo e observações</h3><p>Opcional: selecione o documento para visualizar o nome do arquivo na demonstração.</p></div><span class="nf-form-step">03</span></div>
+                    <fieldset class="nf-fieldset" disabled="@(!CanEdit)">
+                        <label class="nf-upload"><InputFile @key="_attachmentVersion" OnChange="SelectInvoiceFile" accept=".pdf,.xml" aria-label="Selecionar anexo da nota fiscal" /><i class="bi bi-file-earmark-arrow-up" aria-hidden="true"></i><strong>Selecionar documento da NF</strong><span>PDF ou XML · até 10 MB · conteúdo não processado</span></label>
+                        @if (_attachmentError is not null) { <p class="nf-error" role="alert">@_attachmentError</p> }
+                        @if (_invoiceAttachment is not null) { <div class="nf-file-name"><i class="bi bi-paperclip" aria-hidden="true"></i><span>@_invoiceAttachment</span><button type="button" class="nf-text-button" @onclick="RemoveInvoiceFile">Remover anexo</button></div> }
+                        <div class="nf-control"><label for="nf-notes">Observações</label><InputTextArea id="nf-notes" @bind-Value="_invoiceForm.Notes" rows="3" maxlength="500" placeholder="Informações adicionais sobre o recebimento..." /></div>
+                    </fieldset>
+                </section>
+            </div>
+            @if (_invoiceError is not null) { <p class="nf-error" role="alert">@_invoiceError</p> }
+            <div class="nf-form-actions"><span>O cadastro será adicionado somente aos dados desta demonstração.</span><div><button type="button" class="nf-secondary-button" @onclick="ResetInvoiceForm" disabled="@(!CanEdit)">Limpar formulário</button><button type="submit" class="nf-primary-button" disabled="@(!CanEdit)"><i class="bi bi-plus-circle" aria-hidden="true"></i> Simular cadastro de NF</button></div></div>
+        </EditForm>
+    </section>
+
+    <section id="nf-panel-2" role="tabpanel" aria-labelledby="nf-tab-2" hidden="@(_activeTab != 2)">
+        <div class="nf-section-heading"><div><h2>Pedidos Emergenciais</h2><p>Acompanhe solicitações prioritárias, os prazos necessários e o andamento das aquisições.</p></div>@if (CanEdit) { <button type="button" class="nf-primary-button" aria-expanded="@(_showEmergencyForm ? "true" : "false")" aria-controls="nf-emergency-form" @onclick="() => _showEmergencyForm = !_showEmergencyForm"><i class="bi bi-plus-lg" aria-hidden="true"></i>@(_showEmergencyForm ? "Fechar nova solicitação" : "Nova solicitação demonstrativa")</button> }</div>
+        <div class="nf-metrics nf-metrics-three"><article><span><i class="bi bi-lightning-charge" aria-hidden="true"></i> Pedidos em andamento</span><strong>@_requests.Count(r => r.Status != EmergencyStatus.Completed)</strong><small>Solicitações da amostra</small></article><article><span><i class="bi bi-exclamation-triangle nf-red-icon" aria-hidden="true"></i> Prioridade crítica</span><strong>@_requests.Count(r => r.Status != EmergencyStatus.Completed && r.Priority == EmergencyPriority.Critical)</strong><small>Necessitam acompanhamento próximo</small></article><article><span><i class="bi bi-hourglass-split nf-amber-icon" aria-hidden="true"></i> Aguardando aprovação</span><strong>@_requests.Count(r => r.Status == EmergencyStatus.WaitingApproval)</strong><small>Etapa demonstrativa de análise</small></article></div>
+        @if (_showEmergencyForm)
+        {
+            <section id="nf-emergency-form" class="nf-card nf-detail">
+                <div class="nf-card-heading"><div><h3>Nova solicitação emergencial</h3><p>Descreva a necessidade para simular a inclusão do pedido no acompanhamento.</p></div></div>
+                <EditForm @key="_emergencyForm" Model="_emergencyForm" OnValidSubmit="SimulateEmergencyRequest" FormName="nf-demonstration-emergency">
+                    <DataAnnotationsValidator />
+                    <fieldset class="nf-fieldset" disabled="@(!CanEdit)"><div class="nf-form-grid">
+                        <div class="nf-control"><label for="nf-em-sector">Setor solicitante *</label><InputSelect id="nf-em-sector" @bind-Value="_emergencyForm.Sector"><option value="">Selecione o setor</option><option>UTI adulto</option><option>Centro cirúrgico</option><option>Emergência</option><option>Enfermaria</option></InputSelect><ValidationMessage For="@(() => _emergencyForm.Sector)" /></div>
+                        <div class="nf-control"><label for="nf-em-item">Item solicitado *</label><InputSelect id="nf-em-item" @bind-Value="_emergencyForm.ItemCode"><option value="">Selecione o item</option>@foreach (var item in EmergencyItems) { <option value="@item.Code">@item.Code · @item.Description</option> }</InputSelect><ValidationMessage For="@(() => _emergencyForm.ItemCode)" /></div>
+                        <div class="nf-control"><label for="nf-em-quantity">Quantidade (unidades) *</label><InputNumber id="nf-em-quantity" @bind-Value="_emergencyForm.Quantity" min="1" step="1" ParsingErrorMessage="Informe uma quantidade inteira válida." /><ValidationMessage For="@(() => _emergencyForm.Quantity)" /></div>
+                        <div class="nf-control"><label for="nf-em-deadline">Necessário até *</label><InputDate id="nf-em-deadline" @bind-Value="_emergencyForm.Deadline" min="@ReferenceDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)" /><ValidationMessage For="@(() => _emergencyForm.Deadline)" /></div>
+                        <div class="nf-control"><label for="nf-em-priority">Prioridade *</label><InputSelect id="nf-em-priority" @bind-Value="_emergencyForm.Priority">@foreach (var priority in Enum.GetValues<EmergencyPriority>()) { <option value="@priority">@PriorityLabel(priority)</option> }</InputSelect></div>
+                        <div class="nf-control nf-span-two"><label for="nf-em-reason">Justificativa *</label><InputTextArea id="nf-em-reason" @bind-Value="_emergencyForm.Reason" rows="3" maxlength="500" placeholder="Descreva a necessidade e o contexto do setor..." /><ValidationMessage For="@(() => _emergencyForm.Reason)" /></div>
+                    </div></fieldset>
+                    <div class="nf-form-actions"><span>A solicitação não gera compra, aprovação ou comunicação externa.</span><div><button type="button" class="nf-secondary-button" @onclick="() => _showEmergencyForm = false">Cancelar</button><button type="submit" class="nf-primary-button" disabled="@(!CanEdit)">Simular solicitação</button></div></div>
+                </EditForm>
+            </section>
+        }
+        <section class="nf-card">
+            <div class="nf-card-heading"><div><h3>Acompanhamento dos pedidos</h3><p>Prioridades críticas aparecem primeiro, seguidas pelo prazo de necessidade.</p></div><span class="nf-status nf-neutral" aria-live="polite">@FilteredRequests.Count de @_requests.Count pedidos</span></div>
+            <div class="nf-filters"><label class="nf-control nf-grow"><span>Buscar pedido, item ou setor</span><input type="search" placeholder="Ex.: PE-2026-001, noradrenalina, UTI" @bind="_requestSearch" @bind:event="oninput" @bind:after="ClearRequestSelection" /></label><label class="nf-control"><span>Prioridade</span><select aria-label="Filtrar pedidos por prioridade" @bind="_priorityFilter" @bind:after="ClearRequestSelection"><option value="">Todas</option>@foreach (var priority in Enum.GetValues<EmergencyPriority>()) { <option value="@priority">@PriorityLabel(priority)</option> }</select></label><label class="nf-control"><span>Andamento</span><select aria-label="Filtrar pedidos por andamento" @bind="_requestStatus" @bind:after="ClearRequestSelection"><option value="active">Em andamento</option><option value="all">Todos</option>@foreach (var status in Enum.GetValues<EmergencyStatus>()) { <option value="@status">@EmergencyStatusLabel(status)</option> }</select></label></div>
+            @if (HasRequestFilters) { <div class="nf-filter-summary"><span>Filtros aplicados ao acompanhamento</span><button type="button" class="nf-text-button" @onclick="ResetRequestFilters">Limpar filtros</button></div> }
+            <div class="nf-table-scroll"><table class="nf-table nf-request-table"><thead><tr><th>Pedido / setor</th><th>Item</th><th class="nf-numeric">Quantidade</th><th>Necessário até</th><th>Prioridade</th><th>Andamento</th><th>Detalhes</th></tr></thead><tbody>
+                @foreach (var request in FilteredRequests)
+                {
+                    <tr class="@(_selectedRequestId == request.Id ? "is-selected" : null)"><td><strong class="nf-code">@request.Code</strong><small>@request.Sector</small></td><td>@request.ItemDescription<small>@request.ItemCode</small></td><td class="nf-numeric">@request.Quantity.ToString("N0", Br) un.</td><td class="nf-nowrap">@request.Deadline.ToString("dd/MM/yyyy", Br)</td><td><span class="nf-status @PriorityTone(request.Priority)"><i class="bi bi-flag" aria-hidden="true"></i>@PriorityLabel(request.Priority)</span></td><td><span class="nf-status nf-neutral">@EmergencyStatusLabel(request.Status)</span></td><td><button type="button" class="nf-text-button" aria-label="@($"Ver pedido {request.Code}")" aria-expanded="@(_selectedRequestId == request.Id ? "true" : "false")" aria-controls="nf-request-detail" @onclick="() => _selectedRequestId = request.Id">Ver pedido <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></td></tr>
+                }
+            </tbody></table></div>
+            @if (FilteredRequests.Count == 0) { <p class="nf-empty">Nenhum pedido fictício corresponde aos filtros selecionados.</p> }
+        </section>
+        @if (_requests.FirstOrDefault(r => r.Id == _selectedRequestId) is { } selectedRequest)
+        {
+            <section id="nf-request-detail" class="nf-card nf-detail" role="region" aria-label="Detalhes do pedido emergencial"><div class="nf-card-heading"><div><span class="nf-eyebrow">SOLICITAÇÃO EMERGENCIAL · DEMONSTRAÇÃO</span><h3>@selectedRequest.Code · @selectedRequest.ItemDescription</h3><p>@selectedRequest.Sector · Criado em @selectedRequest.CreatedAt.ToString("dd/MM/yyyy", Br)</p></div><button type="button" class="nf-secondary-button" @onclick="ClearRequestSelection"><i class="bi bi-x-lg" aria-hidden="true"></i> Fechar detalhes</button></div><div class="nf-detail-grid"><div><span>Quantidade solicitada</span><strong>@selectedRequest.Quantity.ToString("N0", Br) unidades</strong></div><div><span>Prazo de necessidade</span><strong>@selectedRequest.Deadline.ToString("dd/MM/yyyy", Br)</strong></div><div><span>Prioridade</span><strong>@PriorityLabel(selectedRequest.Priority)</strong></div><div><span>Andamento</span><strong>@EmergencyStatusLabel(selectedRequest.Status)</strong></div></div><div class="nf-context-box"><h4>Justificativa da solicitação</h4><p>@selectedRequest.Reason</p></div><div class="nf-detail-footer"><p>Solicitação ilustrativa; não representa autorização de compra.</p>@if (selectedRequest.InvoiceId is int linkedInvoiceId) { <button type="button" class="nf-secondary-button" @onclick="() => OpenInvoice(linkedInvoiceId)">Ver NF vinculada <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button> }</div></section>
+        }
+    </section>
+    <footer class="nf-footer"><i class="bi bi-info-circle" aria-hidden="true"></i> Prévia visual para avaliação. Dados, documentos e confirmações desta tela são demonstrativos.</footer>
+</div>
+
+<style>
+    .nf-module { --nf-accent:#8b5cf6; --nf-cyan:#06b6d4; max-width:1640px; min-width:0; margin:0 auto; color:var(--app-text,#221a3d); font-size:14px; }
+    .nf-module [hidden] { display:none !important; }
+    .nf-module button, .nf-module select { cursor:pointer; }
+    .nf-module button:disabled, .nf-module fieldset:disabled { opacity:.55; cursor:not-allowed; }
+    .nf-module button:focus-visible, .nf-module input:focus-visible, .nf-module select:focus-visible, .nf-module textarea:focus-visible { outline:2px solid var(--nf-accent); outline-offset:3px; }
+    .nf-module .nf-header { display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; padding:26px; border:1px solid var(--app-border); border-radius:16px; background:linear-gradient(115deg,rgba(139,92,246,.10),rgba(6,182,212,.05)),var(--app-surface); }
+    .nf-module .nf-eyebrow { font-size:10px; font-weight:800; letter-spacing:.11em; color:var(--app-text-muted); margin-bottom:8px; }
+    .nf-module h1 { display:flex; align-items:center; gap:12px; margin:0 0 8px; color:var(--app-text); font-size:29px; font-weight:750; letter-spacing:-.03em; }
+    .nf-module h1 i { color:var(--nf-accent); }
+    .nf-module .nf-header p { margin:0; color:var(--app-text-muted); font-size:13px; }
+    .nf-module .nf-header-context { display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+    .nf-module .nf-demo-badge { display:inline-flex; align-items:center; gap:7px; padding:7px 10px; border:1px solid rgba(245,158,11,.3); background:rgba(245,158,11,.09); border-radius:7px; font-size:11px; font-weight:700; }
+    .nf-module .nf-demo-badge i { font-size:6px; color:#f59e0b; }
+    .nf-module .nf-muted { color:var(--app-text-muted); font-size:11px; line-height:1.7; }
+    .nf-module .nf-demo-note { display:flex; align-items:flex-start; gap:8px; font-size:11px; color:var(--app-text-muted); line-height:1.7; margin:13px 4px 20px; }
+    .nf-module .nf-demo-note i { color:var(--nf-accent); }
+    .nf-module .nf-tabs { display:flex; gap:6px; overflow-x:auto; padding:5px; margin-bottom:26px; border:1px solid var(--app-border); border-radius:11px; background:var(--app-surface); }
+    .nf-module .nf-tabs button { flex:1 0 auto; display:flex; align-items:center; justify-content:center; gap:9px; padding:12px 16px; border:0; border-radius:7px; color:var(--app-text-muted); background:transparent; font-size:13px; font-weight:650; }
+    .nf-module .nf-tabs button:hover { background:var(--app-surface-muted); color:var(--app-text); }
+    .nf-module .nf-tabs button.is-active { background:rgba(139,92,246,.14); color:var(--app-text); box-shadow:inset 0 0 0 1px rgba(139,92,246,.22); }
+    .nf-module .nf-tabs button.is-active i { color:var(--nf-accent); }
+    .nf-module .nf-section-heading, .nf-module .nf-card-heading { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+    .nf-module h2 { font-size:19px; font-weight:700; letter-spacing:-.02em; color:var(--app-text); margin:0 0 7px; }
+    .nf-module h3 { color:var(--app-text); font-size:15px; font-weight:700; margin:0 0 7px; }
+    .nf-module .nf-section-heading p, .nf-module .nf-card-heading p { color:var(--app-text-muted); font-size:12px; margin:0; line-height:1.7; }
+    .nf-module .nf-metrics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; margin-bottom:22px; }
+    .nf-module .nf-metrics-three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .nf-module .nf-metrics article { min-width:0; padding:18px; border:1px solid var(--app-border); border-radius:12px; background:var(--app-surface); }
+    .nf-module .nf-metrics article > span { display:flex; gap:7px; align-items:center; font-size:11px; color:var(--app-text-muted); margin-bottom:12px; }
+    .nf-module .nf-metrics article > span i { color:var(--nf-accent); }
+    .nf-module .nf-metrics article > span .nf-red-icon { color:#f43f5e; }
+    .nf-module .nf-metrics article > span .nf-amber-icon { color:#f59e0b; }
+    .nf-module .nf-metrics article > span .nf-green-icon { color:#10b981; }
+    .nf-module .nf-metrics strong { display:block; font-size:25px; font-weight:750; letter-spacing:-.035em; overflow-wrap:anywhere; }
+    .nf-module .nf-metrics small { display:block; color:var(--app-text-muted); font-size:10px; margin-top:6px; line-height:1.6; }
+    .nf-module .nf-card { min-width:0; padding:22px; border:1px solid var(--app-border); border-radius:13px; background:var(--app-surface); margin-bottom:20px; }
+    .nf-module .nf-status { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:5px 8px; border:1px solid var(--app-border); border-radius:6px; font-size:10px; font-weight:650; white-space:nowrap; }
+    .nf-module .nf-neutral { background:var(--app-surface-muted); color:var(--app-text-muted); }
+    .nf-module .nf-danger { background:rgba(244,63,94,.08); border-color:rgba(244,63,94,.22); }
+    .nf-module .nf-warning { background:rgba(245,158,11,.09); border-color:rgba(245,158,11,.23); }
+    .nf-module .nf-success { background:rgba(16,185,129,.08); border-color:rgba(16,185,129,.23); }
+    .nf-module .nf-info { background:rgba(6,182,212,.07); border-color:rgba(6,182,212,.21); }
+    .nf-module .nf-danger i { color:#f43f5e; } .nf-module .nf-warning i { color:#f59e0b; } .nf-module .nf-success i { color:#10b981; } .nf-module .nf-info i { color:var(--nf-cyan); }
+    .nf-module .nf-filters { display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px; margin-bottom:18px; }
+    .nf-module .nf-control { display:flex; flex-direction:column; gap:6px; min-width:150px; }
+    .nf-module .nf-control > span, .nf-module .nf-control > label { color:var(--app-text-muted); font-size:10px; font-weight:650; }
+    .nf-module .nf-control input, .nf-module .nf-control select, .nf-module .nf-control textarea { width:100%; min-height:38px; border:1px solid var(--app-border); border-radius:7px; padding:8px 11px; color:var(--app-text); background:var(--app-surface); font-size:12px; min-width:0; }
+    .nf-module input::placeholder, .nf-module textarea::placeholder { color:var(--app-text-muted); opacity:.8; }
+    .nf-module .nf-grow { flex:1; min-width:230px; }
+    .nf-module .nf-table-scroll { max-width:100%; overflow-x:auto; }
+    .nf-module .nf-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .nf-module .nf-table th { padding:12px 11px; text-align:left; border-bottom:1px solid var(--app-border); color:var(--app-text-muted); background:var(--app-surface-muted); font-size:10px; font-weight:750; white-space:nowrap; }
+    .nf-module .nf-table td { padding:15px 11px; border-bottom:1px solid var(--app-border); color:var(--app-text); vertical-align:middle; }
+    .nf-module .nf-table tr:last-child td { border-bottom:0; }
+    .nf-module .nf-table tbody tr:hover, .nf-module .nf-table tr.is-selected { background:var(--app-surface-muted); }
+    .nf-module .nf-table small { display:block; color:var(--app-text-muted); font-size:10px; margin-top:5px; line-height:1.6; }
+    .nf-module .nf-table .nf-numeric { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .nf-module .nf-nowrap, .nf-module .nf-code { white-space:nowrap; font-variant-numeric:tabular-nums; }
+    .nf-module .nf-code { font-size:11px; }
+    .nf-module .nf-due-date { display:flex; gap:7px; align-items:center; background:none; white-space:nowrap; font-size:12px; }
+    .nf-module .nf-due-date.nf-danger strong { text-decoration:underline; text-decoration-color:rgba(244,63,94,.6); text-underline-offset:4px; }
+    .nf-module .nf-text-button { display:inline-flex; align-items:center; gap:5px; border:0; padding:3px 0; color:var(--app-link,var(--nf-accent)); background:none; font-size:11px; font-weight:700; white-space:nowrap; }
+    .nf-module .nf-filter-summary { display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--app-text-muted); font-size:11px; margin-bottom:12px; }
+    .nf-module .nf-empty { padding:35px 15px; text-align:center; color:var(--app-text-muted); font-size:12px; margin:0; }
+    .nf-module .nf-primary-button, .nf-module .nf-secondary-button { display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 13px; border-radius:7px; font-size:11px; font-weight:650; border:1px solid var(--app-border); text-decoration:none; }
+    .nf-module .nf-primary-button { background:#7c3aed; border-color:#7c3aed; color:white; }
+    .nf-module .nf-primary-button:hover:not(:disabled) { background:#6d28d9; }
+    .nf-module .nf-secondary-button { background:var(--app-surface); color:var(--app-text); }
+    .nf-module .nf-secondary-button:hover { background:var(--app-surface-muted); }
+    .nf-module .nf-icon-button { display:grid; place-items:center; width:30px; height:30px; border:0; border-radius:6px; color:var(--app-text-muted); background:var(--app-surface-muted); flex-shrink:0; }
+    .nf-module .nf-detail { border-color:rgba(139,92,246,.4); }
+    .nf-module .nf-detail-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; padding:8px 0 20px; }
+    .nf-module .nf-detail-grid span { display:block; font-size:10px; color:var(--app-text-muted); margin-bottom:7px; }
+    .nf-module .nf-detail-grid strong { font-size:14px; overflow-wrap:anywhere; }
+    .nf-module .nf-inline-info { display:flex; flex-wrap:wrap; align-items:center; gap:15px; margin-bottom:18px; font-size:11px; color:var(--app-text-muted); }
+    .nf-module .nf-notice { display:flex; align-items:flex-start; gap:8px; padding:12px 14px; border:1px solid rgba(6,182,212,.22); background:rgba(6,182,212,.05); color:var(--app-text-muted); border-radius:8px; font-size:11px; line-height:1.7; margin:15px 0 18px; }
+    .nf-module .nf-notice > i { color:var(--nf-cyan); }
+    .nf-module .nf-detail-footer, .nf-module .nf-form-actions { display:flex; justify-content:space-between; align-items:center; gap:15px; flex-wrap:wrap; margin-top:20px; }
+    .nf-module .nf-detail-footer p, .nf-module .nf-form-actions > span { color:var(--app-text-muted); font-size:10px; margin:0; }
+    .nf-module .nf-form-actions > div { display:flex; gap:8px; }
+    .nf-module .nf-form-actions { margin-bottom:24px; }
+    .nf-module .nf-form-layout { display:grid; grid-template-columns:minmax(0,2fr) minmax(240px,1fr); gap:20px; }
+    .nf-module .nf-form-layout > .nf-card { margin-bottom:0; }
+    .nf-module .nf-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:17px; }
+    .nf-module .nf-fieldset { min-width:0; padding:0; border:0; margin:0; }
+    .nf-module .nf-form-step { display:grid; place-items:center; width:29px; height:29px; border-radius:8px; color:var(--nf-accent); background:rgba(139,92,246,.1); font-size:11px; font-weight:750; }
+    .nf-module .nf-form-aside { grid-column:2; grid-row:1/3; background:linear-gradient(145deg,rgba(139,92,246,.08),transparent),var(--app-surface); }
+    .nf-module .nf-form-aside p, .nf-module .nf-form-aside li { color:var(--app-text-muted); font-size:12px; line-height:1.9; }
+    .nf-module .nf-form-aside ol { padding-left:18px; margin:20px 0; }
+    .nf-module .nf-aside-icon { display:grid; place-items:center; width:56px; height:56px; border-radius:12px; color:var(--nf-accent); background:rgba(139,92,246,.11); font-size:27px; margin-bottom:22px; }
+    .nf-module .nf-form-wide { grid-column:1/-1; }
+    .nf-module .nf-checks { display:flex; flex-wrap:wrap; gap:20px; padding:16px; margin-top:20px; border:1px solid var(--app-border); border-radius:8px; background:var(--app-surface-muted); }
+    .nf-module .nf-checks label { display:flex; align-items:center; gap:8px; color:var(--app-text); font-size:11px; }
+    .nf-module .nf-checks input { accent-color:var(--nf-accent); }
+    .nf-module .nf-upload { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; border:1px dashed rgba(139,92,246,.45); border-radius:9px; background:rgba(139,92,246,.04); padding:23px 14px; margin-bottom:18px; text-align:center; }
+    .nf-module .nf-upload input { position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer; }
+    .nf-module .nf-upload:focus-within { outline:2px solid var(--nf-accent); outline-offset:3px; }
+    .nf-module .nf-upload > i { font-size:25px; color:var(--nf-accent); }
+    .nf-module .nf-upload > strong { font-size:12px; } .nf-module .nf-upload > span { font-size:10px; color:var(--app-text-muted); }
+    .nf-module .nf-file-name { display:flex; align-items:center; gap:8px; border:1px solid var(--app-border); padding:12px; border-radius:7px; margin-bottom:18px; font-size:11px; }
+    .nf-module .nf-file-name > span { flex:1; overflow-wrap:anywhere; }
+    .nf-module .validation-message { font-size:11px; color:#b91c1c; } .theme-dark .nf-module .validation-message { color:#fda4af; }
+    .nf-module .nf-error { border:1px solid rgba(244,63,94,.25); background:rgba(244,63,94,.06); border-radius:7px; padding:12px; font-size:12px; color:var(--app-text); }
+    .nf-module .nf-feedback { display:flex; align-items:center; gap:10px; padding:13px 16px; border:1px solid rgba(16,185,129,.25); background:rgba(16,185,129,.07); border-radius:8px; font-size:12px; margin-bottom:20px; }
+    .nf-module .nf-feedback > i { color:#10b981; } .nf-module .nf-feedback > span { flex:1; }
+    .nf-module .nf-span-two { grid-column:1/-1; }
+    .nf-module .nf-context-box { padding:16px; background:var(--app-surface-muted); border-radius:8px; }
+    .nf-module .nf-context-box h4 { font-size:12px; font-weight:700; color:var(--app-text); margin:0 0 7px; }
+    .nf-module .nf-context-box p { font-size:12px; line-height:1.8; color:var(--app-text-muted); margin:0; }
+    .nf-module .nf-footer { display:flex; gap:7px; color:var(--app-text-muted); font-size:10px; line-height:1.7; padding:0 4px 16px; }
+    @@media(max-width:1100px) { .nf-module .nf-metrics { grid-template-columns:repeat(2,minmax(0,1fr)); } .nf-module .nf-form-layout { grid-template-columns:minmax(0,1fr); } .nf-module .nf-form-aside { grid-column:auto; grid-row:auto; } }
+    @@media(max-width:720px) {
+        .nf-module .nf-header { padding:20px; gap:18px; } .nf-module h1 { font-size:24px; } .nf-module .nf-header-context { align-items:flex-start; }
+        .nf-module .nf-tabs button { flex:0 0 auto; } .nf-module .nf-card { padding:16px; } .nf-module .nf-filters > .nf-control { flex:1; min-width:150px; } .nf-module .nf-filters > .nf-grow { flex-basis:100%; }
+        .nf-module .nf-metrics, .nf-module .nf-form-grid { grid-template-columns:minmax(0,1fr); } .nf-module .nf-metrics article { display:grid; grid-template-columns:1fr auto; align-items:center; gap:4px 10px; padding:14px; }
+        .nf-module .nf-metrics article > span { margin:0; } .nf-module .nf-metrics strong { grid-column:2; grid-row:1/3; font-size:23px; } .nf-module .nf-metrics small { margin:0; }
+        .nf-module .nf-detail-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .nf-module .nf-form-actions > div { width:100%; flex-wrap:wrap; } .nf-module .nf-form-actions button { flex:1; }
+        .nf-module .nf-filter-summary { align-items:flex-start; } .nf-module .nf-file-name { flex-wrap:wrap; }
+    }
+    @@media(max-width:390px) { .nf-module h1 { font-size:23px; } .nf-module .nf-demo-badge { font-size:10px; } .nf-module .nf-metrics strong { font-size:20px; } }
+</style>
+
+@code {
+    private static readonly CultureInfo Br = CultureInfo.GetCultureInfo("pt-BR");
+    private static readonly DateOnly ReferenceDate = new(2026, 11, 22);
+    private static readonly string[] TabNames = ["Acompanhamento de pagamento", "Cadastro de NF", "Pedidos Emergenciais"];
+    private static readonly string[] TabIcons = ["bi-calendar2-check", "bi-file-earmark-plus", "bi-lightning-charge"];
+    private static readonly DemoSupplier[] Suppliers = [new(1, "Vida Hospitalar"), new(2, "SaúdeLog Distribuidora"), new(3, "MedicBrasil"), new(4, "MedSupply Hospitalar"), new(5, "Hospimed Materiais"), new(6, "Integra Farma")];
+    private static readonly string[] Quotations = ["COT-2026-081", "COT-2026-086", "COT-2026-092", "COT-2026-097"];
+    private static readonly EmergencyItem[] EmergencyItems = [new("MED-001", "Noradrenalina 2 mg/mL"), new("MED-002", "Meropeném 1 g"), new("MAT-008", "Cateter venoso periférico 22 G"), new("MED-012", "Paracetamol 750 mg")];
+    private readonly List<DemoInvoice> _invoices = [];
+    private readonly List<DemoEmergencyRequest> _requests = [];
+    private InvoiceForm _invoiceForm = new();
+    private EmergencyForm _emergencyForm = new();
+    private int _activeTab, _attachmentVersion;
+    private int? _selectedInvoiceId, _selectedRequestId;
+    private string _invoiceSearch = "", _paymentFilter = "open", _supplierFilter = "", _requestSearch = "", _priorityFilter = "", _requestStatus = "active";
+    private string? _message, _invoiceError, _invoiceAttachment, _attachmentError;
+    private bool _showEmergencyForm;
+    private bool CanEdit => AuthService.IsInRole("Admin") || AuthService.IsInRole("Farmacia") || AuthService.IsInRole("Almoxarifado");
+    private bool HasInvoiceFilters => _invoiceSearch.Length > 0 || _paymentFilter != "open" || _supplierFilter.Length > 0;
+    private bool HasRequestFilters => _requestSearch.Length > 0 || _priorityFilter.Length > 0 || _requestStatus != "active";
+    private static string Money(decimal value) => value.ToString("C2", Br);
+    private static string SupplierName(int id) => Suppliers.First(s => s.Id == id).Name;
+    private static bool Matches(string text, string search) => string.IsNullOrWhiteSpace(search) || Br.CompareInfo.IndexOf(text, search.Trim(), CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace) >= 0;
+    private static int DaysUntilDue(DemoInvoice invoice) => invoice.DueDate.DayNumber - ReferenceDate.DayNumber;
+    private static string DueTone(DemoInvoice invoice) => invoice.IsPaid ? "nf-success" : DaysUntilDue(invoice) < 0 ? "nf-danger" : DaysUntilDue(invoice) <= 7 ? "nf-warning" : "nf-info";
+    private static string DueIcon(DemoInvoice invoice) => invoice.IsPaid ? "bi-check-circle" : DaysUntilDue(invoice) < 0 ? "bi-exclamation-circle" : "bi-clock";
+    private static string PaymentLabel(DemoInvoice invoice) => invoice.IsPaid ? "Paga · demo" : DaysUntilDue(invoice) < 0 ? "Vencida" : DaysUntilDue(invoice) == 0 ? "Vence hoje" : "A vencer";
+    private static string DueLabel(DemoInvoice invoice) => invoice.IsPaid ? "Pagamento demonstrativo confirmado" : DaysUntilDue(invoice) < 0 ? $"{Math.Abs(DaysUntilDue(invoice))} dias em atraso" : DaysUntilDue(invoice) == 0 ? "Pagamento previsto para hoje" : $"Vence em {DaysUntilDue(invoice)} dias";
+    private IReadOnlyList<DemoInvoice> FilteredInvoices => _invoices.Where(i => Matches(i.Number + " " + SupplierName(i.SupplierId), _invoiceSearch) && (_supplierFilter.Length == 0 || i.SupplierId.ToString(CultureInfo.InvariantCulture) == _supplierFilter) &&
+        (_paymentFilter switch { "open" => !i.IsPaid, "overdue" => !i.IsPaid && i.DueDate < ReferenceDate, "week" => !i.IsPaid && DaysUntilDue(i) is >= 0 and <= 7, "paid" => i.IsPaid, _ => true }))
+        .OrderBy(i => i.DueDate).ThenBy(i => i.Number).ToArray();
+    private IReadOnlyList<DemoEmergencyRequest> FilteredRequests => _requests.Where(r => Matches(r.Code + " " + r.ItemDescription + " " + r.ItemCode + " " + r.Sector, _requestSearch) && (_priorityFilter.Length == 0 || r.Priority.ToString() == _priorityFilter) &&
+        (_requestStatus == "all" || (_requestStatus == "active" ? r.Status != EmergencyStatus.Completed : r.Status.ToString() == _requestStatus)))
+        .OrderBy(r => r.Priority).ThenBy(r => r.Deadline).ThenBy(r => r.Code).ToArray();
+    private static string PriorityLabel(EmergencyPriority priority) => priority switch { EmergencyPriority.Critical => "Crítica", EmergencyPriority.High => "Alta", _ => "Moderada" };
+    private static string PriorityTone(EmergencyPriority priority) => priority switch { EmergencyPriority.Critical => "nf-danger", EmergencyPriority.High => "nf-warning", _ => "nf-info" };
+    private static string EmergencyStatusLabel(EmergencyStatus status) => status switch { EmergencyStatus.WaitingApproval => "Aguardando aprovação", EmergencyStatus.InQuotation => "Em cotação", EmergencyStatus.OrderSent => "Pedido enviado", _ => "Concluído" };
+
+    protected override void OnInitialized()
+    {
+        AuthService.OnChange += HandleAuthChanged;
+        // Dados locais fixos: nenhum serviço de notas, cadastro ou pedidos é chamado.
+        _invoices.AddRange([
+            Invoice(1, "000184", 1, 12450m, 11, 17, 2),
+            Invoice(2, "000207", 2, 8900m, 11, 22, 1),
+            Invoice(3, "000215", 3, 26800m, 11, 24, 2),
+            Invoice(4, "000223", 4, 6400m, 11, 28, 1),
+            Invoice(5, "000231", 1, 18400m, 12, 3, 1),
+            Invoice(6, "000240", 5, 7950m, 12, 12, 1),
+            Invoice(7, "000176", 2, 4200m, 11, 14, 1, new(2026, 11, 13)),
+            Invoice(8, "000244", 6, 31200m, 12, 20, 1)
+        ]);
+        _requests.AddRange([
+            new() { Id = 1, Code = "PE-2026-001", Sector = "UTI adulto", ItemCode = "MED-001", ItemDescription = "Noradrenalina 2 mg/mL", Quantity = 300, CreatedAt = new(2026, 11, 21), Deadline = ReferenceDate, Priority = EmergencyPriority.Critical, Status = EmergencyStatus.WaitingApproval, Reason = "Solicitação fictícia de reforço do abastecimento para atendimento do setor no prazo indicado." },
+            new() { Id = 2, Code = "PE-2026-002", Sector = "Centro cirúrgico", ItemCode = "MAT-008", ItemDescription = "Cateter venoso periférico 22 G", Quantity = 500, CreatedAt = ReferenceDate, Deadline = ReferenceDate.AddDays(1), Priority = EmergencyPriority.Critical, Status = EmergencyStatus.InQuotation, Reason = "Necessidade ilustrativa para a programação de procedimentos do centro cirúrgico." },
+            new() { Id = 3, Code = "PE-2026-003", Sector = "Emergência", ItemCode = "MED-002", ItemDescription = "Meropeném 1 g", Quantity = 200, CreatedAt = new(2026, 11, 20), Deadline = ReferenceDate.AddDays(3), Priority = EmergencyPriority.High, Status = EmergencyStatus.OrderSent, Reason = "Exemplo de solicitação com pedido enviado e entrega em acompanhamento." },
+            new() { Id = 4, Code = "PE-2026-004", Sector = "Enfermaria", ItemCode = "MED-012", ItemDescription = "Paracetamol 750 mg", Quantity = 7000, CreatedAt = new(2026, 11, 10), Deadline = new(2026, 11, 16), Priority = EmergencyPriority.Moderate, Status = EmergencyStatus.Completed, InvoiceId = 7, Reason = "Exemplo concluído de aquisição com nota fiscal vinculada para consulta." }
+        ]);
+    }
+    private static DemoInvoice Invoice(int id, string number, int supplier, decimal value, int month, int day, int itemCount, DateOnly? paidDate = null) => new()
+    { Id = id, Number = number, SupplierId = supplier, Value = value, ItemCount = itemCount, Quotation = Quotations[(id - 1) % Quotations.Length], IssueDate = new(2026, 11, 10), ReceivedDate = new(2026, 11, 12), DueDate = new(2026, month, day), Receiver = "Equipe de recebimento · demonstração", PaymentMethod = "Boleto", PaidDate = paidDate };
+    private void HandleAuthChanged() => _ = InvokeAsync(StateHasChanged);
+    private void ClearInvoiceSelection() => _selectedInvoiceId = null;
+    private void ClearRequestSelection() => _selectedRequestId = null;
+    private void ResetInvoiceFilters() { _invoiceSearch = _supplierFilter = ""; _paymentFilter = "open"; ClearInvoiceSelection(); }
+    private void ResetRequestFilters() { _requestSearch = _priorityFilter = ""; _requestStatus = "active"; ClearRequestSelection(); }
+    private void OpenInvoice(int invoiceId) { ResetInvoiceFilters(); _paymentFilter = "all"; _selectedInvoiceId = invoiceId; _activeTab = 0; }
+    private void SimulatePayment(DemoInvoice invoice)
+    {
+        if (!CanEdit || invoice.IsPaid) return;
+        invoice.PaidDate = ReferenceDate;
+        _message = $"Pagamento da NF {invoice.Number} confirmado somente na demonstração. Nenhum dado foi gravado.";
+        _paymentFilter = "paid";
+        _invoiceSearch = _supplierFilter = "";
+    }
+    private void SelectInvoiceFile(InputFileChangeEventArgs args)
+    {
+        if (!CanEdit) return;
+        _invoiceAttachment = null; _attachmentError = null;
+        if (args.FileCount != 1) { _attachmentError = "Selecione apenas um documento por nota."; return; }
+        var file = args.File;
+        var extension = Path.GetExtension(file.Name);
+        if (!string.Equals(extension, ".pdf", StringComparison.OrdinalIgnoreCase) && !string.Equals(extension, ".xml", StringComparison.OrdinalIgnoreCase)) { _attachmentError = "Selecione um arquivo PDF ou XML."; return; }
+        if (file.Size == 0 || file.Size > 10 * 1024 * 1024) { _attachmentError = "O documento deve ter conteúdo e tamanho de até 10 MB."; return; }
+        _invoiceAttachment = file.Name;
+    }
+    private void RemoveInvoiceFile() { _invoiceAttachment = _attachmentError = null; _attachmentVersion++; }
+    private void ResetInvoiceForm() { _invoiceForm = new(); _invoiceError = null; RemoveInvoiceFile(); }
+    private void SimulateInvoiceRegistration()
+    {
+        if (!CanEdit || _attachmentError is not null) return;
+        _invoiceError = null;
+        if (_invoices.Any(i => i.SupplierId == _invoiceForm.SupplierId && string.Equals(i.Number, _invoiceForm.Number.Trim(), StringComparison.OrdinalIgnoreCase))) { _invoiceError = "Essa nota já está cadastrada para o fornecedor na demonstração."; return; }
+        var invoice = new DemoInvoice { Id = _invoices.Max(i => i.Id) + 1, Number = _invoiceForm.Number.Trim(), SupplierId = _invoiceForm.SupplierId!.Value, Quotation = _invoiceForm.Quotation, Value = _invoiceForm.Value!.Value, ItemCount = _invoiceForm.ItemCount!.Value,
+            IssueDate = _invoiceForm.IssueDate!.Value, ReceivedDate = _invoiceForm.ReceivedDate!.Value, DueDate = _invoiceForm.DueDate!.Value, Receiver = string.IsNullOrWhiteSpace(_invoiceForm.Receiver) ? "Não informado na demonstração" : _invoiceForm.Receiver.Trim(), PaymentMethod = _invoiceForm.PaymentMethod, AttachmentName = _invoiceAttachment, Notes = _invoiceForm.Notes,
+            IsThermolabile = _invoiceForm.IsThermolabile, ContainsPurchase = _invoiceForm.ContainsPurchase };
+        _invoices.Add(invoice);
+        _message = $"NF {invoice.Number} incluída no acompanhamento apenas nesta sessão. Nenhum dado foi gravado.";
+        ResetInvoiceForm();
+        OpenInvoice(invoice.Id);
+    }
+    private void SimulateEmergencyRequest()
+    {
+        if (!CanEdit) return;
+        var item = EmergencyItems.First(i => i.Code == _emergencyForm.ItemCode);
+        var id = _requests.Max(r => r.Id) + 1;
+        var request = new DemoEmergencyRequest { Id = id, Code = $"PE-2026-{id:000}", Sector = _emergencyForm.Sector, ItemCode = item.Code, ItemDescription = item.Description, Quantity = _emergencyForm.Quantity!.Value, CreatedAt = ReferenceDate, Deadline = _emergencyForm.Deadline!.Value, Priority = _emergencyForm.Priority, Status = EmergencyStatus.WaitingApproval, Reason = _emergencyForm.Reason.Trim() };
+        _requests.Add(request);
+        _emergencyForm = new(); _showEmergencyForm = false;
+        ResetRequestFilters(); _selectedRequestId = request.Id;
+        _message = $"Solicitação {request.Code} incluída apenas na demonstração. Nenhuma compra foi gerada.";
+    }
+    public void Dispose() => AuthService.OnChange -= HandleAuthChanged;
+
+    private sealed record DemoSupplier(int Id, string Name);
+    private sealed record EmergencyItem(string Code, string Description);
+    private sealed class DemoInvoice
+    {
+        public int Id { get; init; }
+        public string Number { get; init; } = "";
+        public int SupplierId { get; init; }
+        public string Quotation { get; init; } = "";
+        public decimal Value { get; init; }
+        public int ItemCount { get; init; }
+        public DateOnly IssueDate { get; init; }
+        public DateOnly ReceivedDate { get; init; }
+        public DateOnly DueDate { get; init; }
+        public string Receiver { get; init; } = "";
+        public string PaymentMethod { get; init; } = "";
+        public DateOnly? PaidDate { get; set; }
+        public bool IsPaid => PaidDate is not null;
+        public string? AttachmentName { get; init; }
+        public string? Notes { get; init; }
+        public bool IsThermolabile { get; init; }
+        public bool ContainsPurchase { get; init; } = true;
+    }
+    private enum EmergencyPriority { Critical, High, Moderate }
+    private enum EmergencyStatus { WaitingApproval, InQuotation, OrderSent, Completed }
+    private sealed class DemoEmergencyRequest
+    {
+        public int Id { get; init; }
+        public string Code { get; init; } = "";
+        public string Sector { get; init; } = "";
+        public string ItemCode { get; init; } = "";
+        public string ItemDescription { get; init; } = "";
+        public int Quantity { get; init; }
+        public DateOnly CreatedAt { get; init; }
+        public DateOnly Deadline { get; init; }
+        public EmergencyPriority Priority { get; init; }
+        public EmergencyStatus Status { get; init; }
+        public string Reason { get; init; } = "";
+        public int? InvoiceId { get; init; }
+    }
+    private sealed class InvoiceForm : IValidatableObject
+    {
+        [Required(ErrorMessage = "Informe o número da nota."), RegularExpression(@"\S(?:.*\S)?", ErrorMessage = "Informe um número de nota válido.")] public string Number { get; set; } = "";
+        [Required(ErrorMessage = "Selecione o fornecedor.")] public int? SupplierId { get; set; }
+        [Required(ErrorMessage = "Selecione a cotação.")] public string Quotation { get; set; } = "";
+        [Required(ErrorMessage = "Informe o valor da nota."), Range(typeof(decimal), "0.01", "999999999", ParseLimitsInInvariantCulture = true, ErrorMessage = "Informe um valor maior que zero.")] public decimal? Value { get; set; }
+        [Required(ErrorMessage = "Informe a quantidade de itens."), Range(1, 1000000, ErrorMessage = "Informe uma quantidade de itens maior que zero.")] public int? ItemCount { get; set; }
+        public string PaymentMethod { get; set; } = "Boleto";
+        [Required(ErrorMessage = "Informe a data de emissão.")] public DateOnly? IssueDate { get; set; } = ReferenceDate;
+        [Required(ErrorMessage = "Informe a data de recebimento.")] public DateOnly? ReceivedDate { get; set; } = ReferenceDate;
+        [Required(ErrorMessage = "Informe a data de vencimento.")] public DateOnly? DueDate { get; set; } = ReferenceDate.AddDays(15);
+        public string Receiver { get; set; } = "";
+        public bool IsThermolabile { get; set; }
+        public bool ContainsPurchase { get; set; } = true;
+        public string Notes { get; set; } = "";
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (IssueDate.HasValue && ReceivedDate < IssueDate) yield return new("O recebimento não pode ser anterior à emissão.", [nameof(ReceivedDate)]);
+            if (IssueDate.HasValue && DueDate < IssueDate) yield return new("O vencimento não pode ser anterior à emissão.", [nameof(DueDate)]);
+        }
+    }
+    private sealed class EmergencyForm : IValidatableObject
+    {
+        [Required(ErrorMessage = "Selecione o setor solicitante.")] public string Sector { get; set; } = "";
+        [Required(ErrorMessage = "Selecione o item solicitado.")] public string ItemCode { get; set; } = "";
+        [Required(ErrorMessage = "Informe a quantidade."), Range(1, 1000000, ErrorMessage = "Informe uma quantidade maior que zero.")] public int? Quantity { get; set; }
+        [Required(ErrorMessage = "Informe o prazo de necessidade.")] public DateOnly? Deadline { get; set; } = ReferenceDate.AddDays(1);
+        public EmergencyPriority Priority { get; set; } = EmergencyPriority.High;
+        [Required(ErrorMessage = "Informe a justificativa."), MinLength(10, ErrorMessage = "Descreva a justificativa com pelo menos 10 caracteres.")] public string Reason { get; set; } = "";
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Deadline < ReferenceDate) yield return new("O prazo não pode ser anterior à referência da demonstração.", [nameof(Deadline)]);
+        }
+    }
+}

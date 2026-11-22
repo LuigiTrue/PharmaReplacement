@@ -1,0 +1,25 @@
+<div class="du-section-heading"><div><h2>Estoque atual</h2><p>Prepare o envio do espelho de estoque com os saldos disponíveis dos itens.</p></div><span class="du-status du-neutral">Referência: @Today.ToString("dd/MM/yyyy", Br)</span></div>
+<div class="du-summary">
+    <article><span><i class="bi bi-clock-history" aria-hidden="true"></i> Última atualização</span><strong class="du-value-date">@(Latest?.RegisteredAt.ToString("dd/MM/yyyy", Br) ?? "—")</strong><small>@(Latest is null ? "Nenhuma atualização demonstrativa" : "Confirmação demonstrativa")</small></article>
+    <article><span><i class="bi bi-filetype-csv" aria-hidden="true"></i> Formato do arquivo</span><strong>CSV</strong><small>Um arquivo por atualização</small></article>
+    <article><span><i class="bi bi-box-seam" aria-hidden="true"></i> Itens no último exemplo</span><strong>@(Latest?.Rows?.ToString("N0", Br) ?? "—")</strong><small>@(Latest?.Rows is null ? "Conteúdo não processado" : "Quantidade fictícia para demonstração")</small></article>
+</div>
+<section class="du-card du-stock-upload">
+    <div class="du-large-icon"><i class="bi bi-box-arrow-in-down" aria-hidden="true"></i></div>
+    <div><h3>Atualizar os saldos de estoque</h3><p>Selecione o arquivo CSV do estoque atual. A identificação do arquivo e a data de referência serão exibidas antes da confirmação.</p><div class="du-file-tags"><span>Arquivo .csv</span><span>Até 10 MB</span><span>Saldos por item</span></div></div>
+    @if (CanImport) { <button type="button" class="du-primary-button" @onclick="() => OnAttach.InvokeAsync()"><i class="bi bi-paperclip" aria-hidden="true"></i> Anexar CSV do estoque</button> }
+    else { <span class="du-readonly-label"><i class="bi bi-lock" aria-hidden="true"></i> Apenas consulta</span> }
+</section>
+@if (Latest is { } latest)
+{
+    <section class="du-card"><div class="du-card-heading"><div><h3>Último arquivo de estoque</h3><p>Informações da atualização demonstrativa mais recente.</p></div><span class="@StatusClass(latest.Status)">@StatusLabel(latest.Status)</span></div><div class="du-latest-file"><i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i><div><strong>@latest.FileName</strong><span>@latest.RegisteredAt.ToString("dd/MM/yyyy 'às' HH:mm", Br)</span></div><button type="button" class="du-secondary-button" @onclick="() => OnViewImport.InvokeAsync(latest.Id)">Ver no histórico <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></div></section>
+}
+
+@code {
+    [Parameter] public DateOnly Today { get; set; }
+    [Parameter] public IReadOnlyList<ImportRecord> Imports { get; set; } = [];
+    [Parameter] public bool CanImport { get; set; }
+    [Parameter] public EventCallback OnAttach { get; set; }
+    [Parameter] public EventCallback<Guid> OnViewImport { get; set; }
+    private ImportRecord? Latest => Imports.Where(i => i.Kind == ImportKind.Stock && i.Status == ConsumptionOperationStatus.Completed).OrderByDescending(i => i.RegisteredAt).FirstOrDefault();
+}

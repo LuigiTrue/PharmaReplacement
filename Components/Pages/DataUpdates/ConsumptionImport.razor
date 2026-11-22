@@ -1,0 +1,59 @@
+<div class="du-section-heading">
+    <div><h2>Consumo por mês</h2><p>Selecione uma competência pendente e anexe o relatório CSV correspondente.</p></div>
+    <div class="du-filters">
+        <label class="du-control"><span>Ano de referência</span><select aria-label="Ano do consumo" @bind="_year">@foreach (var year in Years) { <option value="@year">@year</option> }</select></label>
+        <label class="du-control"><span>Situação</span><select aria-label="Situação do consumo" @bind="_status"><option value="">Todos os meses</option><option value="pending">Necessita atualização</option><option value="imported">Importado</option></select></label>
+    </div>
+</div>
+<div class="du-summary">
+    <article><span><i class="bi bi-calendar3" aria-hidden="true"></i> Meses disponíveis</span><strong>@Months.Count</strong><small>Competências de @_year</small></article>
+    <article><span><i class="bi bi-check-circle" aria-hidden="true"></i> Consumo importado</span><strong>@Months.Count(m => Completed(m) is not null)</strong><small>Confirmações demonstrativas</small></article>
+    <article><span><i class="bi bi-exclamation-circle" aria-hidden="true"></i> Necessitam atualização</span><strong>@Months.Count(m => Completed(m) is null)</strong><small>Meses aguardando um CSV</small></article>
+</div>
+<div class="du-calendar-note"><i class="bi bi-calendar-plus" aria-hidden="true"></i><span>O card de <strong>@CurrentMonth.ToString("MMMM/yyyy", Br)</strong> já está disponível. A próxima competência será liberada em <strong>@CurrentMonth.AddMonths(1).ToString("dd/MM/yyyy", Br)</strong>.</span></div>
+<div class="du-month-grid" aria-label="Competências de consumo">
+    @foreach (var month in FilteredMonths)
+    {
+        var completed = Completed(month);
+        var failed = LatestFailure(month);
+        <article @key="month" class="du-month-card @(completed is not null ? "is-imported" : "is-pending")" data-period="@month.ToString("yyyy-MM", CultureInfo.InvariantCulture)">
+            <div class="du-month-top"><span class="du-month-icon"><i class="bi @(completed is null ? "bi-calendar3" : "bi-calendar2-check")" aria-hidden="true"></i></span><span class="du-status @(completed is null ? "du-warning" : "du-success")"><i class="bi @(completed is null ? "bi-exclamation-circle" : "bi-check-circle-fill")" aria-hidden="true"></i>@(completed is null ? "Necessita atualização" : "Consumo importado")</span></div>
+            <div class="du-month-title"><h3>@month.ToString("MMMM", Br)</h3><span>@month.Year</span></div>
+            <p class="du-month-period">@month.ToString("dd/MM", Br) a @month.AddMonths(1).AddDays(-1).ToString("dd/MM/yyyy", Br)</p>
+            @if (completed is not null)
+            {
+                <div class="du-month-information"><span><i class="bi bi-filetype-csv" aria-hidden="true"></i>@completed.FileName</span><small>Confirmação demonstrativa em @completed.RegisteredAt.ToString("dd/MM/yyyy 'às' HH:mm", Br)</small></div>
+                <button type="button" class="du-secondary-button du-full-width" @onclick="() => OnViewImport.InvokeAsync(completed.Id)">Ver importação <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
+            }
+            else
+            {
+                <div class="du-month-information"><span>@(month == CurrentMonth ? "Competência em andamento" : "Consumo ainda não importado")</span><small>@(failed is null ? "Anexe um CSV para demonstrar a atualização deste mês." : "A última tentativa falhou. Esta competência continua pendente.")</small></div>
+                @if (CanImport) { <button type="button" class="du-primary-button du-full-width" aria-label="@($"Anexar CSV de {month.ToString("MMMM/yyyy", Br)}")" @onclick="() => OnAttach.InvokeAsync(month)"><i class="bi bi-paperclip" aria-hidden="true"></i> Anexar CSV</button> }
+                else { <span class="du-readonly-label"><i class="bi bi-lock" aria-hidden="true"></i> Apenas consulta</span> }
+            }
+        </article>
+    }
+</div>
+@if (!FilteredMonths.Any()) { <p class="du-empty">Nenhuma competência corresponde à situação selecionada.</p> }
+
+@code {
+    [Parameter] public DateOnly Today { get; set; }
+    [Parameter] public int FirstYear { get; set; }
+    [Parameter] public IReadOnlyList<ImportRecord> Imports { get; set; } = [];
+    [Parameter] public bool CanImport { get; set; }
+    [Parameter] public EventCallback<DateOnly> OnAttach { get; set; }
+    [Parameter] public EventCallback<Guid> OnViewImport { get; set; }
+    private int _year, _previousCurrentYear;
+    private string _status = "";
+    private DateOnly CurrentMonth => new(Today.Year, Today.Month, 1);
+    private IEnumerable<int> Years => Enumerable.Range(FirstYear, Today.Year - FirstYear + 1).Reverse();
+    private IReadOnlyList<DateOnly> Months => Enumerable.Range(1, _year == Today.Year ? Today.Month : 12).Reverse().Select(m => new DateOnly(_year, m, 1)).ToArray();
+    private IEnumerable<DateOnly> FilteredMonths => Months.Where(m => _status.Length == 0 || (_status == "imported" ? Completed(m) is not null : Completed(m) is null));
+    private ImportRecord? Completed(DateOnly month) => Imports.Where(i => i.Kind == ImportKind.Consumption && i.ReferenceDate == month && i.Status == ConsumptionOperationStatus.Completed).OrderByDescending(i => i.RegisteredAt).FirstOrDefault();
+    private ImportRecord? LatestFailure(DateOnly month) => Imports.Where(i => i.Kind == ImportKind.Consumption && i.ReferenceDate == month && i.Status == ConsumptionOperationStatus.Failed).OrderByDescending(i => i.RegisteredAt).FirstOrDefault();
+    protected override void OnParametersSet()
+    {
+        if (_year == 0 || (_previousCurrentYear != Today.Year && _year == _previousCurrentYear)) _year = Today.Year;
+        _previousCurrentYear = Today.Year;
+    }
+}

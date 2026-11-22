@@ -15,7 +15,7 @@
 </section>
 @if (Current is { } item)
 {
-    <section class="sa-item-identity"><div class="sa-identity-icon"><i class="bi @(item.Item.ItemType == ItemType.Material ? "bi-box-seam" : "bi-capsule")" aria-hidden="true"></i></div><div><span class="sa-code">@item.Item.Code</span><h3>@item.Item.Name</h3><p>@ItemTypeLabels.GetLabel(item.Item.ItemType) · Unidade: @item.Item.Unit</p></div><div class="sa-identity-badges"><span class="@AbcClass(item.Abc.Classification)">ABC @item.Abc.Classification</span><span class="@XyzClass(item.Xyz)">@ClassLabel(item.Xyz)</span></div></section>
+    <section class="sa-item-identity"><div class="sa-identity-icon"><i class="bi @(item.Item.ItemType == ItemType.Material ? "bi-box-seam" : "bi-capsule")" aria-hidden="true"></i></div><div><span class="sa-code">@item.Item.Code</span><h3>@item.Item.Name</h3><p>@ItemTypeLabels.GetLabel(item.Item.ItemType) · Unidade: @item.Item.Unit</p></div><div class="sa-identity-badges"><span class="@AbcClass(item.Abc.Classification)">@item.Abc.Classification</span><span class="@XyzClass(item.Xyz)">@ClassLabel(item.Xyz)</span></div></section>
     @if (item.Analysis.DataQuality?.ItemsWithInsufficientHistory > 0)
     {
         <p class="sa-inline-notice"><i class="bi bi-info-circle" aria-hidden="true"></i> Este item ilustra um histórico diário curto. Indicadores indisponíveis permanecem sinalizados como histórico insuficiente.</p>

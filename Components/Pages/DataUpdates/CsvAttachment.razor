@@ -1,0 +1,44 @@
+<section class="du-card du-attachment" aria-label="Anexar arquivo CSV">
+    <div class="du-card-heading"><div><span class="du-eyebrow">NOVA ATUALIZAÇÃO · @KindLabel(Kind).ToUpper(Br)</span><h2 @ref="_heading" tabindex="-1">@(Kind == ImportKind.Consumption ? ReferenceDate.ToString("MMMM/yyyy", Br) : "Estoque de " + ReferenceDate.ToString("dd/MM/yyyy", Br))</h2><p>Confira a referência e selecione o arquivo para demonstrar a importação.</p></div><button type="button" class="du-icon-button" aria-label="Fechar anexo" @onclick="() => OnCancel.InvokeAsync()"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
+    <ol class="du-upload-steps"><li class="is-active"><span>1</span> Selecionar CSV</li><li class="@(_selected is not null ? "is-active" : null)"><span>2</span> Conferir referência</li><li><span>3</span> Confirmar simulação</li></ol>
+    <label class="du-upload-zone">
+        <InputFile @key="_inputVersion" OnChange="SelectFile" accept=".csv,text/csv" class="du-file-input" aria-label="Selecionar arquivo CSV" />
+        <span class="du-upload-icon"><i class="bi bi-file-earmark-arrow-up" aria-hidden="true"></i></span><strong>@(_selected is null ? "Clique para selecionar um arquivo CSV" : "Clique para escolher outro arquivo")</strong><span>Extensão .csv · um arquivo · até 10 MB</span>
+    </label>
+    @if (_error is not null) { <p class="du-file-error" role="alert"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i>@_error</p> }
+    @if (_selected is { } file)
+    {
+        <div class="du-selected-file"><i class="bi bi-filetype-csv" aria-hidden="true"></i><div><strong>@file.Name</strong><small>@FormatSize(file.Size) · Arquivo selecionado; conteúdo ainda não validado</small></div><button type="button" class="du-text-button" @onclick="RemoveFile">Remover</button></div>
+    }
+    <div class="du-confirmation-summary"><div><span>Tipo de atualização</span><strong>@KindLabel(Kind)</strong></div><div><span>@(Kind == ImportKind.Consumption ? "Competência selecionada" : "Data de referência")</span><strong>@(Kind == ImportKind.Consumption ? ReferenceDate.ToString("MMMM/yyyy", Br) : ReferenceDate.ToString("dd/MM/yyyy", Br))</strong></div></div>
+    <p class="du-notice"><i class="bi bi-info-circle" aria-hidden="true"></i> A extensão e o tamanho são conferidos nesta prévia. A compatibilidade das colunas, das datas e dos registros do CSV será validada na importação real.</p>
+    <div class="du-attachment-actions"><span>A simulação altera somente os indicadores desta sessão.</span><div><button type="button" class="du-secondary-button" @onclick="() => OnCancel.InvokeAsync()">Cancelar</button><button type="button" class="du-primary-button" disabled="@(_selected is null)" @onclick="Simulate"><i class="bi bi-check2-circle" aria-hidden="true"></i> Simular importação</button></div></div>
+</section>
+
+@code {
+    public const long MaximumFileSize = 10 * 1024 * 1024;
+    [Parameter] public ImportKind Kind { get; set; }
+    [Parameter] public DateOnly ReferenceDate { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback<SelectedCsv> OnSimulate { get; set; }
+    private SelectedCsv? _selected;
+    private string? _error;
+    private int _inputVersion;
+    private ElementReference _heading;
+    protected override async Task OnAfterRenderAsync(bool firstRender) { if (firstRender) await _heading.FocusAsync(); }
+    private void SelectFile(InputFileChangeEventArgs args)
+    {
+        _selected = null;
+        _error = null;
+        if (args.FileCount != 1) { _error = "Selecione apenas um arquivo CSV por atualização."; return; }
+        var file = args.File;
+        if (!string.Equals(Path.GetExtension(file.Name), ".csv", StringComparison.OrdinalIgnoreCase)) { _error = "Formato não aceito. Selecione um arquivo com extensão .csv."; return; }
+        if (file.Size == 0) { _error = "O arquivo está vazio. Selecione um CSV com conteúdo."; return; }
+        if (file.Size > MaximumFileSize) { _error = "O arquivo excede o limite de 10 MB."; return; }
+        _selected = new(file.Name, file.Size);
+    }
+    private void RemoveFile() { _selected = null; _error = null; _inputVersion++; }
+    private Task Simulate() => _selected is { } file ? OnSimulate.InvokeAsync(file) : Task.CompletedTask;
+    private static string FormatSize(long size) => size >= 1024 * 1024 ? (size / (1024m * 1024m)).ToString("N2", Br) + " MB"
+        : size >= 1024 ? (size / 1024m).ToString("N1", Br) + " KB" : size.ToString("N0", Br) + " bytes";
+}
