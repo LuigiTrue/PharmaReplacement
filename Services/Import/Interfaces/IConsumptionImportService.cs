@@ -2,23 +2,20 @@ using RepyPharma.Models.Analytics;
 
 namespace RepyPharma.Services.Import.Interfaces;
 
-/// <summary>
-/// Contratos de validação e importação futura de consumo diário em CSV.
-/// </summary>
 public interface IConsumptionImportService
 {
-    /// <summary>
-    /// Valida a estrutura e os dados de um CSV; a gestão do fluxo permanece com o chamador.
-    /// </summary>
+    /// <summary>Valida o CSV para o período exigido pelo card, sem gravar nem fechar o fluxo recebido.</summary>
     Task<ConsumptionImportValidationDto> ValidateImportAsync(Stream csvStream, string fileName, ConsumptionImportOptionsDto? options = null, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Importa futuramente os registros diários do CSV, sem implementar leitura ou persistência nesta etapa.
-    /// </summary>
+    /// <summary>Atualização parcial do mês corrente. Competências encerradas exigem o fluxo conjunto.</summary>
     Task<ConsumptionImportResultDto> ImportDailyConsumptionAsync(Stream csvStream, string fileName, ConsumptionImportOptionsDto? options = null, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Consulta o resultado de uma importação de consumo identificada.
-    /// </summary>
     Task<ConsumptionImportResultDto?> GetImportResultAsync(Guid importId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<ConsumptionImportResultDto>> GetImportsAsync(CancellationToken cancellationToken = default);
+    /// <summary>Reconstrói e concilia os dois documentos de um mês encerrado, sem persistência.</summary>
+    Task<ConsumptionReportsValidationDto> PrepareCombinedImportAsync(Stream? dailyStream, string dailyFileName,
+        Stream? sectorStream, string sectorFileName, DateOnly referenceMonth,
+        IProgress<ConsumptionImportProgressDto>? progress = null, CancellationToken cancellationToken = default);
+    /// <summary>Confirma o snapshot válido do circuito, revalidando cadastro/cobertura e gravando em uma transação.</summary>
+    Task<CombinedConsumptionImportResultDto> ConfirmCombinedImportAsync(Guid validationId,
+        IProgress<ConsumptionImportProgressDto>? progress = null, CancellationToken cancellationToken = default);
+    void DiscardCombinedPreview(Guid validationId);
 }

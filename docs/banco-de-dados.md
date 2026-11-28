@@ -52,3 +52,7 @@ A migration `20261122150535_RemoveLegacyConsumptionAndReplenishment` elimina exc
 O histórico anterior de migrations foi mantido para bancos já existentes. O snapshot reflete o modelo atual. A migration nova foi aplicada, por solicitação do usuário, em 22/11/2026 ao banco `repypharm` em `127.0.0.1:5432`. As sete tabelas acima e seus dados foram excluídos. A conferência posterior confirmou contagens inalteradas nas tabelas preservadas e ausência de migrations pendentes. O rollback recria as estruturas excluídas, sem recuperar seus registros.
 
 A aplicação continua sem executar `Database.Migrate` automaticamente. Esta atualização foi aplicada manualmente pelo comando `dotnet ef database update 20261122150535_RemoveLegacyConsumptionAndReplenishment --context AppDbContext --no-build`.
+
+## Consumo CSV
+
+A evolução posterior do modelo, incluindo `daily_consumptions`, `monthly_consumptions` e `abc_classification_results`, está documentada em [Consumo e ABC](consumo-e-abc.md). A migration `20261124221329_EnableConsumptionCsvPersistence` acrescenta `consumption_imports` para o histórico de atualizações e `RecordedDays`/`IsComplete` na consolidação mensal, além de permitir valores negativos de consumo. Ela foi aplicada em 24/11/2026, preservando os registros existentes. O histórico de consumo passa a ser persistente e atualizável, sem bloqueio definitivo por competência.

@@ -1,18 +1,18 @@
-<div class="du-section-heading"><div><h2>Estoque atual</h2><p>Prepare o envio do espelho de estoque com os saldos disponíveis dos itens.</p></div><span class="du-status du-neutral">Referência: @Today.ToString("dd/MM/yyyy", Br)</span></div>
+<div class="du-section-heading"><div><h2>Estoque atual</h2><p>Anexe o Relatório de Conferência dos Lotes do Soul MV em PDF para atualizar o estoque.</p></div><span class="du-status du-neutral">Referência: @Today.ToString("dd/MM/yyyy", Br)</span></div>
 <div class="du-summary">
-    <article><span><i class="bi bi-clock-history" aria-hidden="true"></i> Última atualização</span><strong class="du-value-date">@(Latest?.RegisteredAt.ToString("dd/MM/yyyy", Br) ?? "—")</strong><small>@(Latest is null ? "Nenhuma atualização demonstrativa" : "Confirmação demonstrativa")</small></article>
-    <article><span><i class="bi bi-filetype-csv" aria-hidden="true"></i> Formato do arquivo</span><strong>CSV</strong><small>Um arquivo por atualização</small></article>
-    <article><span><i class="bi bi-box-seam" aria-hidden="true"></i> Itens no último exemplo</span><strong>@(Latest?.Rows?.ToString("N0", Br) ?? "—")</strong><small>@(Latest?.Rows is null ? "Conteúdo não processado" : "Quantidade fictícia para demonstração")</small></article>
+    <article><span><i class="bi bi-clock-history" aria-hidden="true"></i> Última importação nesta sessão</span><strong class="du-value-date">@(Latest?.RegisteredAt.ToString("dd/MM/yyyy", Br) ?? "—")</strong><small>@(Latest is null ? "Nenhum PDF importado nesta sessão" : "Estoque gravado no banco")</small></article>
+    <article><span><i class="bi bi-filetype-pdf" aria-hidden="true"></i> Formato do arquivo</span><strong>PDF</strong><small>Um arquivo por atualização</small></article>
+    <article><span><i class="bi bi-box-seam" aria-hidden="true"></i> Integração de estoque</span><strong>Disponível</strong><small>Atualiza itens, lotes, locais e saldos</small></article>
 </div>
 <section class="du-card du-stock-upload">
     <div class="du-large-icon"><i class="bi bi-box-arrow-in-down" aria-hidden="true"></i></div>
-    <div><h3>Atualizar os saldos de estoque</h3><p>Selecione o arquivo CSV do estoque atual. A identificação do arquivo e a data de referência serão exibidas antes da confirmação.</p><div class="du-file-tags"><span>Arquivo .csv</span><span>Até 10 MB</span><span>Saldos por item</span></div></div>
-    @if (CanImport) { <button type="button" class="du-primary-button" @onclick="() => OnAttach.InvokeAsync()"><i class="bi bi-paperclip" aria-hidden="true"></i> Anexar CSV do estoque</button> }
+    <div><h3>Atualizar os saldos de estoque</h3><p>Selecione o PDF do espelho de estoque do Soul MV (Relatório de Conferência dos Lotes). A importação inicia após selecionar e validar o arquivo.</p><div class="du-file-tags"><span>Arquivo .pdf</span><span>Até 10 MB</span><span>Saldos por item</span></div></div>
+    @if (CanImport) { <button type="button" class="du-primary-button" @onclick="() => OnAttach.InvokeAsync()"><i class="bi bi-paperclip" aria-hidden="true"></i> Anexar PDF do estoque</button> }
     else { <span class="du-readonly-label"><i class="bi bi-lock" aria-hidden="true"></i> Apenas consulta</span> }
 </section>
 @if (Latest is { } latest)
 {
-    <section class="du-card"><div class="du-card-heading"><div><h3>Último arquivo de estoque</h3><p>Informações da atualização demonstrativa mais recente.</p></div><span class="@StatusClass(latest.Status)">@StatusLabel(latest.Status)</span></div><div class="du-latest-file"><i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i><div><strong>@latest.FileName</strong><span>@latest.RegisteredAt.ToString("dd/MM/yyyy 'às' HH:mm", Br)</span></div><button type="button" class="du-secondary-button" @onclick="() => OnViewImport.InvokeAsync(latest.Id)">Ver no histórico <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></div></section>
+    <section class="du-card"><div class="du-card-heading"><div><h3>Último arquivo de estoque</h3><p>Informações do último PDF importado nesta sessão. Os dados do estoque foram gravados no banco.</p></div><span class="@StatusClass(latest.Status)">@StatusLabel(latest.Status)</span></div><div class="du-latest-file"><i class="bi bi-file-earmark-pdf" aria-hidden="true"></i><div><strong>@latest.FileName</strong><span>@latest.RegisteredAt.ToString("dd/MM/yyyy 'às' HH:mm", Br)</span></div><button type="button" class="du-secondary-button" @onclick="() => OnViewImport.InvokeAsync(latest.Id)">Ver no histórico <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></div></section>
 }
 
 @code {

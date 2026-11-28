@@ -1,4 +1,4 @@
-<div class="du-section-heading"><div><h2>Histórico de importações</h2><p>Acompanhe as confirmações e as tentativas de atualização da demonstração.</p></div><span class="du-status du-neutral">@FilteredImports.Count registros</span></div>
+<div class="du-section-heading"><div><h2>Histórico de importações</h2><p>Acompanhe as importações de consumo em CSV e as atualizações de estoque em PDF.</p></div><span class="du-status du-neutral">@FilteredImports.Count registros</span></div>
 <section class="du-card">
     <div class="du-filters du-history-filters">
         <label class="du-control du-grow"><span>Buscar arquivo ou período</span><input type="search" placeholder="Ex.: consumo, estoque, setembro/2026" @bind="_search" @bind:event="oninput" /></label>
@@ -6,10 +6,10 @@
         <label class="du-control"><span>Situação</span><select aria-label="Filtrar histórico por situação" @bind="_status"><option value="">Todas</option><option value="Completed">Concluída</option><option value="Failed">Falha</option></select></label>
     </div>
     @if (HasFilters) { <div class="du-filter-summary"><span>@FilteredImports.Count de @Imports.Count registros</span><button type="button" class="du-text-button" @onclick="ClearFilters">Limpar filtros</button></div> }
-    <div class="du-table-scroll"><table class="du-table"><thead><tr><th>Registrado em</th><th>Atualização</th><th>Referência</th><th>Arquivo CSV</th><th>Situação</th><th class="du-numeric">Registros do exemplo</th><th>Detalhes</th></tr></thead><tbody>
+    <div class="du-table-scroll"><table class="du-table"><thead><tr><th>Registrado em</th><th>Atualização</th><th>Referência</th><th>Arquivo</th><th>Situação</th><th>Detalhes</th></tr></thead><tbody>
         @foreach (var entry in FilteredImports)
         {
-            <tr class="@(_selectedId == entry.Id ? "is-selected" : null)"><td class="du-nowrap">@entry.RegisteredAt.ToString("dd/MM/yyyy", Br)<small>@entry.RegisteredAt.ToString("HH:mm", Br) · Brasília</small></td><td>@KindLabel(entry.Kind)</td><td class="du-nowrap">@PeriodLabel(entry)</td><td class="du-filename">@entry.FileName</td><td><span class="@StatusClass(entry.Status)"><i class="bi @(entry.Status == ConsumptionOperationStatus.Completed ? "bi-check-circle" : "bi-exclamation-circle")" aria-hidden="true"></i>@StatusLabel(entry.Status)</span></td><td class="du-numeric">@(entry.Rows?.ToString("N0", Br) ?? "Não processado")</td><td><button type="button" class="du-text-button" aria-label="@($"Ver detalhes de {entry.FileName}")" aria-controls="du-import-detail" aria-expanded="@(_selectedId == entry.Id ? "true" : "false")" @onclick="() => _selectedId = entry.Id">Ver detalhes <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></td></tr>
+            <tr class="@(_selectedId == entry.Id ? "is-selected" : null)"><td class="du-nowrap">@entry.RegisteredAt.ToString("dd/MM/yyyy", Br)<small>@entry.RegisteredAt.ToString("HH:mm", Br) · Brasília</small></td><td>@KindLabel(entry.Kind)</td><td class="du-nowrap">@PeriodLabel(entry)</td><td class="du-filename">@entry.FileName</td><td><span class="@StatusClass(entry.Status)"><i class="bi @(entry.Status == ConsumptionOperationStatus.Completed ? "bi-check-circle" : "bi-exclamation-circle")" aria-hidden="true"></i>@StatusLabel(entry.Status)</span></td><td><button type="button" class="du-text-button" aria-label="@($"Ver detalhes de {entry.FileName}")" aria-controls="du-import-detail" aria-expanded="@(_selectedId == entry.Id ? "true" : "false")" @onclick="() => _selectedId = entry.Id">Ver detalhes <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button></td></tr>
         }
     </tbody></table></div>
     @if (FilteredImports.Count == 0) { <p class="du-empty">Nenhuma importação corresponde aos filtros selecionados.</p> }
@@ -17,10 +17,10 @@
 @if (Imports.FirstOrDefault(i => i.Id == _selectedId) is { } selected)
 {
     <section id="du-import-detail" class="du-card du-import-detail" role="region" aria-label="Detalhes da importação">
-        <div class="du-card-heading"><div><span class="du-eyebrow">DETALHES DA ATUALIZAÇÃO · DEMONSTRAÇÃO</span><h3>@selected.FileName</h3><p>@KindLabel(selected.Kind) · @PeriodLabel(selected)</p></div><button type="button" class="du-secondary-button" @onclick="() => _selectedId = null"><i class="bi bi-x-lg" aria-hidden="true"></i> Fechar detalhes</button></div>
-        <div class="du-detail-grid"><div><span>Situação</span><strong>@StatusLabel(selected.Status)</strong></div><div><span>Registrado em</span><strong>@selected.RegisteredAt.ToString("dd/MM/yyyy HH:mm", Br)</strong></div><div><span>Registros ilustrativos</span><strong>@(selected.Rows?.ToString("N0", Br) ?? "Conteúdo não processado")</strong></div></div>
+        <div class="du-card-heading"><div><span class="du-eyebrow">DETALHES DA ATUALIZAÇÃO</span><h3>@selected.FileName</h3><p>@KindLabel(selected.Kind) · @PeriodLabel(selected)</p></div><button type="button" class="du-secondary-button" @onclick="() => _selectedId = null"><i class="bi bi-x-lg" aria-hidden="true"></i> Fechar detalhes</button></div>
+        <div class="du-detail-grid"><div><span>Situação</span><strong>@StatusLabel(selected.Status)</strong></div><div><span>Registrado em</span><strong>@selected.RegisteredAt.ToString("dd/MM/yyyy HH:mm", Br)</strong></div></div>
         <p class="du-notice @(selected.Status == ConsumptionOperationStatus.Failed ? "du-notice-error" : null)"><i class="bi @(selected.Status == ConsumptionOperationStatus.Failed ? "bi-exclamation-triangle" : "bi-info-circle")" aria-hidden="true"></i>@selected.Detail</p>
-        <p class="du-muted">Este histórico é demonstrativo e permanece disponível apenas enquanto esta página estiver aberta.</p>
+        <p class="du-muted">@(selected.Kind == ImportKind.Consumption ? "O histórico de consumo permanece disponível após recarregar a página." : "Os dados do estoque foram gravados. As informações do arquivo PDF neste histórico estão disponíveis nesta sessão.")</p>
     </section>
 }
 

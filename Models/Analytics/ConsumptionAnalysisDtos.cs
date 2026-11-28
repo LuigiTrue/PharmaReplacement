@@ -8,7 +8,10 @@ namespace RepyPharma.Models.Analytics;
 public class DailyConsumptionDto
 {
     public long Id { get; set; }
-    public int ItemId { get; set; }
+    public int? ItemId { get; set; }
+    public string? SoulMvProductCode { get; set; }
+    public string? Description { get; set; }
+    public string? Unit { get; set; }
     public DateOnly Date { get; set; }
     public decimal Quantity { get; set; }
 }
@@ -19,11 +22,18 @@ public class DailyConsumptionDto
 public class MonthlyConsumptionDto
 {
     public long Id { get; set; }
-    public int ItemId { get; set; }
+    public int? ItemId { get; set; }
+    public string? SoulMvProductCode { get; set; }
+    public string? Description { get; set; }
+    public string? Unit { get; set; }
     public int Year { get; set; }
     public int Month { get; set; }
     public decimal TotalQuantity { get; set; }
-    public decimal AverageDailyConsumption { get; set; }
+    public decimal? AverageDailyConsumption { get; set; }
+    public int RecordedDays { get; set; }
+    public bool IsComplete { get; set; }
+    public decimal? ReportedTotalQuantity { get; set; }
+    public decimal? ReportedAverageDailyConsumption { get; set; }
     public decimal? UnitPurchasePrice { get; set; }
 }
 

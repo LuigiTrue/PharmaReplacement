@@ -1,8 +1,6 @@
 # Contratos dos serviços analíticos
 
-Esta etapa contém somente contratos e estrutura para desenvolvimento incremental. Os 54 métodos das nove implementações lançam diretamente `NotImplementedException`; nenhum deles foi executado durante a validação.
-
-Não há consultas EF, persistência, leitura de CSV, cálculos, autorização implementada, componentes Blazor, alterações em entidades/contextos/migrations ou novas dependências.
+Os serviços analíticos foram criados inicialmente como contratos para desenvolvimento incremental. Desde 24/11/2026, `ConsumptionImportService` implementa leitura e validação de CSV, consolidação mensal, persistência transacional e consulta do histórico, ligado aos cards de consumo. Os demais serviços analíticos continuam sem implementação de negócio. Os detalhes do fluxo estão em [Consumo e ABC](consumo-e-abc.md).
 
 ## Organização e injeção de dependência
 
@@ -17,16 +15,17 @@ Os sete serviços de análise seguem `Services/Interfaces` e `Services/Implement
 | [IInventoryAnalysisService](../Services/Interfaces/IInventoryAnalysisService.cs) | [InventoryAnalysisService](../Services/Implementations/InventoryAnalysisService.cs) | 7 |
 | [IPurchasePlanningService](../Services/Interfaces/IPurchasePlanningService.cs) | [PurchasePlanningService](../Services/Implementations/PurchasePlanningService.cs) | 7 |
 | [IConsumptionDataQualityService](../Services/Interfaces/IConsumptionDataQualityService.cs) | [ConsumptionDataQualityService](../Services/Implementations/ConsumptionDataQualityService.cs) | 5 |
-| [IConsumptionImportService](../Services/Import/Interfaces/IConsumptionImportService.cs) | [ConsumptionImportService](../Services/Import/ConsumptionImportService.cs) | 3 |
+| [IConsumptionImportService](../Services/Import/Interfaces/IConsumptionImportService.cs) | [ConsumptionImportService](../Services/Import/ConsumptionImportService.cs) | 7 |
+| [ISectorConsumptionImportService](../Services/Import/Interfaces/ISectorConsumptionImportService.cs) | [SectorConsumptionImportService](../Services/Import/SectorConsumptionImportService.cs) | 1 |
 | [IConsumptionAggregationService](../Services/Import/Interfaces/IConsumptionAggregationService.cs) | [ConsumptionAggregationService](../Services/Import/ConsumptionAggregationService.cs) | 3 |
 
-Todos os métodos usam `Task<T>`, recebem `CancellationToken` como último parâmetro e possuem comentários XML na interface e na implementação. As consultas coletivas usam filtros e paginação quando retornam listas de tamanho variável. Distribuições por classes/grupos têm conjuntos pequenos e definidos e não precisam de paginação.
+Os contratos públicos usam `Task<T>` e recebem `CancellationToken` como último parâmetro. As consultas coletivas usam filtros e paginação quando retornam listas de tamanho variável. Distribuições por classes/grupos têm conjuntos pequenos e definidos e não precisam de paginação.
 
-As novas classes não recebem dependências de banco sem uso: os construtores e dependências reais serão definidos quando cada método for implementado. As telas e os endpoints existentes não foram ligados a esses métodos incompletos.
+`ConsumptionImportService` recebe `IDbContextFactory<AppDbContext>`, `ILogger<ConsumptionImportService>`, `TimeProvider`, `ISectorConsumptionImportService` e as opções da importação. Os serviços ainda não implementados permanecem sem dependências de banco desnecessárias e não são chamados pela importação CSV.
 
 ## DTOs e enums
 
-Os DTOs estão no namespace `RepyPharma.Models.Analytics`. São 67 DTOs e cinco enums auxiliares, agrupados em dez arquivos. Os enums de domínio existentes `ItemType` e `AbcClassification` são reutilizados; nenhuma entidade EF é exposta.
+Os DTOs estão no namespace `RepyPharma.Models.Analytics`. São reutilizados os contratos analíticos e os DTOs da importação conjunta, sem exposição de entidades EF. Os enums de domínio existentes `ItemType` e `AbcClassification` são reutilizados; nenhuma entidade EF é exposta.
 
 | Arquivo | Contratos |
 | --- | --- |
@@ -38,6 +37,7 @@ Os DTOs estão no namespace `RepyPharma.Models.Analytics`. São 67 DTOs e cinco 
 | [InventoryAnalysisDtos.cs](../Models/Analytics/InventoryAnalysisDtos.cs) | `InventoryAnalysisQueryDto`, `ItemsOverviewDto`, `ItemAnalysisDto`, `AbcXyzMatrixCellDto`, `AbcXyzMatrixDto`, `ConsumptionAlertDto`, `FinancialConsumptionSummaryDto` |
 | [PurchasePlanningDtos.cs](../Models/Analytics/PurchasePlanningDtos.cs) | `PurchasePlanningParametersDto`, `PurchaseRequirementDto`, `StockCoverageDto`, `ReorderPointDto`, `SafetyStockDto`, `PurchasePlanningDto`, `PurchasePlanningSummaryDto` |
 | [ConsumptionDataQualityDtos.cs](../Models/Analytics/ConsumptionDataQualityDtos.cs) | `ConsumptionDataCoverageDto`, `MissingConsumptionPeriodDto`, `InsufficientHistoryItemDto`, `DataQualitySummaryDto`, `LastConsumptionImportDto` |
+| [CombinedConsumptionImportDtos.cs](../Models/Analytics/CombinedConsumptionImportDtos.cs) | Progresso, linhas de preço, preço por produto, prévia, resultados e erros da importação conjunta. |
 | [ConsumptionImportDtos.cs](../Models/Analytics/ConsumptionImportDtos.cs) | `ConsumptionImportOptionsDto`, `ConsumptionImportIssueDto`, `ConsumptionImportValidationDto`, `ConsumptionImportResultDto` |
 | [ConsumptionAggregationDtos.cs](../Models/Analytics/ConsumptionAggregationDtos.cs) | `MonthlyAggregationRequestDto`, `ConsumptionAggregationStatusDto` |
 
@@ -45,14 +45,14 @@ Contratos compartilhados evitam tipos de paginação, intervalo, seleção e ide
 
 ## Decisões e compatibilidade com o modelo atual
 
-- **Preço mensal:** a propriedade existente é `MonthlyConsumption.UnitPurchasePrice`, e não `UnitProductPrice`. A entidade foi preservada e `MonthlyConsumptionDto` usa o nome real, incluindo sua nulabilidade. Preço desconhecido pode continuar distinto de zero. A lógica financeira e o tratamento de preços ausentes serão implementados posteriormente.
+- **Preço mensal:** a propriedade existente é `MonthlyConsumption.UnitPurchasePrice`, e não `UnitProductPrice`. A entidade foi preservada e `MonthlyConsumptionDto` usa o nome real, incluindo sua nulabilidade. Preço desconhecido pode continuar distinto de zero. A importação conjunta ignora preços zero e usa o preço positivo único ou, somente para preços positivos distintos, o quociente dos totais e quantidades setoriais. Ausência de custo válido ou cálculo inviável gera exceção de processamento e bloqueia a confirmação.
 - **Grupo de produtos:** não existe entidade de grupo. Os filtros e os agrupamentos usam o `ItemType` existente, sem adicionar tabelas ou identificadores de grupos fictícios.
 - **Contexto ABC:** consultas e comparações preservam `AnalysisId`. O escopo de classificação atual admite uma execução identificada ou um recorte explícito de período/conjunto. A futura implementação deverá validar esse escopo e evitar misturar classificações de conjuntos diferentes. Paginar um Pareto não deve redefinir o conjunto financeiro da análise.
 - **XYZ manual:** `XyzCriticality` é apenas um enum de contrato em `Models/Analytics`. O modelo atual não possui propriedade/tabela para persistir criticidade. A atualização manual e a verificação de autorização continuam pendentes; não foi criada qualquer classificação automática por consumo.
-- **Auditoria e metadados:** não existem histórico XYZ, metadados persistidos de importação de consumo nem histórico persistido de previsões. `DataAvailabilityDto<T>` permite informar essa indisponibilidade quando os métodos forem implementados, distinguindo-a de uma consulta válida sem resultados. Nenhuma entidade de auditoria foi criada.
+- **Auditoria e metadados:** `ConsumptionImportRecord`, na tabela `consumption_imports`, registra as importações de consumo concluídas. Histórico XYZ e histórico de previsões continuam indisponíveis.
 - **Importação existente:** `IJsonImportService` e `PdfParserService` tratam estoque, não CSV de consumo. Portanto, os novos contratos de consumo são separados e não duplicam esses fluxos. `ConsumptionImportResultDto` não substitui o `ImportResult` existente de estoque.
-- **Streams CSV:** `ValidateImportAsync` e `ImportDailyConsumptionAsync` recebem `Stream`, nome do arquivo e opções de formato. O chamador será responsável por disponibilizar/posicionar/fechar o fluxo. Os métodos atuais não leem nem descartam o stream.
-- **Identificadores de operações:** os GUIDs de importação e consolidação são contratos para evolução posterior. Não pressupõem que exista armazenamento de jobs no modelo atual.
+- **Streams CSV:** `ValidateImportAsync` e `ImportDailyConsumptionAsync` recebem `Stream`, nome do arquivo e `ReferenceMonth`, definido pelo card. O serviço lê o fluxo com CsvHelper; o chamador continua responsável por posicioná-lo e fechá-lo. A validação isolada não grava dados.
+- **Identificadores de operações:** GUIDs de importações concluídas são persistidos em `consumption_imports`; os contratos de jobs de consolidação continuam reservados para evolução posterior.
 - **Métodos de previsão:** `MethodCode` e parâmetros numéricos são extensíveis. Nenhum método ou algoritmo é declarado como implementado ou selecionado automaticamente.
 - **Unidades:** intervalos usam `DateOnly`; datas operacionais usam `DateTimeOffset`; horizontes e prazos são expressos em dias; médias móveis usam uma janela de observações na granularidade indicada; quantidades, valores e percentuais usam `decimal`.
 
@@ -147,6 +147,7 @@ Task<DataAvailabilityDto<LastConsumptionImportDto>> GetLastImportInformationAsyn
 Task<ConsumptionImportValidationDto> ValidateImportAsync(Stream csvStream, string fileName, ConsumptionImportOptionsDto? options = null, CancellationToken cancellationToken = default);
 Task<ConsumptionImportResultDto> ImportDailyConsumptionAsync(Stream csvStream, string fileName, ConsumptionImportOptionsDto? options = null, CancellationToken cancellationToken = default);
 Task<ConsumptionImportResultDto?> GetImportResultAsync(Guid importId, CancellationToken cancellationToken = default);
+Task<IReadOnlyList<ConsumptionImportResultDto>> GetImportsAsync(CancellationToken cancellationToken = default);
 ```
 
 ### ConsumptionAggregationService
@@ -157,7 +158,7 @@ Task<ConsumptionAggregationStatusDto> RecalculateMonthlyConsumptionAsync(Monthly
 Task<ConsumptionAggregationStatusDto?> GetAggregationStatusAsync(Guid aggregationId, CancellationToken cancellationToken = default);
 ```
 
-## Validação
+## Validação da etapa inicial de contratos
 
 - Compilação com `dotnet build --no-restore --nologo`: **zero erros e zero avisos**.
 - Conferência estática das 54 assinaturas nas interfaces e implementações, do `CancellationToken`, dos comentários XML e do corpo contendo exclusivamente `throw new NotImplementedException();`.

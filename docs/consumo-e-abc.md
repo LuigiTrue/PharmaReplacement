@@ -49,7 +49,7 @@ Além da unicidade por análise/item, existem índices para consulta por item e 
 
 ## Restrições de integridade
 
-- Quantidades, médias e valores financeiros não podem ser negativos.
+- Quantidades diárias, totais e médias mensais admitem valores negativos desde a migration de importação CSV. As restrições de valores financeiros e preço continuam em vigor.
 - O ano deve estar entre 1 e 9999, e o mês entre 1 e 12.
 - O período ABC não pode ter data final anterior à inicial.
 - O percentual acumulado deve estar entre 0 e 100.
@@ -68,3 +68,25 @@ A verificação posterior confirmou contagens inalteradas nas 14 tabelas preexis
 A migration incremental `20261122183039_AddUnitPurchasePriceToMonthlyConsumptions` adiciona somente `UnitPurchasePrice` e a restrição de preço não negativo à tabela mensal. Os testes em PostgreSQL temporário confirmaram preservação dos registros anteriores, preço ausente como `NULL`, precisão de seis casas decimais, preços independentes por mês, distinção entre zero e ausência de preço e rejeição de valores negativos.
 
 Essa migration também foi aplicada ao banco configurado `repypharm`. A conferência posterior validou a coluna opcional `numeric(18,6)`, a preservação das contagens de todas as tabelas, os preços antigos sem preenchimento fictício e a ausência de migrations pendentes.
+
+## Importação CSV de consumo — atualização de 24/11/2026
+
+**Evolução vigente:** competências encerradas agora exigem os relatórios diário e setorial, prévia sem gravação e confirmação explícita. Preços zerados são ignorados; um único preço positivo é copiado diretamente e preços positivos distintos são ponderados por Valor Total / Qtd Moviment. do setorial. Custos inviáveis geram exceção; não há comparação entre os relatórios. As médias do diário utilizam três casas decimais. O histórico abaixo descreve a primeira versão; as regras atuais de fechamento, cobertura, unidade e rastreabilidade estão em [Importação mensal conjunta](importacao-mensal-conjunta.md). O fluxo parcial do mês corrente foi preservado. Nenhuma migration foi criada ou reaplicada nessa evolução.
+
+`ConsumptionImportService` passou a ler o relatório Soul MV com CsvHelper, vírgula, cultura `pt-BR` e Windows-1252. Reconhece cabeçalhos repetidos, colunas intercaladas e diferentes blocos de dias, agrupando pelo código externo do produto. Nenhuma posição fixa é utilizada para os dias. As quantidades zero, fracionadas e negativas são preservadas.
+
+A competência é determinada exclusivamente pelo card selecionado em `/DateUpdates` ou `/DataUpdates`. O CSV não contém mês/ano: a validação confere cobertura de dias, sem comprovar a identidade da competência. Meses anteriores precisam apresentar todos os dias do mês (28/29/30/31, conforme ano/mês) para **cada produto**. No mês atual, todos os dias de 1 até a data de hoje em Brasília são obrigatórios, mesmo antes do dia 28. Dias posteriores, lacunas, campos inválidos e duplicidades impedem toda a gravação. Competências futuras não podem ser importadas.
+
+Depois da validação do arquivo, o código Soul MV é relacionado a `items.Code`, obtendo `items.Id`. Produtos sem cadastro ou com unidade incompatível geram erro; não são criados itens nem inferidas conversões ou classificações. Uma atualização substitui as quantidades dos produtos presentes no arquivo, sem soma e sem duplicar `(ItemId, Date)` ou `(ItemId, Year, Month)`. Produtos ausentes no novo arquivo são preservados. Um bloqueio transacional PostgreSQL por competência serializa atualizações concorrentes.
+
+Os registros diários, as consolidações mensais e o histórico são gravados em uma única transação. Uma falha desfaz a operação inteira. O serviço não cria quantidades para dias ausentes ou futuros. No mês atual, a média utiliza somente os dias disponíveis e `IsComplete` permanece falso até o último dia do mês. O preço de uma consolidação anterior é preservado; novos registros ficam com `UnitPurchasePrice = NULL`.
+
+`MonthlyConsumption.RecordedDays` registra a cobertura efetivamente importada e `IsComplete` indica se o mês inteiro está disponível. Esses campos são distintos de contadores de diagnóstico. A tabela `consumption_imports` guarda o identificador da operação, o arquivo, a competência, a data final disponível e a data de gravação. O histórico permanece após recarregar a página e aceita novas importações da mesma competência. No dia seguinte, um card do mês atual sem os novos dias volta a indicar necessidade de atualização.
+
+A migration `20261124221329_EnableConsumptionCsvPersistence` remove as restrições que proibiam valores negativos em quantidades diárias, totais e médias mensais, adiciona a cobertura mensal e a tabela de histórico. As restrições de preço e de classificação ABC continuam inalteradas. A cobertura de consolidações antigas é obtida dos registros diários existentes. A reversão da migration volta a exigir valores não negativos e falhará se houver dados incompatíveis; não há exclusão ou conversão automática desses dados.
+
+Foram retirados o modo mock, a entrada especial de dezembro, a competência digitada manualmente, o histórico de consumo fictício, os contadores do CSV e a listagem diária/mensal no console. Os cards mantêm sua estrutura visual e utilizam `Anexar CSV` ou `Atualizar CSV` para abrir o painel existente. O fluxo de estoque permanece separado e utiliza o importador PDF existente; os cards de consumo continuam exclusivos para CSV.
+
+Os testes automatizados ficam em `tests/RepyPharma.Consumption.Tests`. A suíte de persistência cria um banco PostgreSQL temporário exclusivo; a aplicação continua sem executar migrations automaticamente ao iniciar.
+
+A migration foi aplicada ao banco configurado em 24/11/2026, após backup local. A conferência confirmou preservação dos registros preexistentes e ausência de importações de teste no banco real. As validações no navegador e as gravações do CSV foram realizadas em uma cópia PostgreSQL isolada. O cadastro atual apresenta produtos ausentes e unidades divergentes em relação ao CSV de agosto; essas pendências precisam ser regularizadas antes de importar o arquivo completo.

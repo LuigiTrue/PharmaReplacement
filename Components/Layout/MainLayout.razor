@@ -2,6 +2,7 @@
 @implements IDisposable
 @using Microsoft.FluentUI.AspNetCore.Components
 @inject ThemeState ThemeState
+@inject RepyPharma.Services.Abstractions.LoadingOperationState Loading
 @inject IAuthService AuthService
 @inject IUserSettingsService UserSettingsService
 
@@ -10,7 +11,7 @@
 
 <div class="layout-container @ThemeClass">
 
-    <div class="page">
+    <div class="page" inert="@(Loading.IsProcessing ? "" : null)" aria-busy="@(Loading.IsProcessing ? "true" : "false")">
         <NavMenuOutlaw></NavMenuOutlaw>
             
         
@@ -65,6 +66,7 @@
         </footer>
         </main>
     </div>
+    <LoadingOverlay />
 </div>
 
 
@@ -90,6 +92,7 @@
 
     protected override void OnInitialized()
     {
+        Loading.Changed += OnThemeChanged;
         ThemeState.OnChange += OnThemeChanged;
         AuthService.OnChange += OnThemeChanged;
         UserSettingsService.OnChange += OnUserSettingsChanged;
@@ -107,6 +110,7 @@
 
     public void Dispose()
     {
+        Loading.Changed -= OnThemeChanged;
         ThemeState.OnChange -= OnThemeChanged;
         AuthService.OnChange -= OnThemeChanged;
         UserSettingsService.OnChange -= OnUserSettingsChanged;

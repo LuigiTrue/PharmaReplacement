@@ -4,6 +4,10 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepyPharma", "RepyPharma.csproj", "{9F45C46F-62F0-4EF6-079F-F25A65B1D5A3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepyPharma.Consumption.Tests", "tests\RepyPharma.Consumption.Tests\RepyPharma.Consumption.Tests.csproj", "{020EAF43-436F-43FE-95D5-A4F1602E44A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,9 +18,16 @@ Global
 		{9F45C46F-62F0-4EF6-079F-F25A65B1D5A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F45C46F-62F0-4EF6-079F-F25A65B1D5A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F45C46F-62F0-4EF6-079F-F25A65B1D5A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{020EAF43-436F-43FE-95D5-A4F1602E44A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{020EAF43-436F-43FE-95D5-A4F1602E44A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{020EAF43-436F-43FE-95D5-A4F1602E44A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{020EAF43-436F-43FE-95D5-A4F1602E44A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{020EAF43-436F-43FE-95D5-A4F1602E44A8} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3083C2FA-3C7F-4ED0-9A74-C49052F3FD97}

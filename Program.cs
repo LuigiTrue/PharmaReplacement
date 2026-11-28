@@ -65,6 +65,7 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 });
 
 // Application services
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddScoped<IDanfeService, DanfeService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddScoped<IQuotationService, QuotationService>();
@@ -81,7 +82,14 @@ builder.Services.AddScoped<IConsumptionForecastService, ConsumptionForecastServi
 builder.Services.AddScoped<IInventoryAnalysisService, InventoryAnalysisService>();
 builder.Services.AddScoped<IPurchasePlanningService, PurchasePlanningService>();
 builder.Services.AddScoped<IConsumptionDataQualityService, ConsumptionDataQualityService>();
+builder.Services.AddOptions<ConsumptionReportsImportOptions>()
+    .Bind(builder.Configuration.GetSection("ConsumptionReportsImport"))
+    .Validate(o => o.PreviewLifetimeMinutes > 0 && o.MaximumFileSize > 0,
+        "A validade da prévia e o tamanho dos arquivos devem ser positivos.")
+    .ValidateOnStart();
+builder.Services.AddScoped<ISectorConsumptionImportService, SectorConsumptionImportService>();
 builder.Services.AddScoped<IConsumptionImportService, ConsumptionImportService>();
+builder.Services.AddScoped<RepyPharma.Services.Abstractions.LoadingOperationState>();
 builder.Services.AddScoped<IConsumptionAggregationService, ConsumptionAggregationService>();
 
 // Stock import and UI state

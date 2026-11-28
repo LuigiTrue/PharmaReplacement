@@ -1,0 +1,205 @@
+@inject RepyPharma.Services.Import.Interfaces.IConsumptionImportService ImportService
+@inject RepyPharma.Services.Abstractions.LoadingOperationState Loading
+@inject ILogger<MonthlyConsumptionReports> Logger
+@implements IDisposable
+
+<AttachmentPanel Kind="ImportKind.Consumption" ReferenceDate="ReferenceMonth" Busy="Busy" HasFiles="@_files.Any(f => f.File is not null)" OnCancel="OnCancel"
+                 Description="Selecione os relatórios correspondentes à competência."
+                 Notice="O consumo diário fornece o histórico. O relatório de saídas por setor fornece o valor unitário informado para a competência selecionada."
+                 ActionHint="Confira os arquivos e a competência antes de processar.">
+    <Files>
+    <div role="group" aria-label="Relatórios de @ReferenceMonth.ToString("MMMM/yyyy", Br)" tabindex="-1" data-loading-scope data-reports-month="@ReferenceMonth.ToString("yyyy-MM", CultureInfo.InvariantCulture)">
+    @foreach (var slot in _files.OrderBy(f => f.Key == "daily" ? 0 : f.Key == "position" ? 1 : 2))
+    {
+        <div data-report="@slot.Key">
+            <h3>@slot.Title <span class="du-status du-neutral">@(slot.Required ? "Obrigatório" : "Quando aplicável")</span></h3>
+            <label class="du-upload-zone">
+                <InputFile @key="slot.Version" OnChange="args => SelectFile(slot, args)" accept="@slot.Accept" class="du-file-input" disabled="@Busy" aria-label="@slot.Title" aria-required="@(slot.Required ? "true" : "false")" />
+                <span class="du-upload-icon"><i class="bi bi-file-earmark-arrow-up" aria-hidden="true"></i></span>
+                <strong>@(slot.File is null ? $"Clique para selecionar {slot.Title.ToLower(Br)}" : "Clique para escolher outro arquivo")</strong>
+                <span>@slot.Hint · um arquivo · até 10 MB</span>
+            </label>
+            @if (slot.Error is not null) { <p class="du-file-error" role="alert">@slot.Error</p> }
+            @if (slot.File is { } file)
+            {
+                <div class="du-selected-file"><i class="bi bi-file-earmark-check" aria-hidden="true"></i><div><strong>@file.Name</strong><small>Arquivo selecionado</small></div><button type="button" class="du-text-button" disabled="@Busy" @onclick="() => RemoveFile(slot)">Remover</button></div>
+            }
+        </div>
+    }
+    </div>
+    </Files>
+    <Actions><button type="button" class="du-primary-button" data-process-reports disabled="@(!CanProcess)" @onclick="ProcessReportsAsync"><i class="bi bi-check2-circle" aria-hidden="true"></i>Processar relatórios</button></Actions>
+    <Results>
+    @if (_error is not null) { <p role="alert" class="report-error" tabindex="-1" data-import-result>@_error</p> }
+    @if (_success is not null)
+    {
+        <p role="status" data-import-result tabindex="-1">Atualização mensal concluída. Diário: @_success.SourceFileName. Consolidação mensal: @_success.SectorSourceFileName.</p>
+    }
+    @if (_preview is { } preview)
+    {
+        <section class="reports-preview" aria-label="Prévia da atualização mensal" data-preview-month="@ReferenceMonth.ToString("yyyy-MM", CultureInfo.InvariantCulture)" tabindex="-1" data-import-result>
+            <h4>Validação · @preview.ReferenceMonth.ToString("MMMM/yyyy", Br)</h4>
+            <p>@preview.DailyFileName<br />@preview.SectorFileName</p>
+            <dl class="reports-summary">
+                <div><dt>Produtos no diário</dt><dd>@preview.DailyProductCount</dd></div>
+                <div><dt>Produtos na consolidação mensal</dt><dd>@preview.SectorProductCount</dd></div>
+                <div><dt>Registros diários</dt><dd>@preview.DailyRecordCount</dd></div>
+                <div><dt>Consolidados mensais</dt><dd>@preview.MonthlyRecordCount</dd></div>
+                <div><dt>Preços unitários disponíveis</dt><dd>@preview.AssignedPriceCount</dd></div>
+                <div><dt>Preços unitários indisponíveis</dt><dd>@preview.MissingPriceCount</dd></div>
+                <div><dt>Erros impeditivos</dt><dd>@preview.SignificantDiscrepancyCount</dd></div>
+                <div><dt>Produtos diários não cadastrados</dt><dd>@preview.UnknownProductCount</dd></div>
+            </dl>
+            <details><summary>Avisos e erros de validação</summary>
+                @if (preview.Issues.Count == 0) { <p>Nenhuma inconsistência identificada.</p> }
+                <ul>@foreach (var issue in preview.Issues)
+                { <li class="@(issue.Severity >= AnalysisSeverity.Error ? "report-error" : null)">@(issue.ItemCode is null ? "" : $"Produto {issue.ItemCode}: ")@issue.Message</li> }</ul>
+            </details>
+            <details><summary>Consultar produtos e preços</summary>
+                <label class="reports-filter"><input type="checkbox" @bind="_onlyIssues" disabled="@Busy" /> Somente produtos com avisos ou erros</label>
+                <div class="reports-table"><table><thead><tr><th>Código</th><th>Produto</th><th>Consumo mensal</th><th>Média diária</th><th>Unidade do diário</th><th>Custo unitário mensal</th><th>Situação</th></tr></thead><tbody>
+                    @foreach (var product in preview.Products.Where(p => !_onlyIssues || p.Issues.Count > 0))
+                    {
+                        <tr><td>@product.ProductCode</td><td>@product.Description</td><td>@product.DailyQuantity.ToString(Br)</td><td>@product.AverageDailyConsumption?.ToString("N3", Br)</td><td>@product.DailyUnit</td><td>@(product.UnitPurchasePrice?.ToString("0.######", Br) ?? "Indisponível")</td><td>@string.Join(", ", product.Categories.Select(CategoryLabel))</td></tr>
+                    }
+                </tbody></table></div>
+            </details>
+            <p>Preços zerados são desconsiderados. Um único preço positivo é utilizado diretamente; preços positivos distintos geram custo ponderado por Valor Total / Qtd Moviment. do relatório setorial. Falhas na obtenção do custo impedem a confirmação. O consumo continua vindo exclusivamente do diário.</p>
+            @if (!preview.CanConfirm) { <p class="report-error">Corrija os erros e processe os dois documentos novamente antes de confirmar.</p> }
+            <button type="button" class="du-primary-button du-full-width" data-confirm-monthly disabled="@(Busy || !preview.CanConfirm)" @onclick="ConfirmAsync">Confirmar atualização mensal</button>
+            @if (preview.CanConfirm) { <small>Prévia válida até @preview.ExpiresAt.ToOffset(TimeSpan.FromHours(-3)).ToString("HH:mm", Br). Substituir qualquer arquivo exige novo processamento.</small> }
+        </section>
+    }
+    </Results>
+</AttachmentPanel>
+
+@code {
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public DateOnly ReferenceMonth { get; set; }
+    [Parameter] public EventCallback<ConsumptionImportResultDto> OnImported { get; set; }
+    private readonly FileSlot[] _files = [
+        new("daily", "Consumo diário", true, ".csv,text/csv", "CSV · R_CONS_DIARIO"),
+        new("monthly", "Consolidação Mensal de Estoque", true, ".csv,text/csv", "CSV"),
+        new("position", "Posição de Estoque", false, ".csv,.pdf,text/csv,application/pdf", "CSV ou PDF")
+    ];
+    private readonly CancellationTokenSource _lifetime = new();
+    private ConsumptionReportsValidationDto? _preview;
+    private CombinedConsumptionImportResultDto? _success;
+    private string? _error;
+    private bool _processing, _onlyIssues = true;
+    private bool Busy => _processing || Loading.IsProcessing;
+    private bool CanProcess => !Busy && _files.All(f => f.Error is null && (!f.Required || f.File is not null));
+    protected override void OnInitialized() => Loading.Changed += Changed;
+    private void Changed() => _ = InvokeAsync(StateHasChanged);
+    private void SelectFile(FileSlot slot, InputFileChangeEventArgs args)
+    {
+        if (Busy) return;
+        InvalidatePreview(); slot.File = null; slot.Error = null;
+        if (args.FileCount != 1) { slot.Error = "Selecione apenas um arquivo por relatório."; return; }
+        var file = args.File;
+        if (!(string.Equals(Path.GetExtension(file.Name), ".csv", StringComparison.OrdinalIgnoreCase) || !slot.Required && string.Equals(Path.GetExtension(file.Name), ".pdf", StringComparison.OrdinalIgnoreCase)) || file.Size <= 0 || file.Size > CsvAttachment.MaximumFileSize || file.Name.Length > 255)
+        { slot.Error = $"Selecione um {slot.Hint}, não vazio, de até 10 MB e nome de até 255 caracteres."; return; }
+        slot.File = file;
+    }
+    private void RemoveFile(FileSlot slot)
+    {
+        if (Busy) return;
+        InvalidatePreview(); slot.File = null; slot.Error = null; slot.Version++;
+    }
+    private void InvalidatePreview()
+    {
+        if (_preview is not null) ImportService.DiscardCombinedPreview(_preview.ValidationId);
+        _preview = null; _success = null; _error = null;
+    }
+    private async Task ProcessReportsAsync()
+    {
+        if (!CanProcess) return;
+        await RunAsync("Lendo relatório de consumo diário...", async operation =>
+        {
+            InvalidatePreview();
+            var daily = _files[0].File!; var sector = _files[1].File!;
+            // Receber um arquivo por vez evita streams SignalR concorrentes no mesmo circuito.
+            await using var dailyStream = await ReadSelectedFileAsync(daily);
+            operation.Report("Lendo relatório de saídas por setor...");
+            await using var sectorStream = await ReadSelectedFileAsync(sector);
+            _preview = await ImportService.PrepareCombinedImportAsync(dailyStream, daily.Name, sectorStream, sector.Name,
+                ReferenceMonth, new Progress<ConsumptionImportProgressDto>(p => operation.Report(p.Message)), _lifetime.Token);
+        });
+    }
+    private async Task<MemoryStream> ReadSelectedFileAsync(IBrowserFile file)
+    {
+        await using var source = file.OpenReadStream(CsvAttachment.MaximumFileSize, _lifetime.Token);
+        var content = new MemoryStream();
+        try
+        {
+            await source.CopyToAsync(content, _lifetime.Token);
+            content.Position = 0;
+            return content;
+        }
+        catch { await content.DisposeAsync(); throw; }
+    }
+    private async Task ConfirmAsync()
+    {
+        if (Busy || _preview is not { CanConfirm: true } preview) return;
+        await RunAsync("Validando condições para persistência...", async operation =>
+        {
+            var result = await ImportService.ConfirmCombinedImportAsync(preview.ValidationId,
+                new Progress<ConsumptionImportProgressDto>(p => operation.Report(p.Message)), _lifetime.Token);
+            _preview = null;
+            if (result.Status == ConsumptionOperationStatus.Completed)
+            { _success = result; await OnImported.InvokeAsync(result); }
+            else _error = result.Status == ConsumptionOperationStatus.Cancelled ? "Operação cancelada." : string.Join(" ", result.Issues.Select(i => i.Message));
+        });
+    }
+    private async Task RunAsync(string message, Func<RepyPharma.Services.Abstractions.LoadingOperationState.Operation, Task> action)
+    {
+        if (_processing) return;
+        using var operation = Loading.TryBegin(message);
+        if (operation is null) return;
+        _processing = true; _error = null;
+        try
+        {
+            await InvokeAsync(StateHasChanged);
+            await Task.Yield();
+            await action(operation);
+        }
+        catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Falha na atualização mensal conjunta de {Month}.", ReferenceMonth);
+            _error = "Não foi possível concluir a operação. Confira os documentos e processe-os novamente.";
+            InvalidateAfterError();
+        }
+        finally { _processing = false; }
+    }
+    private void InvalidateAfterError()
+    {
+        if (_preview is not null) ImportService.DiscardCombinedPreview(_preview.ValidationId);
+        _preview = null;
+    }
+    private static string CategoryLabel(ConsumptionCorrespondence category) => category switch
+    {
+        ConsumptionCorrespondence.UnitPriceAvailable => "Custo mensal disponível",
+        ConsumptionCorrespondence.UnknownProduct => "Não cadastrado",
+        ConsumptionCorrespondence.FinancialUnavailable => "Preço indisponível",
+        _ => category.ToString()
+    };
+    public void Dispose()
+    {
+        Loading.Changed -= Changed;
+        _lifetime.Cancel();
+        if (_preview is not null) ImportService.DiscardCombinedPreview(_preview.ValidationId);
+        _lifetime.Dispose();
+    }
+    private sealed class FileSlot(string key, string title, bool required, string accept, string hint)
+    {
+        public string Key { get; } = key;
+        public string Title { get; } = title;
+        public bool Required { get; } = required;
+        public string Accept { get; } = accept;
+        public string Hint { get; } = hint;
+        public IBrowserFile? File;
+        public string? Error;
+        public int Version;
+    }
+}

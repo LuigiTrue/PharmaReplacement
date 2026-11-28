@@ -4,16 +4,33 @@
 @inject PdfStorageService Storage
 @inject ThemeState ThemeState
 
-<div class="update-input-file-shell @(ThemeState.IsDarkMode ? "is-dark" : null)">
+<div class="@(UseAttachmentLayout ? null : $"update-input-file-shell {(ThemeState.IsDarkMode ? "is-dark" : null)}")">
+    @if (!UseAttachmentLayout)
+    {
     <div class="update-input-heading">
         <strong>@Title</strong>
         <span>@Hint</span>
     </div>
+    }
+    else
+    {
+        <h3>@Title <span class="du-status du-neutral">Obrigatório</span></h3>
+    }
 
-    <FluentInputFile Id="@UploadId" Class="update-input-file" Mode="InputFileMode.SaveToTemporaryFolder" Multiple="false" MaximumFileCount="1"
-                     MaximumFileSize="@(10*1024*1024)" Accept=".pdf" @bind-ProgressPercent="@ProgressPercent"
-                     OnCompleted="@OnCompletedAsync" Style="height: 30vh; display: grid; padding: 30px">
+    <FluentInputFile Id="@UploadId" Class="@(UseAttachmentLayout ? "du-upload-zone" : "update-input-file")" AnchorId="@SelectionAnchorId" Mode="InputFileMode.SaveToTemporaryFolder" Multiple="false" MaximumFileCount="1"
+                     MaximumFileSize="@(10*1024*1024)" Accept=".pdf" Disabled="@_importing" @bind-ProgressPercent="@ProgressPercent"
+                     OnCompleted="@OnCompletedAsync" Style="@(UseAttachmentLayout ? "height:auto;display:flex;flex-direction:column;gap:10px;padding:28px 16px" : "height:30vh;display:grid;padding:30px")">
         <ChildContent>
+            @if (UseAttachmentLayout)
+            {
+                <label for="@UploadId" style="display:contents">
+                    <span class="du-upload-icon"><i class="bi bi-file-earmark-arrow-up" aria-hidden="true"></i></span>
+                    <strong>Clique para selecionar o PDF do estoque</strong>
+                    <span class="du-muted" style="font-size:10px">Extensão .pdf · um arquivo · até 10 MB</span>
+                </label>
+            }
+            else
+            {
             <div class="label-content">
             <label for="@UploadId">
                 <FluentIcon Value="@(new @Icons.Regular.Size32.ArrowUpload())" />
@@ -23,47 +40,61 @@
                 @Description <label for="@UploadId">Selecionar arquivo</label><span style="color: red;">*</span>.
             </div>
             </div>
+            }
         </ChildContent>
     </FluentInputFile>
 
     @if (!string.IsNullOrWhiteSpace(_statusMessage))
     {
-        <p class="update-input-status @(_statusIsError ? "error" : "success")">@_statusMessage</p>
+        <p class="@(UseAttachmentLayout ? (_statusIsError ? "du-file-error" : "du-feedback") : $"update-input-status {(_statusIsError ? "error" : "success")}")" role="@(UseAttachmentLayout ? "status" : null)">@_statusMessage</p>
     }
 </div>
 
 @code {
 
+    [Parameter] public bool UseAttachmentLayout { get; set; }
+    [Parameter] public string? SelectionAnchorId { get; set; }
     [Parameter] public string UploadId { get; set; } = "file-uploader";
     [Parameter] public string Title { get; set; } = "Importar arquivo";
     [Parameter] public string Description { get; set; } = "Arraste aqui ou selecione o arquivo.";
     [Parameter] public string Hint { get; set; } = string.Empty;
+    [Parameter] public EventCallback<string> OnImported { get; set; }
 
     private int ProgressPercent = 0;
     private string? _statusMessage;
     private bool _statusIsError;
+    private bool _importing;
 
     private async Task OnCompletedAsync(IEnumerable<FluentInputFileEventArgs> files)
     {
+        if (_importing) return;
         var file = files.FirstOrDefault();
         if (file?.LocalFile is null)
             return;
 
         _statusMessage = null;
         _statusIsError = false;
+        if (!string.Equals(Path.GetExtension(file.Name), ".pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            _statusIsError = true;
+            _statusMessage = "Selecione o espelho de estoque em formato PDF (.pdf).";
+            return;
+        }
 
+        _importing = true;
         try
         {
-            await ImportStockMirrorAsync(file.LocalFile.FullName);
+            await ImportStockMirrorAsync(file.LocalFile.FullName, file.Name);
         }
         catch (Exception ex)
         {
             _statusIsError = true;
             _statusMessage = ex.Message;
         }
+        finally { _importing = false; }
     }
 
-    private async Task ImportStockMirrorAsync(string filePath)
+    private async Task ImportStockMirrorAsync(string filePath, string fileName)
     {
         var validation = Parser.ValidateStockMirrorPdf(filePath);
         if (!validation.IsValid)
@@ -77,6 +108,7 @@
 
         await Storage.SaveAsync(produtos);
         _statusMessage = $"Espelho de estoque importado com {produtos.Count} itens.";
+        await OnImported.InvokeAsync(fileName);
     }
 
 }

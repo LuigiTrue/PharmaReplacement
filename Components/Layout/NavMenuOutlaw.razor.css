@@ -64,7 +64,7 @@
 }
 
 .sidebar-nav-outlaw ul li .logo .text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -96,9 +96,14 @@
     display: flex;
     align-items: center;
     height: 72px;
-    font-size: 16px;
+    flex: 1;
+    min-width: 0;
+    padding-right: 12px;
+    font-size: 13px;
+    line-height: 1.35;
+    white-space: normal;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 0.25px;
     font-weight: 500;
     opacity: 0;
     visibility: hidden;
@@ -345,7 +350,7 @@ ul {
 }
 
 .stock-menu-label {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     flex: 1;
 }
@@ -394,7 +399,7 @@ ul {
     display: block;
     padding: 10px 12px;
     height: auto;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.4;
     white-space: normal;
     border-radius: 6px;
@@ -483,5 +488,23 @@ ul {
 
     .stock-menu-toggle {
         min-height: 3.35rem;
+    }
+}
+
+@media (max-width: 1100px) {
+    .sidebar-nav-outlaw ul li a .text,
+    .sidebar-nav-outlaw ul li button .text {
+        font-size: 12px;
+        letter-spacing: 0.1px;
+    }
+
+    .sidebar-nav-outlaw ul li .logo .text {
+        font-size: 15px;
+    }
+
+    .stock-menu-label,
+    .sidebar-nav-outlaw .stock-submenu a,
+    .sidebar-nav-outlaw .stock-submenu span {
+        font-size: 12px;
     }
 }

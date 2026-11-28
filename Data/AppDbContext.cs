@@ -16,6 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
     public DbSet<Danfe> Danfes => Set<Danfe>();
     public DbSet<DailyConsumption> DailyConsumptions => Set<DailyConsumption>();
     public DbSet<MonthlyConsumption> MonthlyConsumptions => Set<MonthlyConsumption>();
+    public DbSet<ConsumptionImportRecord> ConsumptionImports => Set<ConsumptionImportRecord>();
     public DbSet<AbcClassificationResult> AbcClassificationResults => Set<AbcClassificationResult>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -181,12 +182,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
 
         modelBuilder.Entity<DailyConsumption>(entity =>
         {
-            entity.ToTable("daily_consumptions", table =>
-            {
-                table.HasCheckConstraint(
-                    "CK_daily_consumptions_quantity",
-                    "\"Quantity\" >= 0");
-            });
+            entity.ToTable("daily_consumptions");
             entity.HasKey(consumption => consumption.Id);
             entity.Property(consumption => consumption.Id).ValueGeneratedOnAdd();
             entity.Property(consumption => consumption.Date).HasColumnType("date");
@@ -212,11 +208,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                     "CK_monthly_consumptions_month",
                     "\"Month\" BETWEEN 1 AND 12");
                 table.HasCheckConstraint(
-                    "CK_monthly_consumptions_total_quantity",
-                    "\"TotalQuantity\" >= 0");
-                table.HasCheckConstraint(
-                    "CK_monthly_consumptions_average_daily_consumption",
-                    "\"AverageDailyConsumption\" >= 0");
+                    "CK_monthly_consumptions_recorded_days",
+                    "\"RecordedDays\" BETWEEN 0 AND 31");
                 table.HasCheckConstraint(
                     "CK_monthly_consumptions_unit_purchase_price",
                     "\"UnitPurchasePrice\" IS NULL OR \"UnitPurchasePrice\" >= 0");
@@ -234,6 +227,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbCo
                 .WithMany(item => item.MonthlyConsumptions)
                 .HasForeignKey(consumption => consumption.ItemId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<ConsumptionImportRecord>(entity =>
+        {
+            entity.ToTable("consumption_imports");
+            entity.HasKey(import => import.Id);
+            entity.Property(import => import.ReferenceMonth).HasColumnType("date");
+            entity.Property(import => import.RecordedThrough).HasColumnType("date");
+            entity.Property(import => import.SourceFileName).HasMaxLength(255).IsRequired();
+            entity.HasIndex(import => new { import.ReferenceMonth, import.ImportedAt });
         });
 
         modelBuilder.Entity<AbcClassificationResult>(entity =>

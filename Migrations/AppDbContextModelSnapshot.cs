@@ -323,6 +323,33 @@ namespace RepyPharma.Migrations
                     b.ToTable("batches", (string)null);
                 });
 
+            modelBuilder.Entity("RepyPharma.Domain.Entities.ConsumptionImportRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("ImportedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("RecordedThrough")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("ReferenceMonth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("SourceFileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReferenceMonth", "ImportedAt");
+
+                    b.ToTable("consumption_imports", (string)null);
+                });
+
             modelBuilder.Entity("RepyPharma.Domain.Entities.DailyConsumption", b =>
                 {
                     b.Property<long>("Id")
@@ -346,10 +373,7 @@ namespace RepyPharma.Migrations
                     b.HasIndex("ItemId", "Date")
                         .IsUnique();
 
-                    b.ToTable("daily_consumptions", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_daily_consumptions_quantity", "\"Quantity\" >= 0");
-                        });
+                    b.ToTable("daily_consumptions", (string)null);
                 });
 
             modelBuilder.Entity("RepyPharma.Domain.Entities.Danfe", b =>
@@ -490,10 +514,16 @@ namespace RepyPharma.Migrations
                         .HasPrecision(18, 6)
                         .HasColumnType("numeric(18,6)");
 
+                    b.Property<bool>("IsComplete")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("ItemId")
                         .HasColumnType("integer");
 
                     b.Property<int>("Month")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RecordedDays")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("TotalQuantity")
@@ -514,11 +544,9 @@ namespace RepyPharma.Migrations
 
                     b.ToTable("monthly_consumptions", null, t =>
                         {
-                            t.HasCheckConstraint("CK_monthly_consumptions_average_daily_consumption", "\"AverageDailyConsumption\" >= 0");
-
                             t.HasCheckConstraint("CK_monthly_consumptions_month", "\"Month\" BETWEEN 1 AND 12");
 
-                            t.HasCheckConstraint("CK_monthly_consumptions_total_quantity", "\"TotalQuantity\" >= 0");
+                            t.HasCheckConstraint("CK_monthly_consumptions_recorded_days", "\"RecordedDays\" BETWEEN 0 AND 31");
 
                             t.HasCheckConstraint("CK_monthly_consumptions_unit_purchase_price", "\"UnitPurchasePrice\" IS NULL OR \"UnitPurchasePrice\" >= 0");
 

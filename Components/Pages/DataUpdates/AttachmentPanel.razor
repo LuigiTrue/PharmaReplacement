@@ -1,0 +1,29 @@
+<section class="du-card du-attachment" aria-label="@($"Anexar relatórios de {KindLabel(Kind)}")" tabindex="-1" data-loading-scope data-attachment-kind="@Kind.ToString().ToLowerInvariant()">
+    <div class="du-card-heading">
+        <div><span class="du-eyebrow">NOVA ATUALIZAÇÃO · @KindLabel(Kind).ToUpper(Br)</span><h2 @ref="_heading" tabindex="-1">@ReferenceLabel</h2><p>@Description</p></div>
+        <button type="button" class="du-icon-button" aria-label="Fechar anexo" disabled="@Busy" @onclick="() => OnCancel.InvokeAsync()"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+    </div>
+    <ol class="du-upload-steps"><li class="is-active"><span>1</span> Selecionar arquivos</li><li class="@(HasFiles ? "is-active" : null)"><span>2</span> Conferir referência</li><li><span>3</span> Atualizar dados</li></ol>
+    @Files
+    <div class="du-confirmation-summary"><div><span>Tipo de atualização</span><strong>@KindLabel(Kind)</strong></div><div><span>@(Kind == ImportKind.Consumption ? "Competência selecionada" : "Data de referência")</span><strong>@ReferenceLabel</strong></div></div>
+    <p class="du-notice"><i class="bi bi-info-circle" aria-hidden="true"></i>@Notice</p>
+    <div class="du-attachment-actions"><span>@ActionHint</span><div><button type="button" class="du-secondary-button" disabled="@Busy" @onclick="() => OnCancel.InvokeAsync()">Cancelar</button>@Actions</div></div>
+    @Results
+</section>
+
+@code {
+    [Parameter] public ImportKind Kind { get; set; }
+    [Parameter] public DateOnly ReferenceDate { get; set; }
+    [Parameter] public string Description { get; set; } = "Confira a referência e selecione os relatórios da atualização.";
+    [Parameter] public string Notice { get; set; } = "Confira os arquivos antes de prosseguir.";
+    [Parameter] public string ActionHint { get; set; } = "Os arquivos devem corresponder à referência selecionada.";
+    [Parameter] public bool Busy { get; set; }
+    [Parameter] public bool HasFiles { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public RenderFragment? Files { get; set; }
+    [Parameter] public RenderFragment? Actions { get; set; }
+    [Parameter] public RenderFragment? Results { get; set; }
+    private ElementReference _heading;
+    private string ReferenceLabel => Kind == ImportKind.Consumption ? ReferenceDate.ToString("MMMM/yyyy", Br) : ReferenceDate.ToString("dd/MM/yyyy", Br);
+    protected override async Task OnAfterRenderAsync(bool firstRender) { if (firstRender) await _heading.FocusAsync(); }
+}

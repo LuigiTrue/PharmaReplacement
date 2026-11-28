@@ -1,6 +1,9 @@
 @page "/DataUpdates"
+@page "/DateUpdates"
 @attribute [Authorize(Roles = "Admin,Farmacia,Almoxarifado,Consulta")]
 @inject IAuthService AuthService
+@inject RepyPharma.Services.Import.Interfaces.IConsumptionImportService ConsumptionService
+@inject ILogger<DataUpdates> Logger
 @implements IAsyncDisposable
 
 <PageTitle>Atualização de Dados | RepyPharma</PageTitle>
@@ -8,9 +11,9 @@
 <div class="data-updates">
     <header class="du-header">
         <div><div class="du-eyebrow">GESTÃO HOSPITALAR · ATUALIZAÇÃO DE DADOS</div><h1><i class="bi bi-cloud-arrow-up" aria-hidden="true"></i> Atualização de Dados</h1><p>Organize os arquivos de consumo e mantenha o estoque em dia.</p></div>
-        <div class="du-header-context"><span class="du-demo-badge"><i class="bi bi-circle-fill" aria-hidden="true"></i> Ambiente demonstrativo — Dados fictícios</span><span class="du-muted">Referência: @_today.ToString("dd/MM/yyyy", Br) · horário de Brasília</span></div>
+        <div class="du-header-context"><span class="du-demo-badge"><i class="bi bi-circle-fill" aria-hidden="true"></i> Atualização de dados</span><span class="du-muted">Referência: @_today.ToString("dd/MM/yyyy", Br) · horário de Brasília</span></div>
     </header>
-    <p class="du-demo-note"><i class="bi bi-info-circle" aria-hidden="true"></i> As importações são simuladas. Os arquivos não são processados e nenhuma alteração é gravada. Ao sair ou recarregar esta página, as simulações são descartadas.</p>
+    <p class="du-demo-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Consumo: selecione a competência e anexe os relatórios no painel de nova atualização. Estoque atual: espelho de estoque em PDF do Soul MV.</p>
 
     <nav class="du-tabs" role="tablist" aria-label="Tipos de atualização de dados">
         @for (var index = 0; index < TabNames.Length; index++)
@@ -29,10 +32,11 @@
     }
     @if (_attachment is { } attachment && CanImport)
     {
-        <CsvAttachment @key="attachment" Kind="attachment.Kind" ReferenceDate="attachment.ReferenceDate" OnCancel="CloseAttachment" OnSimulate="CompleteSimulation" />
+        <CsvAttachment @key="attachment" Kind="attachment.Kind" ReferenceDate="attachment.ReferenceDate" Today="_today"
+                       OnImported="CompleteConsumption" OnStockImported="CompleteStock" OnCancel="CloseAttachment" />
     }
     <section id="du-panel-0" role="tabpanel" aria-labelledby="du-tab-0" hidden="@(_activeTab != 0)">
-        <ConsumptionImport Today="_today" FirstYear="_firstYear" Imports="_imports" CanImport="CanImport" OnAttach="OpenConsumptionAttachment" OnViewImport="ViewImport" />
+        <ConsumptionImport Today="_today" FirstYear="_firstYear" Imports="_imports" CanImport="CanImport" OnAttach="OpenConsumptionAttachment" OnImported="CompleteConsumption" OnViewImport="ViewImport" />
     </section>
     <section id="du-panel-1" role="tabpanel" aria-labelledby="du-tab-1" hidden="@(_activeTab != 1)">
         <StockImport Today="_today" Imports="_imports" CanImport="CanImport" OnAttach="OpenStockAttachment" OnViewImport="ViewImport" />
@@ -40,11 +44,11 @@
     <section id="du-panel-2" role="tabpanel" aria-labelledby="du-tab-2" hidden="@(_activeTab != 2)">
         <ImportHistory @key="_historyVersion" Imports="_imports" SelectedId="_selectedImportId" />
     </section>
-    <footer class="du-footer"><i class="bi bi-calendar2-check" aria-hidden="true"></i> Os meses são disponibilizados automaticamente conforme o calendário. Uma competência só muda para importada após a confirmação da simulação.</footer>
+    <footer class="du-footer"><i class="bi bi-calendar2-check" aria-hidden="true"></i> Os meses são disponibilizados automaticamente conforme o calendário. Competências já importadas podem ser atualizadas por um novo arquivo válido.</footer>
 </div>
 
 @code {
-    [Parameter] public TimeProvider Clock { get; set; } = TimeProvider.System;
+    [Inject] public TimeProvider Clock { get; set; } = TimeProvider.System;
     [SupplyParameterFromQuery(Name = "tab")] public string? InitialTab { get; set; }
     public static readonly CultureInfo Br = CultureInfo.GetCultureInfo("pt-BR");
     private static readonly TimeZoneInfo BrasiliaZone = TimeZoneInfo.FindSystemTimeZoneById("America/Sao_Paulo");
@@ -64,20 +68,44 @@
     public enum ImportKind { Consumption, Stock }
     public sealed record AttachmentRequest(ImportKind Kind, DateOnly ReferenceDate);
     public sealed record SelectedCsv(string Name, long Size);
-    // Contratos exclusivos da apresentação; não representam registros persistidos.
     public sealed record ImportRecord(Guid Id, ImportKind Kind, DateOnly ReferenceDate, string FileName,
-        DateTimeOffset RegisteredAt, ConsumptionOperationStatus Status, long? Rows, string Detail);
+        DateTimeOffset RegisteredAt, ConsumptionOperationStatus Status, string Detail, DateOnly? RecordedThrough = null);
     public static string KindLabel(ImportKind kind) => kind == ImportKind.Consumption ? "Consumo" : "Estoque atual";
-    public static string StatusLabel(ConsumptionOperationStatus status) => status == ConsumptionOperationStatus.Completed ? "Concluída · demo" : "Falha · demo";
+    public static string StatusLabel(ConsumptionOperationStatus status) => status == ConsumptionOperationStatus.Completed ? "Concluída" : "Falha";
     public static string StatusClass(ConsumptionOperationStatus status) => status == ConsumptionOperationStatus.Completed ? "du-status du-success" : "du-status du-error";
     public static string PeriodLabel(ImportRecord record) => record.Kind == ImportKind.Consumption ? record.ReferenceDate.ToString("MMMM/yyyy", Br) : record.ReferenceDate.ToString("dd/MM/yyyy", Br);
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         _today = CalendarDate();
         _firstYear = _today.Year - 1;
         AuthService.OnChange += HandleAuthChanged;
-        SeedDemonstrationHistory();
+        try
+        {
+            var imports = await ConsumptionService.GetImportsAsync(_lifetime.Token);
+            _imports.AddRange(imports.Select(ToImportRecord));
+            if (_imports.Count > 0) _firstYear = Math.Min(_firstYear, _imports.Min(i => i.ReferenceDate.Year));
+        }
+        catch (OperationCanceledException) when (_lifetime.IsCancellationRequested) { }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Não foi possível carregar o histórico de consumo.");
+            _message = "Não foi possível carregar o histórico. Verifique a conexão e as migrations do banco.";
+        }
+    }
+    private static ImportRecord ToImportRecord(ConsumptionImportResultDto result) => new(result.ImportId,
+        ImportKind.Consumption, result.ConsumptionPeriod!.StartDate, result.SourceFileName,
+        TimeZoneInfo.ConvertTime(result.CompletedAt!.Value, BrasiliaZone), result.Status,
+        $"Consumos gravados até {result.ConsumptionPeriod.EndDate:dd/MM/yyyy}. Os valores podem ser atualizados por outro relatório válido.",
+        result.ConsumptionPeriod.EndDate);
+    private void CompleteConsumption(ConsumptionImportResultDto result)
+    {
+        _imports.Insert(0, ToImportRecord(result));
+        _attachment = null;
+        _historyVersion++;
+        _message = "Consumo importado com sucesso.";
+        if (result.Issues.Count > 0) _message += " Avisos: " + string.Join(" ", result.Issues.Take(5)
+            .Select(i => (i.ItemCode is null ? "" : $"Produto {i.ItemCode}: ") + i.Message));
     }
     protected override void OnParametersSet()
     {
@@ -119,7 +147,7 @@
     private void OpenConsumptionAttachment(DateOnly period)
     {
         var currentMonth = new DateOnly(_today.Year, _today.Month, 1);
-        if (!CanImport || period > currentMonth || period.Year < _firstYear || HasConsumptionImport(period)) return;
+        if (!CanImport || period > currentMonth || period.Year < _firstYear) return;
         _message = null;
         _attachment = new(ImportKind.Consumption, period);
     }
@@ -129,39 +157,17 @@
         _message = null;
         _attachment = new(ImportKind.Stock, _today);
     }
-    private bool HasConsumptionImport(DateOnly period) => _imports.Any(i => i.Kind == ImportKind.Consumption && i.ReferenceDate == period && i.Status == ConsumptionOperationStatus.Completed);
-    private void CompleteSimulation(SelectedCsv file)
+    private void CompleteStock(string fileName)
     {
-        if (!CanImport || _attachment is not { } target || file.Size <= 0 || file.Size > CsvAttachment.MaximumFileSize || !string.Equals(Path.GetExtension(file.Name), ".csv", StringComparison.OrdinalIgnoreCase)) return;
-        if (target.Kind == ImportKind.Consumption && HasConsumptionImport(target.ReferenceDate)) { _attachment = null; return; }
-        _imports.Insert(0, new(Guid.NewGuid(), target.Kind, target.ReferenceDate, file.Name,
-            TimeZoneInfo.ConvertTime(Clock.GetUtcNow(), BrasiliaZone), ConsumptionOperationStatus.Completed, null,
-            "Confirmação simulada nesta sessão. O conteúdo do CSV não foi lido, validado ou gravado."));
-        _attachment = null;
-        _message = "Simulação concluída. O status e o histórico foram atualizados apenas nesta sessão; nenhum dado foi gravado.";
+        _imports.Insert(0, new(Guid.NewGuid(), ImportKind.Stock, CalendarDate(), fileName,
+            TimeZoneInfo.ConvertTime(Clock.GetUtcNow(), BrasiliaZone), ConsumptionOperationStatus.Completed,
+            "Espelho de estoque PDF validado e gravado pelo importador existente. As informações deste arquivo permanecem nesta sessão; os dados do estoque foram persistidos."));
+        if (_attachment?.Kind == ImportKind.Stock) _attachment = null;
+        _historyVersion++;
+        _message = "Estoque atualizado com sucesso a partir do espelho PDF.";
     }
     private void ViewImport(Guid id) { ChangeTab(2); _selectedImportId = id; _historyVersion++; }
 
-    private void SeedDemonstrationHistory()
-    {
-        var month = new DateOnly(_today.Year, _today.Month, 1);
-        var offsets = new[] { 2, 3, 5 };
-        var ids = new[] { "d690bd5a-7cb0-4400-a806-000000000001", "d690bd5a-7cb0-4400-a806-000000000002", "d690bd5a-7cb0-4400-a806-000000000003" };
-        for (var index = 0; index < offsets.Length; index++)
-        {
-            var period = month.AddMonths(-offsets[index]);
-            var timestamp = new DateTimeOffset(period.AddMonths(1).AddDays(2).ToDateTime(new TimeOnly(9, 15)), TimeSpan.FromHours(-3));
-            _imports.Add(new(Guid.Parse(ids[index]), ImportKind.Consumption, period, $"consumo_{period:yyyy_MM}.csv", timestamp,
-                ConsumptionOperationStatus.Completed, new[] { 3240L, 3110L, 2890L }[index], "Exemplo fictício de importação mensal concluída."));
-        }
-        var failedPeriod = month.AddMonths(-1);
-        _imports.Add(new(Guid.Parse("d690bd5a-7cb0-4400-a806-000000000004"), ImportKind.Consumption, failedPeriod,
-            $"consumo_{failedPeriod:yyyy_MM}_tentativa.csv", new(_today.AddDays(-1).ToDateTime(new TimeOnly(14, 20)), TimeSpan.FromHours(-3)),
-            ConsumptionOperationStatus.Failed, null, "Exemplo fictício: arquivo com competência divergente. O mês continua pendente de atualização."));
-        _imports.Add(new(Guid.Parse("d690bd5a-7cb0-4400-a806-000000000005"), ImportKind.Stock, _today.AddDays(-1), "estoque_atual.csv",
-            new(_today.AddDays(-1).ToDateTime(new TimeOnly(16, 40)), TimeSpan.FromHours(-3)), ConsumptionOperationStatus.Completed, 12,
-            "Exemplo fictício de atualização dos saldos de 12 itens."));
-    }
     public async ValueTask DisposeAsync()
     {
         _disposed = true;

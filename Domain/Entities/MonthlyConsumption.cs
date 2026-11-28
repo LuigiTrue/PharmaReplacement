@@ -8,6 +8,8 @@ public class MonthlyConsumption
     public int Month { get; set; }
     public decimal TotalQuantity { get; set; }
     public decimal AverageDailyConsumption { get; set; }
+    public int RecordedDays { get; set; }
+    public bool IsComplete { get; set; }
 
     /// <summary>
     /// Unit purchase price for the reference year and month; null when unknown.
